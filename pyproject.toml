@@ -6,3 +6,6 @@ readme = "README.md"
 authors = [{ name = "pengqun", email = "pengqun.pq@gmail.com" }]
 requires-python = ">=3.12"
 dependencies = ["fastmcp>=2.10.3"]
+
+[project.scripts]
+modelscope-mcp-server = "modelscope_mcp_server:main"
