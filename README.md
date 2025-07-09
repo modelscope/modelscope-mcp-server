@@ -6,6 +6,7 @@ This project is currently under development and not yet complete. It's in the ea
 
 ## References
 
+- Model Context Protocol - <https://modelcontextprotocol.io/>
 - FastMCP v2 - <https://github.com/jlowin/fastmcp>
 - MCP Python SDK - <https://github.com/modelcontextprotocol/python-sdk>
 - MCP Example Servers - <https://github.com/modelcontextprotocol/servers>
