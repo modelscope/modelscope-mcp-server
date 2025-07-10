@@ -1,6 +1,6 @@
 [project]
 name = "modelscope-mcp-server"
-version = "0.1.0"
+version = "0.1.1"
 description = "ModelScope MCP Server"
 readme = "README.md"
 authors = [{ name = "pengqun", email = "pengqun.pq@gmail.com" }]

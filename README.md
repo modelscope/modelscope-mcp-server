@@ -1,8 +1,20 @@
 # ModelScope Unofficial MCP Server
 
-## 🚧 WIP (Work In Progress)
+> 🚧 **WIP**: This project is currently under development and not yet complete. It's in the early development stage, and features and APIs may change.
 
-This project is currently under development and not yet complete. It's in the early development stage, and features and APIs may change.
+## Usage
+
+TODO
+
+## Development
+
+```bash
+# Run with stdio transport (default)
+uv run modelscope-mcp-server
+
+# Run with streamable HTTP transport
+fastmcp run src/modelscope_mcp_server/server.py --transport http
+```
 
 ## References
 
