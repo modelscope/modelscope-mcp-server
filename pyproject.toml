@@ -6,6 +6,32 @@ readme = "README.md"
 authors = [{ name = "pengqun", email = "pengqun.pq@gmail.com" }]
 requires-python = ">=3.12"
 dependencies = ["fastmcp>=2.10.3"]
+license = { file = "LICENSE" }
+keywords = ["modelscope", "mcp", "server", "model-context-protocol"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/pengqun/modelscope-mcp-server"
+"Bug Tracker" = "https://github.com/pengqun/modelscope-mcp-server/issues"
 
 [project.scripts]
 modelscope-mcp-server = "modelscope_mcp_server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/modelscope_mcp_server"]
+
+[dependency-groups]
+dev = [
+    "build>=1.2.2.post1",
+    "twine>=6.1.0",
+]
