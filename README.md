@@ -2,9 +2,26 @@
 
 > 🚧 **WIP**: This project is currently under development and not yet complete. It's in the early development stage, and features and APIs may change.
 
+## Features
+
+- [x] Generate image URL from text
+
 ## Usage
 
+### Runing the Demo
+
+```bash
+uv run python demo.py
+```
+
+### Integrate with popular MCP clients
+
 TODO
+
+- Cursor
+- VS Code
+- ModelScope MCP Playground
+- Cherry Studio
 
 ## Development
 
