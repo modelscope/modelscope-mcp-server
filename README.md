@@ -16,6 +16,15 @@ uv run modelscope-mcp-server
 fastmcp run src/modelscope_mcp_server/server.py --transport http
 ```
 
+## Publishing
+
+```bash
+# Run the publishing script
+python scripts/publish.py
+```
+
+TODO: auto publish via Github Actions
+
 ## References
 
 - Model Context Protocol - <https://modelcontextprotocol.io/>
