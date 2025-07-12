@@ -33,7 +33,7 @@ async def main():
         )
 
         if result.content and len(result.content) > 0:
-            image_url = result.content[0].text
+            image_url = result.content[0].text  # type: ignore
             print(f"✅ Generated image URL: {image_url}")
 
         print("\n✨ Demo complete!")

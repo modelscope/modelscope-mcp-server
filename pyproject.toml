@@ -1,6 +1,6 @@
 [project]
 name = "modelscope-mcp-server"
-version = "0.1.1"
+dynamic = ["version"]
 description = "ModelScope MCP Server"
 readme = "README.md"
 authors = [{ name = "pengqun" }]
@@ -39,6 +39,9 @@ modelscope-mcp-server = "modelscope_mcp_server:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+path = "src/modelscope_mcp_server/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/modelscope_mcp_server"]

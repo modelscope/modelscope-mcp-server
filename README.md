@@ -18,7 +18,7 @@ uv run python demo.py
 
 ### Integrate with popular MCP clients
 
-- Use in Claude Desktop / Cursor / Cherry Studio:
+- Use in [Claude Desktop](https://modelcontextprotocol.io/quickstart/user) / [Cursor](https://docs.cursor.com/context/model-context-protocol) / [Cherry Studio](https://docs.cherry-ai.com/advanced-basic/mcp/config):
 
 ```json
 {
@@ -104,14 +104,38 @@ pre-commit run --all-files
 uv run pre-commit run --all-files
 ```
 
-### Publish to PyPI
+### Version Management
+
+The project uses automated version management scripts for releases:
+
+#### Bump Version
 
 ```bash
-# Run the publishing script
-python scripts/publish.py
+# Bump patch version (1.0.0 -> 1.0.1)
+python scripts/bump_version.py patch
+
+# Bump minor version (1.0.0 -> 1.1.0)
+python scripts/bump_version.py minor
+
+# Bump major version (1.0.0 -> 2.0.0)
+python scripts/bump_version.py major
+
+# Create pre-release versions (in development order)
+python scripts/bump_version.py patch --pre dev    # 1.0.1.dev1  (development snapshot)
+python scripts/bump_version.py patch --pre alpha  # 1.0.1a1     (internal testing)
+python scripts/bump_version.py patch --pre beta   # 1.0.1b1     (public testing)
+python scripts/bump_version.py patch --pre rc     # 1.0.1rc1    (release candidate)
 ```
 
-TODO: auto publish via Github Actions
+#### Release to PyPI
+
+```bash
+# Preview what will be released (dry-run mode)
+python scripts/release.py --dry-run
+
+# Perform actual release
+python scripts/release.py
+```
 
 ## References
 
