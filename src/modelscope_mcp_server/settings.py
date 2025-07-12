@@ -1,7 +1,5 @@
 """Global settings management for ModelScope MCP Server."""
 
-import os
-from typing import Optional
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -18,7 +16,7 @@ class Settings(BaseSettings):
     )
 
     # ModelScope API settings
-    api_key: Optional[str] = Field(
+    api_key: str | None = Field(
         default=None, description="ModelScope API key for authentication"
     )
 
@@ -38,7 +36,7 @@ class Settings(BaseSettings):
 
     @field_validator("api_key")
     @classmethod
-    def validate_api_key(cls, v: Optional[str]) -> Optional[str]:
+    def validate_api_key(cls, v: str | None) -> str | None:
         """Validate API key format."""
         if v is not None:
             v = v.strip()

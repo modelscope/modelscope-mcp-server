@@ -18,14 +18,49 @@ uv run python demo.py
 
 ### Integrate with popular MCP clients
 
-TODO
+- Use in Claude Desktop / Cursor / Cherry Studio:
 
-- Cursor
-- VS Code
-- ModelScope MCP Playground
-- Cherry Studio
+```json
+{
+  "mcpServers": {
+    "modelscope-mcp-server": {
+      "command": "uvx",
+      "args": ["modelscope-mcp-server"],
+      "env": {
+        "MODELSCOPE_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
 
-## Development
+## Contributing
+
+### Prerequisites
+
+- Python 3.12+
+- [uv](https://docs.astral.sh/uv/) (Recommended for environment management)
+
+### Setup
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/pengqun/modelscope-mcp-server.git
+   cd modelscope-mcp-server
+   ```
+
+2. Create and sync the environment:
+
+   ```bash
+   uv sync
+   ```
+
+   This installs all dependencies, including dev tools.
+
+3. Activate the virtual environment (e.g., `source .venv/bin/activate` or via your IDE).
+
+### Run the Server
 
 ```bash
 # Run with stdio transport (default)
@@ -35,7 +70,41 @@ uv run modelscope-mcp-server
 fastmcp run src/modelscope_mcp_server/server.py --transport http
 ```
 
-## Publishing
+### Unit Tests
+
+All PRs must introduce or update tests as appropriate and pass the full suite.
+
+Run tests using pytest:
+
+```bash
+pytest
+```
+
+or if you want an overview of the code coverage
+
+```bash
+uv run pytest --cov=src --cov=examples --cov-report=html
+```
+
+### Static Checks
+
+This project uses `pre-commit` for code formatting, linting, and type-checking. All PRs must pass these checks (they run automatically in CI).
+
+Install the hooks locally:
+
+```bash
+uv run pre-commit install
+```
+
+The hooks will now run automatically on `git commit`. You can also run them manually at any time:
+
+```bash
+pre-commit run --all-files
+# or via uv
+uv run pre-commit run --all-files
+```
+
+### Publish to PyPI
 
 ```bash
 # Run the publishing script

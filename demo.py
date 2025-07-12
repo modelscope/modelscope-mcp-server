@@ -1,8 +1,6 @@
 """Demo script showing all ModelScope MCP server capabilities."""
 
 import asyncio
-import random
-from datetime import datetime
 
 from fastmcp import Client
 
@@ -14,7 +12,7 @@ async def main():
     print("🤖 ModelScope MCP server demo\n")
 
     # Show configuration
-    print(f"📋 Current configuration:")
+    print("📋 Current configuration:")
     print(f"   API Key: {settings.api_key}")
     print(f"   API Inference Base URL: {settings.api_inference_base_url}")
     print(

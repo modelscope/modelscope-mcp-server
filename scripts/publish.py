@@ -2,6 +2,7 @@
 """
 Automated publishing script
 """
+
 import os
 import subprocess
 import sys

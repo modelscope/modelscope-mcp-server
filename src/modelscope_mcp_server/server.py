@@ -1,7 +1,7 @@
 import json
-import requests
 import logging
-from typing import List, Optional
+
+import requests
 from fastmcp import FastMCP
 from mcp.types import TextContent
 
@@ -16,8 +16,8 @@ mcp = FastMCP("ModelScope MCP Server")
 
 @mcp.tool()
 def generate_image_url_from_text(
-    description: str, model: Optional[str] = None
-) -> List[TextContent]:
+    description: str, model: str | None = None
+) -> list[TextContent]:
     """Generate an image from the input description using ModelScope API.
 
     This function sends a request to the ModelScope API to generate an image

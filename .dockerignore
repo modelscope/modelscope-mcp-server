@@ -14,6 +14,9 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+.venv/
+.pytest_cache/
+.ruff_cache/
 
 # IDE
 .vscode/
@@ -32,4 +35,4 @@ docker-compose*.yml
 
 # Development
 *.log
-*.tmp 
+*.tmp
