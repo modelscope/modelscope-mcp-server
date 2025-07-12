@@ -1,3 +1,11 @@
+# Git
+.git
+.gitignore
+
+# Environment files
+.env
+.env.*
+
 # Python
 __pycache__/
 *.py[cod]
@@ -6,11 +14,6 @@ __pycache__/
 *.egg-info/
 dist/
 build/
-
-# Environment files
-.env
-.env.*
-!.env.example
 
 # IDE
 .vscode/
@@ -22,6 +25,11 @@ build/
 .DS_Store
 Thumbs.db
 
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
 # Development
 *.log
-*.tmp
+*.tmp 

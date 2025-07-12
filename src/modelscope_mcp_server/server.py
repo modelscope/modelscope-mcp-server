@@ -1,4 +1,3 @@
-import os
 import json
 import requests
 import logging
@@ -6,7 +5,10 @@ from typing import List, Optional
 from fastmcp import FastMCP
 from mcp.types import TextContent
 
-logging.basicConfig(level=logging.INFO)
+from .settings import settings
+
+# Configure logging with settings
+logging.basicConfig(level=getattr(logging, settings.log_level))
 logger = logging.getLogger(__name__)
 
 mcp = FastMCP("ModelScope MCP Server")
@@ -14,7 +16,7 @@ mcp = FastMCP("ModelScope MCP Server")
 
 @mcp.tool()
 def generate_image_url_from_text(
-    description: str, model: str = "MusePublic/489_ckpt_FLUX_1"
+    description: str, model: Optional[str] = None
 ) -> List[TextContent]:
     """Generate an image from the input description using ModelScope API.
 
@@ -25,7 +27,7 @@ def generate_image_url_from_text(
         description: The description of the image to be generated, containing
                     the desired elements and visual features.
         model: The model name to be used for image generation.
-               Default is "MusePublic/489_ckpt_FLUX_1".
+               If not provided, uses the default model from settings.
 
     Returns:
         List[TextContent]: A list containing a single TextContent object with
@@ -34,6 +36,10 @@ def generate_image_url_from_text(
     Raises:
         None: All exceptions are caught and returned as error messages.
     """
+    # Use default model if not specified
+    if model is None:
+        model = settings.default_image_generation_model
+
     # Validate input parameters
     if not description or not description.strip():
         error_msg = "Error: Description cannot be empty"
@@ -45,22 +51,24 @@ def generate_image_url_from_text(
         logger.error(error_msg)
         return [TextContent(type="text", text=error_msg)]
 
-    # Get API token from environment
-    token = os.environ.get("MODELSCOPE_API_KEY")
-    if not token:
+    # Check if API key is configured
+    if not settings.is_api_key_configured():
         error_msg = "Error: MODELSCOPE_API_KEY environment variable is not set"
         logger.error(error_msg)
         return [TextContent(type="text", text=error_msg)]
 
     # API endpoint and request configuration
-    url = "https://api-inference.modelscope.cn/v1/images/generations"
+    url = settings.images_endpoint
 
     payload = {
         "model": model,  # ModelScope Model-Id, required field
         "prompt": description,  # Required field
     }
 
-    headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+    headers = {
+        "Authorization": f"Bearer {settings.api_key}",
+        "Content-Type": "application/json",
+    }
 
     try:
         logger.info(f"Sending image generation request for model: {model}")
@@ -70,7 +78,7 @@ def generate_image_url_from_text(
             url,
             data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
             headers=headers,
-            timeout=300,  # Add timeout for better reliability
+            timeout=300,
         )
 
         # Check HTTP status code

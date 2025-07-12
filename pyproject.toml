@@ -5,7 +5,11 @@ description = "ModelScope MCP Server"
 readme = "README.md"
 authors = [{ name = "pengqun", email = "pengqun.pq@gmail.com" }]
 requires-python = ">=3.12"
-dependencies = ["fastmcp>=2.10.3", "requests>=2.28.0"]
+dependencies = [
+    "fastmcp>=2.10.3",
+    "requests>=2.28.0",
+    "pydantic-settings>=2.0.0",
+]
 license = { file = "LICENSE" }
 keywords = ["modelscope", "mcp", "server", "model-context-protocol"]
 classifiers = [
