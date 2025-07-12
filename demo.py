@@ -24,6 +24,8 @@ async def main():
             image_url = result.content[0].text
             print(f"✅ Generated image URL: {image_url}")
 
+        print("\n✨ Demo complete!")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

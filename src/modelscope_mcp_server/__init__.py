@@ -7,8 +7,9 @@ __version__ = "0.1.1"
 
 def main():
     """Main entry point for ModelScope MCP Server"""
-    mcp.run(transport="stdio")
+    from .cli import main as cli_main
+
+    cli_main()
 
 
-# Export the main function for entry point
-__all__ = ["main", "__version__"]
+__all__ = ["main", "__version__", "mcp"]
