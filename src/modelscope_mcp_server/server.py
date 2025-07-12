@@ -5,13 +5,14 @@ import requests
 from fastmcp import FastMCP
 from mcp.types import TextContent
 
+from ._version import __version__
 from .settings import settings
 
 # Configure logging with settings
 logging.basicConfig(level=getattr(logging, settings.log_level))
 logger = logging.getLogger(__name__)
 
-mcp = FastMCP("ModelScope MCP Server")
+mcp = FastMCP(f"ModelScope MCP Server v{__version__}")
 
 
 @mcp.tool()

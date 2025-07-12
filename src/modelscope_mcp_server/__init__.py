@@ -1,9 +1,8 @@
 """ModelScope MCP Server"""
 
+from ._version import __version__
 from .server import mcp
 from .settings import settings
-
-__version__ = "0.1.1"
 
 
 def main():

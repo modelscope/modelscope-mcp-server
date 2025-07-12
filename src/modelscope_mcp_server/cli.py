@@ -56,12 +56,7 @@ def validate_args(args: argparse.Namespace) -> None:
 def run_server(args: argparse.Namespace) -> None:
     """Run the MCP server with the specified arguments."""
     try:
-        if args.transport == "stdio":
-            mcp.run(transport="stdio")
-        elif args.transport == "sse":
-            mcp.run(transport="sse", port=args.port)
-        elif args.transport == "http":
-            mcp.run(transport="http", port=args.port)
+        mcp.run(transport=args.transport, port=args.port, show_banner=False)
     except KeyboardInterrupt:
         print("\nShutting down ModelScope MCP Server...", file=sys.stderr)
         sys.exit(0)
