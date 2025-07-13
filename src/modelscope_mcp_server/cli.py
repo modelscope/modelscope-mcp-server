@@ -71,7 +71,11 @@ def main() -> None:
         sys.exit(1)
 
     try:
-        mcp.run(transport=args.transport, port=args.port, show_banner=False)
+        mcp.run(
+            transport=args.transport,
+            port=args.port,
+            show_banner=False,
+        )
     except KeyboardInterrupt:
         print("\nShutting down ModelScope MCP Server...", file=sys.stderr)
         sys.exit(0)

@@ -5,17 +5,17 @@ Provides MCP tools for image generation, etc.
 """
 
 import json
-import logging
 from typing import Annotated
 
 import requests
 from fastmcp import FastMCP
+from fastmcp.utilities import logging
 from pydantic import Field
 
 from ..settings import settings
 from ..types import ImageGenerationResult
 
-logger = logging.getLogger(__name__)
+logger = logging.get_logger(__name__)
 
 
 def register_aigc_tools(mcp: FastMCP) -> None:
