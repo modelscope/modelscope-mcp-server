@@ -1,10 +1,13 @@
-# ModelScope Unofficial MCP Server
+# ModelScope MCP Server
+
+[![PyPI - Version](https://img.shields.io/pypi/v/modelscope-mcp-server.svg)](https://pypi.org/project/modelscope-mcp-server) [![License](https://img.shields.io/github/license/pengqun/modelscope-mcp-server.svg)](https://github.com/pengqun/modelscope-mcp-server/blob/main/LICENSE)
 
 > 🚧 **WIP**: This project is currently under development and not yet complete. It's in the early development stage, and features and APIs may change.
 
 ## Features
 
-- [x] Generate image URL from text
+- [x] Generate image from text using any AIGC model
+- [ ] Search for models, datasets, studios, papers, and more
 
 ## Usage
 
