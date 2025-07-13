@@ -4,6 +4,10 @@ from typing import Annotated
 
 import requests
 from fastmcp import FastMCP
+from fastmcp.server.middleware.error_handling import ErrorHandlingMiddleware
+from fastmcp.server.middleware.logging import LoggingMiddleware
+from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
+from fastmcp.server.middleware.timing import TimingMiddleware
 from pydantic import Field
 
 from ._version import __version__
@@ -20,6 +24,12 @@ mcp = FastMCP(
         This server provides tools for calling ModelScope API.
     """,
 )
+
+# Add middleware in logical order
+mcp.add_middleware(ErrorHandlingMiddleware(include_traceback=True))
+mcp.add_middleware(RateLimitingMiddleware(max_requests_per_second=10))
+mcp.add_middleware(TimingMiddleware())
+mcp.add_middleware(LoggingMiddleware())
 
 
 @mcp.tool()
@@ -81,7 +91,7 @@ def generate_image_url_from_text(
 
     try:
         logger.info(
-            f"Sending image generation request for model: {model}, description: {description}"
+            f"Sending image generation request for model: {model}, with description: {description}"
         )
 
         # Send POST request to ModelScope API
