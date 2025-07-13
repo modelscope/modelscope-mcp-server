@@ -1,7 +1,6 @@
 """ModelScope MCP Server"""
 
 from ._version import __version__
-from .server import mcp
 from .settings import settings
 
 
@@ -12,4 +11,4 @@ def main():
     cli_main()
 
 
-__all__ = ["main", "__version__", "mcp", "settings"]
+__all__ = ["main", "__version__", "settings"]

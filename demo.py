@@ -4,7 +4,7 @@ import asyncio
 
 from fastmcp import Client
 
-from modelscope_mcp_server.server import mcp
+from modelscope_mcp_server.server import create_mcp_server
 from modelscope_mcp_server.settings import settings
 
 
@@ -20,6 +20,8 @@ async def main():
     )
     print(f"   Log level: {settings.log_level}")
     print()
+
+    mcp = create_mcp_server()
 
     async with Client(mcp) as client:
         print("1. Calling generate_image_url_from_text tool (using default model)")

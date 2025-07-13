@@ -3,7 +3,7 @@
 import argparse
 import sys
 
-from .server import mcp
+from .server import create_mcp_server
 
 
 def create_parser() -> argparse.ArgumentParser:
@@ -53,8 +53,23 @@ def validate_args(args: argparse.Namespace) -> None:
         raise ValueError("Port must be a positive integer for SSE/HTTP transport")
 
 
-def run_server(args: argparse.Namespace) -> None:
-    """Run the MCP server with the specified arguments."""
+def main() -> None:
+    """Main CLI entry point."""
+    parser = create_parser()
+    args = parser.parse_args()
+
+    try:
+        validate_args(args)
+    except ValueError as e:
+        parser.error(str(e))
+
+    # Create and configure the MCP server
+    try:
+        mcp = create_mcp_server()
+    except Exception as e:
+        print(f"Error creating MCP server: {e}", file=sys.stderr)
+        sys.exit(1)
+
     try:
         mcp.run(transport=args.transport, port=args.port, show_banner=False)
     except KeyboardInterrupt:
@@ -63,15 +78,3 @@ def run_server(args: argparse.Namespace) -> None:
     except Exception as e:
         print(f"Error starting server: {e}", file=sys.stderr)
         sys.exit(1)
-
-
-def main() -> None:
-    """Main CLI entry point."""
-    parser = create_parser()
-    args = parser.parse_args()
-
-    try:
-        validate_args(args)
-        run_server(args)
-    except ValueError as e:
-        parser.error(str(e))
