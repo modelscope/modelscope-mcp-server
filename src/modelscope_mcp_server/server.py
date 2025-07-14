@@ -12,6 +12,7 @@ from fastmcp.utilities import logging
 from ._version import __version__
 from .settings import settings
 from .tools.aigc import register_aigc_tools
+from .tools.paper import register_paper_tools
 from .tools.user import register_user_tools
 
 logger = logging.get_logger(__name__)
@@ -38,5 +39,6 @@ def create_mcp_server() -> FastMCP:
     # Register all tools
     register_user_tools(mcp)
     register_aigc_tools(mcp)
+    register_paper_tools(mcp)
 
     return mcp

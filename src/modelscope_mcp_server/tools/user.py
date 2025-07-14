@@ -35,11 +35,9 @@ def register_user_tools(mcp: FastMCP) -> None:
         if not settings.is_api_key_configured():
             return UserInfo(authenticated=False, reason="API key is not set")
 
-        # NOTE: the OpenAPI for user info is not officially public yet,
-        # so we need to manually hack the URL and authentication header.
-        url = (
-            f"{settings.openapi_base_url.replace('/openapi', '/api')}/users/login/info"
-        )
+        # Should change to use the official OpenAPI when it's available
+        url = f"{settings.api_base_url}/users/login/info"
+
         headers = {
             "Cookie": f"m_session_id={settings.api_key}",
             "User-Agent": "modelscope-mcp-server",

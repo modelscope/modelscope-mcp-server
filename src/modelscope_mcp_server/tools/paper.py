@@ -1,0 +1,101 @@
+"""
+ModelScope MCP Server Paper tools.
+
+Provides MCP tools for paper-related operations, such as searching for papers, getting paper details, etc.
+"""
+
+from typing import Annotated, Literal
+
+import requests
+from fastmcp import FastMCP
+from fastmcp.utilities import logging
+from pydantic import Field
+
+from ..settings import settings
+from ..types import Paper
+
+logger = logging.get_logger(__name__)
+
+
+def register_paper_tools(mcp: FastMCP) -> None:
+    """
+    Register all paper-related tools with the MCP server.
+
+    Args:
+        mcp (FastMCP): The MCP server instance
+    """
+
+    @mcp.tool(
+        annotations={
+            "title": "Search Papers",
+        }
+    )
+    async def search_papers(
+        query: Annotated[str, Field(description="Search query for papers")],
+        page_number: Annotated[int, Field(description="Page number", ge=1)] = 1,
+        page_size: Annotated[
+            int, Field(description="Number of papers per page", ge=1, le=100)
+        ] = 2,
+        sort: Annotated[
+            Literal["default", "hot", "recommend"],
+            Field(description="Sort order, available options: default, hot, recommend"),
+        ] = "default",
+    ) -> list[Paper]:
+        """
+        Search for papers on ModelScope.
+        """
+        if not settings.is_api_key_configured():
+            logger.warning("API key is not set, searching without authentication")
+
+        url = f"{settings.api_base_url}/dolphin/papers"
+
+        headers = {
+            "Content-Type": "application/json",
+            "User-Agent": "modelscope-mcp-server",
+        }
+
+        request_data = {
+            "Query": query,
+            "PageNumber": page_number,
+            "PageSize": page_size,
+            "Sort": sort,
+            "Criterion": [],
+        }
+
+        try:
+            response = requests.put(url, json=request_data, headers=headers, timeout=10)
+        except requests.exceptions.Timeout:
+            raise TimeoutError("Request timeout - please try again later")
+
+        if response.status_code != 200:
+            raise Exception(
+                f"Server returned non-200 status code: {response.status_code} {response.text}"
+            )
+
+        data = response.json()
+
+        if not data.get("Success", False):
+            raise Exception(f"Server returned error: {data}")
+
+        papers_data = data.get("Data", {}).get("Papers", [])
+
+        papers = []
+        for paper_data in papers_data:
+            paper = Paper(
+                id=paper_data.get("Id"),
+                arxiv_id=paper_data.get("ArxivId"),
+                title=paper_data.get("Title"),
+                authors=paper_data.get("Authors"),
+                publish_date=paper_data.get("PublishDate"),
+                abstract_cn=paper_data.get("AbstractCn"),
+                abstract_en=paper_data.get("AbstractEn"),
+                pdf_url=paper_data.get("PdfUrl"),
+                arxiv_url=paper_data.get("ArxivUrl"),
+                code_link=paper_data.get("CodeLink"),
+                view_count=paper_data.get("ViewCount"),
+                favorite_count=paper_data.get("FavoriteCount"),
+                comment_count=paper_data.get("CommentTotalCount"),
+            )
+            papers.append(paper)
+
+        return papers

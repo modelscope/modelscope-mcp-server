@@ -14,6 +14,8 @@ async def main():
     # Show configuration
     print("📋 Current configuration:")
     print(f"   API Key: {settings.api_key}")
+    print(f"   API Base URL: {settings.api_base_url}")
+    print(f"   OpenAPI Base URL: {settings.openapi_base_url}")
     print(f"   API Inference Base URL: {settings.api_inference_base_url}")
     print(
         f"   Default Image Generation Model: {settings.default_image_generation_model}"
@@ -24,18 +26,23 @@ async def main():
     mcp = create_mcp_server()
 
     async with Client(mcp) as client:
-        print("1. Calling get_current_user tool")
-        print()
+        print("1. Calling get_current_user tool\n")
 
         user_result = await client.call_tool("get_current_user", {})
 
         if user_result.content and len(user_result.content) > 0:
             user_info = user_result.content[0].text  # type: ignore
-            print(f"✅ Current user info: {user_info}")
-            print()
+            print(f"✅ Current user info: {user_info}\n")
 
-        print("2. Calling generate_image_url_from_text tool (using default model)")
-        print()
+        print("2. Calling search_papers tool\n")
+
+        result = await client.call_tool("search_papers", {"query": "Qwen3"})
+
+        if result.content and len(result.content) > 0:
+            papers = result.content[0].text  # type: ignore
+            print(f"✅ Search papers: {papers}\n")
+
+        print("3. Calling generate_image_url_from_text tool (using default model)\n")
 
         result = await client.call_tool(
             "generate_image_url_from_text",
@@ -46,9 +53,9 @@ async def main():
 
         if result.content and len(result.content) > 0:
             image_url = result.content[0].text  # type: ignore
-            print(f"✅ Generated image URL: {image_url}")
+            print(f"✅ Generated image URL: {image_url}\n")
 
-        print("\n✨ Demo complete!")
+        print("✨ Demo complete!")
 
 
 if __name__ == "__main__":

@@ -20,6 +20,11 @@ class Settings(BaseSettings):
         default=None, description="ModelScope API key for authentication"
     )
 
+    api_base_url: str = Field(
+        default="https://modelscope.cn/api/v1",
+        description="Base URL for ModelScope API",
+    )
+
     openapi_base_url: str = Field(
         default="https://modelscope.cn/openapi/v1",
         description="Base URL for ModelScope OpenAPI",
