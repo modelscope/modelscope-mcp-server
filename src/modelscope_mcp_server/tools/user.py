@@ -32,36 +32,34 @@ def register_user_tools(mcp: FastMCP) -> None:
         """
         Get current authenticated user information from ModelScope (魔搭社区).
         """
-        if not settings.api_key:
-            return UserInfo(
-                authenticated=False,
-                username=None,
-                email=None,
-                avatar_url=None,
-                description=None,
-            )
+        if not settings.is_api_key_configured():
+            return UserInfo(authenticated=False, reason="API key is not set")
 
-        url = "https://modelscope.cn/api/v1/users/login/info"
+        # NOTE: the OpenAPI for user info is not officially public yet,
+        # so we need to manually hack the URL and authentication header.
+        url = (
+            f"{settings.openapi_base_url.replace('/openapi', '/api')}/users/login/info"
+        )
         headers = {
-            # NOTE this is just a hack, may be changed in the future
             "Cookie": f"m_session_id={settings.api_key}",
             "User-Agent": "modelscope-mcp-server",
         }
 
         response = requests.get(url, headers=headers, timeout=10)
-        response.raise_for_status()
+        if response.status_code == 401 or response.status_code == 403:
+            return UserInfo(
+                authenticated=False,
+                reason=f"Invalid API key: server returned {response.status_code}",
+            )
+        elif response.status_code != 200:
+            raise Exception(
+                f"Server returned non-200 status code: {response.status_code} {response.text}"
+            )
 
         data = response.json()
 
         if not data.get("Success", False):
-            logger.error(f"API call failed: {data.get('Message', 'Unknown error')}")
-            return UserInfo(
-                authenticated=False,
-                username=None,
-                email=None,
-                avatar_url=None,
-                description=None,
-            )
+            raise Exception(f"Server returned error: {data}")
 
         user_data = data.get("Data", {})
 
@@ -70,5 +68,5 @@ def register_user_tools(mcp: FastMCP) -> None:
             username=user_data.get("Name"),
             email=user_data.get("Email"),
             avatar_url=user_data.get("Avatar"),
-            description=user_data.get("Description"),
+            description=user_data.get("Description") or "",
         )

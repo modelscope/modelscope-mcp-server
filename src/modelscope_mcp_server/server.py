@@ -30,7 +30,7 @@ def create_mcp_server() -> FastMCP:
     )
 
     # Add middleware in logical order
-    mcp.add_middleware(ErrorHandlingMiddleware(include_traceback=False))
+    mcp.add_middleware(ErrorHandlingMiddleware(logger=logger))
     mcp.add_middleware(RateLimitingMiddleware(max_requests_per_second=10))
     mcp.add_middleware(TimingMiddleware())
     mcp.add_middleware(LoggingMiddleware())

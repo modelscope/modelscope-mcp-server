@@ -1,22 +1,21 @@
 """Type definitions for ModelScope MCP server."""
 
-from typing import TypedDict
+from pydantic import BaseModel
 
 
-class UserInfo(TypedDict):
+class UserInfo(BaseModel):
     """User information."""
 
     authenticated: bool
-    username: str | None
-    email: str | None
-    avatar_url: str | None
-    description: str | None
+    reason: str | None = None
+    username: str | None = None
+    email: str | None = None
+    avatar_url: str | None = None
+    description: str | None = None
 
 
-class ImageGenerationResult(TypedDict):
+class ImageGenerationResult(BaseModel):
     """Image generation result."""
 
-    success: bool
-    model_used: str | None
-    image_url: str | None
-    error: str | None
+    model_used: str | None = None
+    image_url: str | None = None

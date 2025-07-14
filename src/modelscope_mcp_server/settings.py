@@ -20,6 +20,11 @@ class Settings(BaseSettings):
         default=None, description="ModelScope API key for authentication"
     )
 
+    openapi_base_url: str = Field(
+        default="https://modelscope.cn/openapi/v1",
+        description="Base URL for ModelScope OpenAPI",
+    )
+
     api_inference_base_url: str = Field(
         default="https://api-inference.modelscope.cn/v1",
         description="Base URL for ModelScope API Inference",
@@ -53,11 +58,6 @@ class Settings(BaseSettings):
         if v not in allowed_levels:
             raise ValueError(f"Log level must be one of {allowed_levels}")
         return v
-
-    @property
-    def images_endpoint(self) -> str:
-        """Get the full images generation endpoint URL."""
-        return f"{self.api_inference_base_url}/images/generations"
 
     def is_api_key_configured(self) -> bool:
         """Check if API key is configured."""
