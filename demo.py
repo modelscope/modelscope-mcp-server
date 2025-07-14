@@ -36,7 +36,10 @@ async def main():
 
         print("2. Calling search_papers tool\n")
 
-        result = await client.call_tool("search_papers", {"query": "Qwen3"})
+        result = await client.call_tool(
+            "search_papers",
+            {"query": "Qwen3", "page_number": 1, "page_size": 1},
+        )
 
         if result.content and len(result.content) > 0:
             papers = result.content[0].text  # type: ignore

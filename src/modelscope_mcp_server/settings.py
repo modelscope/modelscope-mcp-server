@@ -3,6 +3,13 @@
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from .constants import (
+    DEFAULT_IMAGE_GENERATION_MODEL,
+    MODELSCOPE_API_ENDPOINT,
+    MODELSCOPE_API_INFERENCE_ENDPOINT,
+    MODELSCOPE_OPENAPI_ENDPOINT,
+)
+
 
 class Settings(BaseSettings):
     """Global settings for ModelScope MCP Server."""
@@ -21,23 +28,23 @@ class Settings(BaseSettings):
     )
 
     api_base_url: str = Field(
-        default="https://modelscope.cn/api/v1",
+        default=MODELSCOPE_API_ENDPOINT,
         description="Base URL for ModelScope API",
     )
 
     openapi_base_url: str = Field(
-        default="https://modelscope.cn/openapi/v1",
+        default=MODELSCOPE_OPENAPI_ENDPOINT,
         description="Base URL for ModelScope OpenAPI",
     )
 
     api_inference_base_url: str = Field(
-        default="https://api-inference.modelscope.cn/v1",
+        default=MODELSCOPE_API_INFERENCE_ENDPOINT,
         description="Base URL for ModelScope API Inference",
     )
 
     # Default model settings
     default_image_generation_model: str = Field(
-        default="MusePublic/489_ckpt_FLUX_1",
+        default=DEFAULT_IMAGE_GENERATION_MODEL,
         description="Default model for image generation",
     )
 

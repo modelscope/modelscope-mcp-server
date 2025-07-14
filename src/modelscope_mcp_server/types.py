@@ -1,44 +1,50 @@
 """Type definitions for ModelScope MCP server."""
 
-from pydantic import BaseModel
+from typing import Annotated
+
+from pydantic import BaseModel, Field
 
 
 class UserInfo(BaseModel):
     """User information."""
 
-    authenticated: bool
-    reason: str | None = None
-    username: str | None = None
-    email: str | None = None
-    avatar_url: str | None = None
-    description: str | None = None
+    authenticated: Annotated[
+        bool, Field(description="Whether the user is authenticated")
+    ]
+    reason: Annotated[
+        str | None, Field(description="Reason for failed authentication")
+    ] = None
+    username: Annotated[str | None, Field(description="Username")] = None
+    email: Annotated[str | None, Field(description="Email")] = None
+    avatar_url: Annotated[str | None, Field(description="Avatar URL")] = None
+    description: Annotated[str | None, Field(description="Description")] = None
 
 
 class ImageGenerationResult(BaseModel):
     """Image generation result."""
 
-    model_used: str | None = None
-    image_url: str | None = None
+    model_used: Annotated[str, Field(description="Model used for image generation")]
+    image_url: Annotated[str, Field(description="URL of the generated image")]
 
 
 class Paper(BaseModel):
     """Paper information."""
 
     # Basic information
-    id: int | None = None
-    arxiv_id: str | None = None
-    title: str | None = None
-    authors: str | None = None
-    publish_date: str | None = None
-    abstract_cn: str | None = None
-    abstract_en: str | None = None
+    arxiv_id: Annotated[str, Field(description="Arxiv ID")]
+    title: Annotated[str, Field(description="Title")]
+    authors: Annotated[str, Field(description="Authors")]
+    publish_date: Annotated[str, Field(description="Publish date")]
+    abstract_cn: Annotated[str, Field(description="Abstract in Chinese")]
+    abstract_en: Annotated[str, Field(description="Abstract in English")]
 
     # Links
-    pdf_url: str | None = None
-    arxiv_url: str | None = None
-    code_link: str | None = None
+    modelscope_url: Annotated[str, Field(description="ModelScope page URL")]
+    arxiv_url: Annotated[str, Field(description="Arxiv page URL")]
+    pdf_url: Annotated[str, Field(description="PDF URL")]
+    code_link: Annotated[str | None, Field(description="Code link")] = None
 
     # Metrics
-    view_count: int | None = None
-    favorite_count: int | None = None
-    comment_count: int | None = None
+    view_count: Annotated[int, Field(description="View count")] = 0
+    favorite_count: Annotated[int, Field(description="Favorite count")] = 0
+    comment_count: Annotated[int, Field(description="Comment count")] = 0

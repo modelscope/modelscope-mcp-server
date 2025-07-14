@@ -11,6 +11,7 @@ from fastmcp import FastMCP
 from fastmcp.utilities import logging
 from pydantic import Field
 
+from ..constants import MODELSCOPE_DOMAIN
 from ..settings import settings
 from ..types import Paper
 
@@ -81,16 +82,19 @@ def register_paper_tools(mcp: FastMCP) -> None:
 
         papers = []
         for paper_data in papers_data:
+            arxiv_id = paper_data.get("ArxivId")
+            modelscope_url = f"{MODELSCOPE_DOMAIN}/papers/{arxiv_id}"
+
             paper = Paper(
-                id=paper_data.get("Id"),
-                arxiv_id=paper_data.get("ArxivId"),
+                arxiv_id=arxiv_id,
                 title=paper_data.get("Title"),
                 authors=paper_data.get("Authors"),
                 publish_date=paper_data.get("PublishDate"),
                 abstract_cn=paper_data.get("AbstractCn"),
                 abstract_en=paper_data.get("AbstractEn"),
-                pdf_url=paper_data.get("PdfUrl"),
+                modelscope_url=modelscope_url,
                 arxiv_url=paper_data.get("ArxivUrl"),
+                pdf_url=paper_data.get("PdfUrl"),
                 code_link=paper_data.get("CodeLink"),
                 view_count=paper_data.get("ViewCount"),
                 favorite_count=paper_data.get("FavoriteCount"),
