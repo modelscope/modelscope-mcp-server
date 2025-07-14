@@ -6,6 +6,7 @@
 
 ## Features
 
+- [x] Get current authenticated user information
 - [x] Generate image from text using any AIGC model
 - [ ] Search for models, datasets, studios, papers, and more
 

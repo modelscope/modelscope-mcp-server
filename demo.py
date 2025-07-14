@@ -24,7 +24,17 @@ async def main():
     mcp = create_mcp_server()
 
     async with Client(mcp) as client:
-        print("1. Calling generate_image_url_from_text tool (using default model)")
+        print("1. Calling get_current_user tool")
+        print()
+
+        user_result = await client.call_tool("get_current_user", {})
+
+        if user_result.content and len(user_result.content) > 0:
+            user_info = user_result.content[0].text  # type: ignore
+            print(f"✅ Current user info: {user_info}")
+            print()
+
+        print("2. Calling generate_image_url_from_text tool (using default model)")
         print()
 
         result = await client.call_tool(

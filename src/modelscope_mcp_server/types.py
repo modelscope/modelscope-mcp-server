@@ -3,6 +3,16 @@
 from typing import TypedDict
 
 
+class UserInfo(TypedDict):
+    """User information."""
+
+    authenticated: bool
+    username: str | None
+    email: str | None
+    avatar_url: str | None
+    description: str | None
+
+
 class ImageGenerationResult(TypedDict):
     """Image generation result."""
 

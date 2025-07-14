@@ -1,7 +1,7 @@
 """
 ModelScope MCP Server AIGC tools.
 
-Provides MCP tools for image generation, etc.
+Provides MCP tools for text-to-image generation, etc.
 """
 
 import json
@@ -26,7 +26,12 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         mcp (FastMCP): The MCP server instance
     """
 
-    @mcp.tool()
+    @mcp.tool(
+        annotations={
+            "title": "Generate Image URL from Text",
+            "destructiveHint": False,
+        }
+    )
     async def generate_image_url_from_text(
         description: Annotated[
             str,
@@ -81,6 +86,7 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         headers = {
             "Authorization": f"Bearer {settings.api_key}",
             "Content-Type": "application/json",
+            "User-Agent": "modelscope-mcp-server",
         }
 
         try:
