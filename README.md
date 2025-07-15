@@ -1,6 +1,6 @@
 # ModelScope MCP Server
 
-[![PyPI - Version](https://img.shields.io/pypi/v/modelscope-mcp-server.svg)](https://pypi.org/project/modelscope-mcp-server) [![Docker](https://img.shields.io/badge/docker-supported-blue?logo=docker)](https://github.com/pengqun/modelscope-mcp-server/blob/main/Dockerfile) [![License](https://img.shields.io/github/license/pengqun/modelscope-mcp-server.svg)](https://github.com/pengqun/modelscope-mcp-server/blob/main/LICENSE)
+[![PyPI - Version](https://img.shields.io/pypi/v/modelscope-mcp-server.svg)](https://pypi.org/project/modelscope-mcp-server) [![Docker](https://img.shields.io/badge/docker-supported-blue?logo=docker)](https://github.com/pengqun/modelscope-mcp-server/blob/main/Dockerfile) [![Docker Hub](https://img.shields.io/docker/v/spadrian/modelscope-mcp-server?logo=docker)](https://hub.docker.com/r/spadrian/modelscope-mcp-server) [![License](https://img.shields.io/github/license/pengqun/modelscope-mcp-server.svg)](https://github.com/pengqun/modelscope-mcp-server/blob/main/LICENSE)
 
 A Model Context Protocol (MCP) server that integrates with [ModelScope](https://modelscope.cn)'s ecosystem, providing seamless access to AI models, datasets, apps, papers, and generation capabilities through popular MCP clients.
 
@@ -40,6 +40,26 @@ Add the following JSON configuration to your MCP client's configuration file:
 }
 ```
 
+Or, you can use the Docker image (appro):
+
+```json
+{
+  "mcpServers": {
+    "modelscope-mcp-server": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-e", "MODELSCOPE_API_TOKEN",
+        "spadrian/modelscope-mcp-server:latest"
+      ],
+      "env": {
+        "MODELSCOPE_API_TOKEN": "your-api-token"
+      }
+    }
+  }
+}
+```
+
 Refer to the [MCP JSON Configuration Standard](https://gofastmcp.com/integrations/mcp-json-configuration#mcp-json-configuration-standard) for more details.
 
 This format is widely adopted across the MCP ecosystem:
@@ -49,53 +69,6 @@ This format is widely adopted across the MCP ecosystem:
 - **Cursor**: Uses `~/.cursor/mcp.json`
 - **VS Code**: Uses workspace `.vscode/mcp.json`
 - **Other clients**: Many MCP-compatible applications follow this standard
-
-## 🐳 Docker Usage
-
-### Quick Start with Docker
-
-```bash
-# Build the image for your platform
-docker build -t modelscope-mcp-server .
-
-# Run with environment variable
-docker run -e MODELSCOPE_API_TOKEN="your-api-token" \
-  modelscope-mcp-server
-
-# Or create a .env file and mount it
-echo "MODELSCOPE_API_TOKEN=your-api-token" > .env
-docker run --env-file .env \
-  modelscope-mcp-server
-
-# Run with different transports
-docker run -p 8080:8080 -e MODELSCOPE_API_TOKEN="your-api-token" modelscope-mcp-server --transport http --port 8080
-```
-
-> **Multi-platform Support**: For ARM64 platforms (Apple Silicon, etc.), specify the platform explicitly:
->
-> ```bash
-> docker build --platform linux/arm64 -t modelscope-mcp-server .
-> docker run --platform linux/arm64 -e MODELSCOPE_API_TOKEN="your-api-token" modelscope-mcp-server
-> ```
-
-### Using with MCP Clients
-
-For Docker-based deployment, you can modify the MCP client configuration:
-
-```json
-{
-  "mcpServers": {
-    "modelscope-mcp-server": {
-      "command": "docker",
-      "args": [
-        "run", "--rm", "-i",
-        "-e", "MODELSCOPE_API_TOKEN=your-api-token",
-        "modelscope-mcp-server"
-      ]
-    }
-  }
-}
-```
 
 ## 🛠️ Development
 
@@ -197,16 +170,24 @@ python scripts/bump_version.py patch --pre beta   # 1.0.1b1
 python scripts/bump_version.py patch --pre rc     # 1.0.1rc1
 ```
 
-### Publishing to PyPI
+### Release to PyPI
 
 > TODO: trigger release from GitHub Actions
 
 ```bash
-# Preview release (dry-run)
-python scripts/release.py --dry-run
+python scripts/pypi_release.py
+```
 
-# Publish release
-python scripts/release.py
+### Release to Docker Hub
+
+```bash
+docker login
+
+# Release to Docker Hub (will auto-detect buildx or use traditional build)
+python scripts/docker_release.py
+
+# Release to Docker Hub (use traditional multi-arch build with manifest)
+python scripts/docker_release.py --traditional-multiarch
 ```
 
 ## 🤝 Contributing
