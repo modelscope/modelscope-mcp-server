@@ -1,48 +1,30 @@
 # ModelScope MCP Server
 
-[![PyPI - Version](https://img.shields.io/pypi/v/modelscope-mcp-server.svg)](https://pypi.org/project/modelscope-mcp-server) [![License](https://img.shields.io/github/license/pengqun/modelscope-mcp-server.svg)](https://github.com/pengqun/modelscope-mcp-server/blob/main/LICENSE)
+[![PyPI - Version](https://img.shields.io/pypi/v/modelscope-mcp-server.svg)](https://pypi.org/project/modelscope-mcp-server) [![Docker](https://img.shields.io/badge/docker-supported-blue?logo=docker)](https://github.com/pengqun/modelscope-mcp-server/blob/main/Dockerfile) [![License](https://img.shields.io/github/license/pengqun/modelscope-mcp-server.svg)](https://github.com/pengqun/modelscope-mcp-server/blob/main/LICENSE)
 
-## Features
+A Model Context Protocol (MCP) server that integrates with [ModelScope](https://modelscope.cn)'s ecosystem, providing seamless access to AI models, datasets, apps, papers, and generation capabilities through popular MCP clients.
 
-- [x] Retrieve information about the currently authenticated ModelScope user
-- [x] Generate images from text descriptions using any AIGC model available on ModelScope
-- [x] Search for arXiv papers indexed in ModelScope, returning comprehensive metadata
-- [ ] Search for models, datasets, studios and other resources on ModelScope
-- [ ] Do semantic search for ModelScope documentation/articles to get help.
-- [ ] Invoke Gradio API exposed by any ModelScope studio(app) you pre-configured.
+## ✨ Features
 
-## Usage
+- 🔐 **User Authentication** - Retrieve information about the currently authenticated ModelScope user
+- 🎨 **AI Image Generation** - Generate images from text descriptions using any AIGC model available on ModelScope
+- 📚 **Research Paper Search** - Search for arXiv papers indexed in ModelScope with comprehensive metadata
+- 🔍 **Resource Discovery** _(Coming Soon)_ - Search for models, datasets, studios and other resources on ModelScope
+- 📖 **Documentation Search** _(Coming Soon)_ - Semantic search for ModelScope documentation and articles
+- 🚀 **Gradio API Integration** _(Coming Soon)_ - Invoke Gradio APIs exposed by any pre-configured ModelScope studio
 
-### Get API Token
+## 🚀 Quick Start
 
-1. Go to [ModelScope](https://modelscope.cn/home) and sign in.
-2. Click [Home]->[Access Tokens] to get your default API Token or create a new one.
+### 1. Get Your API Token
 
-Refer to [ModelScope Documentation](https://modelscope.cn/docs/accounts/token) for more details.
+1. Visit [ModelScope](https://modelscope.cn/home) and sign in to your account
+2. Navigate to **[Home] → [Access Tokens]** to retrieve your default API token or create a new one
 
-### Built-in Demo
+> 📖 For detailed instructions, refer to the [ModelScope Token Documentation](https://modelscope.cn/docs/accounts/token)
 
-1. Set the ModelScope API token environment variable:
+### 2. Integration with MCP Clients
 
-    ```bash
-    export MODELSCOPE_API_TOKEN="your_api_token_here"
-    ```
-
-    Or, you can set the API token in the `.env` file (under the project root):
-
-    ```env
-    MODELSCOPE_API_TOKEN="your_api_token_here"
-    ```
-
-2. Run the demo:
-
-    ```bash
-    uv run python demo.py
-    ```
-
-### Integrate with popular MCP clients
-
-- Use in [Claude Desktop](https://modelcontextprotocol.io/quickstart/user) / [Cursor](https://docs.cursor.com/context/model-context-protocol) / [Cherry Studio](https://docs.cherry-ai.com/advanced-basic/mcp/config):
+Add the following JSON configuration to your MCP client's configuration file:
 
 ```json
 {
@@ -58,118 +40,190 @@ Refer to [ModelScope Documentation](https://modelscope.cn/docs/accounts/token) f
 }
 ```
 
-## Contributing
+Refer to the [MCP JSON Configuration Standard](https://gofastmcp.com/integrations/mcp-json-configuration#mcp-json-configuration-standard) for more details.
 
-### Prerequisites
+This format is widely adopted across the MCP ecosystem:
 
-- Python 3.12+
-- [uv](https://docs.astral.sh/uv/) (Recommended for environment management)
+- **Cherry Studio**: See [Cherry Studio MCP Configuration](https://docs.cherry-ai.com/advanced-basic/mcp/config)
+- **Claude Desktop**: Uses `~/.claude/claude_desktop_config.json`
+- **Cursor**: Uses `~/.cursor/mcp.json`
+- **VS Code**: Uses workspace `.vscode/mcp.json`
+- **Other clients**: Many MCP-compatible applications follow this standard
 
-### Setup
+## 🐳 Docker Usage
 
-1. Clone the repository:
+### Quick Start with Docker
+
+```bash
+# Build the image for your platform
+docker build -t modelscope-mcp-server .
+
+# Run with environment variable
+docker run -e MODELSCOPE_API_TOKEN="your-api-token" \
+  modelscope-mcp-server
+
+# Or create a .env file and mount it
+echo "MODELSCOPE_API_TOKEN=your-api-token" > .env
+docker run --env-file .env \
+  modelscope-mcp-server
+
+# Run with different transports
+docker run -p 8080:8080 -e MODELSCOPE_API_TOKEN="your-api-token" modelscope-mcp-server --transport http --port 8080
+```
+
+> **Multi-platform Support**: For ARM64 platforms (Apple Silicon, etc.), specify the platform explicitly:
+>
+> ```bash
+> docker build --platform linux/arm64 -t modelscope-mcp-server .
+> docker run --platform linux/arm64 -e MODELSCOPE_API_TOKEN="your-api-token" modelscope-mcp-server
+> ```
+
+### Using with MCP Clients
+
+For Docker-based deployment, you can modify the MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "modelscope-mcp-server": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-e", "MODELSCOPE_API_TOKEN=your-api-token",
+        "modelscope-mcp-server"
+      ]
+    }
+  }
+}
+```
+
+## 🛠️ Development
+
+### Environment Setup
+
+1. **Clone and Setup**:
 
    ```bash
    git clone https://github.com/pengqun/modelscope-mcp-server.git
    cd modelscope-mcp-server
-   ```
-
-2. Create and sync the environment:
-
-   ```bash
    uv sync
    ```
 
-   This installs all dependencies, including dev tools.
+2. **Activate Environment**:
 
-3. Activate the virtual environment (e.g., `source .venv/bin/activate` or via your IDE).
+   ```bash
+   source .venv/bin/activate  # Linux/macOS
+   # or via your IDE
+   ```
 
-### Run the Server
+3. **Set Your API Token Environment Variable**:
+
+   ```bash
+   export MODELSCOPE_API_TOKEN="your-api-token"
+   ```
+
+   Or, you can set the API token in the `.env` file (under the project root) for convenience:
+
+   ```env
+   MODELSCOPE_API_TOKEN="your-api-token"
+   ```
+
+### Running the Server
 
 ```bash
-# Run with stdio transport (default)
+# Standard stdio transport (default)
 uv run modelscope-mcp-server
 
-# Run with streamable HTTP transport
-fastmcp run src/modelscope_mcp_server/server.py --transport http
+# Streamable HTTP transport for web integration
+uv run modelscope-mcp-server --transport http
+
+# HTTP/SSE transport with custom port (default: 8000)
+uv run modelscope-mcp-server --transport [http/sse] --port 8080
 ```
 
-### Unit Tests
-
-All PRs must introduce or update tests as appropriate and pass the full suite.
-
-Run tests using pytest:
+### Running the Demo (Optional)
 
 ```bash
+uv run python demo.py
+```
+
+### Testing
+
+Run the complete test suite:
+
+```bash
+# Basic test run
 uv run pytest
-```
 
-or if you want an overview of the code coverage
+# Run tests for a specific file
+uv run pytest tests/test_search_papers.py
 
-```bash
+# With coverage report
 uv run pytest --cov=src --cov=examples --cov-report=html
 ```
 
-### Static Checks
+### Code Quality
 
-This project uses `pre-commit` for code formatting, linting, and type-checking. All PRs must pass these checks (they run automatically in CI).
-
-Install the hooks locally:
+This project uses `pre-commit` hooks for automated code formatting, linting, and type checking:
 
 ```bash
+# Install hooks
 uv run pre-commit install
-```
 
-The hooks will now run automatically on `git commit`. You can also run them manually at any time:
-
-```bash
-pre-commit run --all-files
-# or via uv
+# Run all checks manually
 uv run pre-commit run --all-files
 ```
 
-### Version Management
+**All PRs must pass these checks and include appropriate tests.**
 
-The project uses automated version management scripts for releases:
+## 📦 Release Management
 
-#### Bump Version
+### Version Bumping
 
 ```bash
-# Bump patch version (1.0.0 -> 1.0.1)
+# Patch version (1.0.0 → 1.0.1)
 python scripts/bump_version.py patch
 
-# Bump minor version (1.0.0 -> 1.1.0)
+# Minor version (1.0.0 → 1.1.0)
 python scripts/bump_version.py minor
 
-# Bump major version (1.0.0 -> 2.0.0)
+# Major version (1.0.0 → 2.0.0)
 python scripts/bump_version.py major
 
-# Create pre-release versions (in development order)
-python scripts/bump_version.py patch --pre dev    # 1.0.1.dev1  (development snapshot)
-python scripts/bump_version.py patch --pre alpha  # 1.0.1a1     (internal testing)
-python scripts/bump_version.py patch --pre beta   # 1.0.1b1     (public testing)
-python scripts/bump_version.py patch --pre rc     # 1.0.1rc1    (release candidate)
+# Pre-release versions
+python scripts/bump_version.py patch --pre dev    # 1.0.1.dev1
+python scripts/bump_version.py patch --pre alpha  # 1.0.1a1
+python scripts/bump_version.py patch --pre beta   # 1.0.1b1
+python scripts/bump_version.py patch --pre rc     # 1.0.1rc1
 ```
 
-#### Release to PyPI
+### Publishing to PyPI
 
-> TODO: trigger release from github actions
+> TODO: trigger release from GitHub Actions
 
 ```bash
-# Preview what will be released (dry-run mode)
+# Preview release (dry-run)
 python scripts/release.py --dry-run
 
-# Perform actual release
+# Publish release
 python scripts/release.py
 ```
 
-## References
+## 🤝 Contributing
 
-- Model Context Protocol - <https://modelcontextprotocol.io/>
-- FastMCP v2 - <https://github.com/jlowin/fastmcp>
-- MCP Python SDK - <https://github.com/modelcontextprotocol/python-sdk>
-- MCP Example Servers - <https://github.com/modelcontextprotocol/servers>
-- Hugging Face Official MCP Server - <https://github.com/evalstate/hf-mcp-server>
-- mcp-hfspace MCP Server - <https://github.com/evalstate/mcp-hfspace>
-- shreyaskarnik/huggingface-mcp-server - <https://github.com/shreyaskarnik/huggingface-mcp-server>
-- Cursor – Model Context Protocol - <https://docs.cursor.com/context/model-context-protocol>
+We welcome contributions! Please ensure that:
+
+1. All PRs include relevant tests and pass the full test suite
+2. Code follows our style guidelines (enforced by pre-commit hooks)
+3. Documentation is updated for new features
+4. Commit messages follow conventional commit format
+
+## 📚 References
+
+- **[Model Context Protocol](https://modelcontextprotocol.io/)** - Official MCP documentation
+- **[FastMCP v2](https://github.com/jlowin/fastmcp)** - High-performance MCP framework
+- **[MCP Example Servers](https://github.com/modelcontextprotocol/servers)** - Community server examples
+
+---
+
+**License**: [MIT](LICENSE) | **Author**: [pengqun](https://github.com/pengqun)

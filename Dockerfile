@@ -3,7 +3,7 @@ FROM python:3.12-alpine
 # Install system dependencies
 RUN apk add --no-cache curl
 
-# Install uv from official image
+# Install uv from official image (supports multi-arch)
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Set working directory
