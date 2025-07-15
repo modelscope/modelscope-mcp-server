@@ -6,9 +6,9 @@
 
 ## Features
 
-- [x] Get current authenticated user information
-- [x] Generate image from text using any AIGC model
-- [ ] Search for models, datasets, studios, papers, and more
+- [x] Retrieve information about the currently authenticated ModelScope user
+- [x] Generate images from text descriptions using any AIGC model available on ModelScope
+- [x] Search for arXiv papers indexed in ModelScope, returning comprehensive metadata
 
 ## Usage
 
@@ -81,7 +81,7 @@ All PRs must introduce or update tests as appropriate and pass the full suite.
 Run tests using pytest:
 
 ```bash
-pytest
+uv run pytest
 ```
 
 or if you want an overview of the code coverage
@@ -132,6 +132,8 @@ python scripts/bump_version.py patch --pre rc     # 1.0.1rc1    (release candida
 ```
 
 #### Release to PyPI
+
+> TODO: trigger release from github actions
 
 ```bash
 # Preview what will be released (dry-run mode)

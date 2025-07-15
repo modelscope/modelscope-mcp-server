@@ -54,7 +54,17 @@ dev = [
     "pyright>=1.1.403",
     "pre-commit>=4.2.0",
     "ruff>=0.12.3",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=6.2.1",
+    "pytest-env>=1.1.5",
+    "pytest-report>=0.2.1",
+    "pytest-timeout>=2.4.0",
 ]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+env = ["MODELSCOPE_LOG_LEVEL=INFO"]
+
 
 [tool.pyright]
 include = ["src"]

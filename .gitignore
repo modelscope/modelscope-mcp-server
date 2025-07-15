@@ -9,6 +9,8 @@ build/
 .venv/
 .pytest_cache/
 .ruff_cache/
+.coverage
+htmlcov/
 
 # Environment files
 .env
