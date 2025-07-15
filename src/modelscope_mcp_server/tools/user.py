@@ -32,14 +32,14 @@ def register_user_tools(mcp: FastMCP) -> None:
         """
         Get current authenticated user information from ModelScope (魔搭社区).
         """
-        if not settings.is_api_key_configured():
-            return UserInfo(authenticated=False, reason="API key is not set")
+        if not settings.is_api_token_configured():
+            return UserInfo(authenticated=False, reason="API token is not set")
 
         # Should change to use the official OpenAPI when it's available
         url = f"{settings.api_base_url}/users/login/info"
 
         headers = {
-            "Cookie": f"m_session_id={settings.api_key}",
+            "Cookie": f"m_session_id={settings.api_token}",
             "User-Agent": "modelscope-mcp-server",
         }
 
@@ -47,7 +47,7 @@ def register_user_tools(mcp: FastMCP) -> None:
         if response.status_code == 401 or response.status_code == 403:
             return UserInfo(
                 authenticated=False,
-                reason=f"Invalid API key: server returned {response.status_code}",
+                reason=f"Invalid API token: server returned {response.status_code}",
             )
         elif response.status_code != 200:
             raise Exception(

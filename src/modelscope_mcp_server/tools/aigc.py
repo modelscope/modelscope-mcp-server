@@ -55,11 +55,11 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         if not description or not description.strip():
             raise ValueError("Description cannot be empty")
 
-        if not model or not model.strip():
+        if not model:
             raise ValueError("Model name cannot be empty")
 
-        if not settings.is_api_key_configured():
-            raise ValueError("API key is not set")
+        if not settings.is_api_token_configured():
+            raise ValueError("API token is not set")
 
         url = f"{settings.api_inference_base_url}/images/generations"
 
@@ -69,7 +69,7 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         }
 
         headers = {
-            "Authorization": f"Bearer {settings.api_key}",
+            "Authorization": f"Bearer {settings.api_token}",
             "Content-Type": "application/json",
             "User-Agent": "modelscope-mcp-server",
         }

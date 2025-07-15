@@ -23,8 +23,8 @@ class Settings(BaseSettings):
     )
 
     # ModelScope API settings
-    api_key: str | None = Field(
-        default=None, description="ModelScope API key for authentication"
+    api_token: str | None = Field(
+        default=None, description="ModelScope API token for authentication"
     )
 
     api_base_url: str = Field(
@@ -51,10 +51,10 @@ class Settings(BaseSettings):
     # Logging settings
     log_level: str = Field(default="INFO", description="Logging level")
 
-    @field_validator("api_key")
+    @field_validator("api_token")
     @classmethod
-    def validate_api_key(cls, v: str | None) -> str | None:
-        """Validate API key format."""
+    def validate_api_token(cls, v: str | None) -> str | None:
+        """Validate API token format."""
         if v is not None:
             v = v.strip()
             if not v:
@@ -71,9 +71,9 @@ class Settings(BaseSettings):
             raise ValueError(f"Log level must be one of {allowed_levels}")
         return v
 
-    def is_api_key_configured(self) -> bool:
-        """Check if API key is configured."""
-        return self.api_key is not None and len(self.api_key) > 0
+    def is_api_token_configured(self) -> bool:
+        """Check if API token is configured."""
+        return self.api_token is not None and len(self.api_token) > 0
 
 
 # Global settings instance

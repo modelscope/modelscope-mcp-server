@@ -2,23 +2,43 @@
 
 [![PyPI - Version](https://img.shields.io/pypi/v/modelscope-mcp-server.svg)](https://pypi.org/project/modelscope-mcp-server) [![License](https://img.shields.io/github/license/pengqun/modelscope-mcp-server.svg)](https://github.com/pengqun/modelscope-mcp-server/blob/main/LICENSE)
 
-> 🚧 **WIP**: This project is currently under development and not yet complete. It's in the early development stage, and features and APIs may change.
-
 ## Features
 
 - [x] Retrieve information about the currently authenticated ModelScope user
 - [x] Generate images from text descriptions using any AIGC model available on ModelScope
 - [x] Search for arXiv papers indexed in ModelScope, returning comprehensive metadata
+- [ ] Search for models, datasets, studios and other resources on ModelScope
+- [ ] Do semantic search for ModelScope documentation/articles to get help.
+- [ ] Invoke Gradio API exposed by any ModelScope studio(app) you pre-configured.
 
 ## Usage
 
-### Runing the Demo
+### Get API Token
 
-```bash
-export MODELSCOPE_API_KEY="your_api_key_here"
+1. Go to [ModelScope](https://modelscope.cn/home) and sign in.
+2. Click [Home]->[Access Tokens] to get your default API Token or create a new one.
 
-uv run python demo.py
-```
+Refer to [ModelScope Documentation](https://modelscope.cn/docs/accounts/token) for more details.
+
+### Built-in Demo
+
+1. Set the ModelScope API token environment variable:
+
+    ```bash
+    export MODELSCOPE_API_TOKEN="your_api_token_here"
+    ```
+
+    Or, you can set the API token in the `.env` file (under the project root):
+
+    ```env
+    MODELSCOPE_API_TOKEN="your_api_token_here"
+    ```
+
+2. Run the demo:
+
+    ```bash
+    uv run python demo.py
+    ```
 
 ### Integrate with popular MCP clients
 
@@ -31,7 +51,7 @@ uv run python demo.py
       "command": "uvx",
       "args": ["modelscope-mcp-server"],
       "env": {
-        "MODELSCOPE_API_KEY": "your-api-key"
+        "MODELSCOPE_API_TOKEN": "your-api-token"
       }
     }
   }

@@ -45,8 +45,8 @@ def register_paper_tools(mcp: FastMCP) -> None:
         """
         Search for papers on ModelScope.
         """
-        if not settings.is_api_key_configured():
-            logger.warning("API key is not set, searching without authentication")
+        if not settings.is_api_token_configured():
+            logger.warning("API token is not set, searching without authentication")
 
         url = f"{settings.api_base_url}/dolphin/papers"
 

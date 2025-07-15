@@ -52,7 +52,7 @@ async def demo_generate_image(client: Client) -> None:
 def show_configuration() -> None:
     """Display current configuration settings."""
     print("📋 Current configuration:")
-    print(f"   API Key: {settings.api_key}")
+    print(f"   API Token: {settings.api_token}")
     print(f"   API Base URL: {settings.api_base_url}")
     print(f"   OpenAPI Base URL: {settings.openapi_base_url}")
     print(f"   API Inference Base URL: {settings.api_inference_base_url}")
