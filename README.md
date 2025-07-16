@@ -10,7 +10,7 @@ A Model Context Protocol (MCP) server that integrates with [ModelScope](https://
 ## ✨ Features
 
 - 🔐 **User Authentication** - Retrieve information about the currently authenticated ModelScope user
-- 🎨 **AI Image Generation** - Generate images from text descriptions using any AIGC model available on ModelScope
+- 🎨 **AI Image Generation** - Generate images from text prompts using any AIGC model available on ModelScope
 - 📚 **Research Paper Search** - Search for arXiv papers indexed in ModelScope with comprehensive metadata
 - 🔍 **Resource Discovery** _(Coming Soon)_ - Search for models, datasets, studios and other resources on ModelScope
 - 📖 **Documentation Search** _(Coming Soon)_ - Semantic search for ModelScope documentation and articles
@@ -154,28 +154,9 @@ uv run pre-commit run --all-files
 
 ## 📦 Release Management
 
-### Version Bumping
-
-```bash
-# Patch version (1.0.0 → 1.0.1)
-python scripts/bump_version.py patch
-
-# Minor version (1.0.0 → 1.1.0)
-python scripts/bump_version.py minor
-
-# Major version (1.0.0 → 2.0.0)
-python scripts/bump_version.py major
-
-# Pre-release versions
-python scripts/bump_version.py patch --pre dev    # 1.0.1.dev1
-python scripts/bump_version.py patch --pre alpha  # 1.0.1a1
-python scripts/bump_version.py patch --pre beta   # 1.0.1b1
-python scripts/bump_version.py patch --pre rc     # 1.0.1rc1
-```
+> TODO: trigger release from GitHub Actions
 
 ### Release to PyPI
-
-> TODO: trigger release from GitHub Actions
 
 ```bash
 python scripts/pypi_release.py
