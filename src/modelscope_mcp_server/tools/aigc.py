@@ -28,32 +28,35 @@ def register_aigc_tools(mcp: FastMCP) -> None:
 
     @mcp.tool(
         annotations={
-            "title": "Generate Image URL from Text",
+            "title": "Generate Image",
             "destructiveHint": False,
         }
     )
-    async def generate_image_url_from_text(
-        description: Annotated[
+    async def generate_image(
+        prompt: Annotated[
             str,
             Field(
-                description="The description of the image to be generated, containing the desired elements and visual features."
+                description="The prompt of the image to be generated, containing the desired elements and visual features."
             ),
         ],
         model: Annotated[
             str | None,
             Field(
-                description="The model name to be used for image generation. If not provided, uses the default model from settings."
+                description="The model ID from ModelScope to be used for image generation. If not provided, uses the default model '"
+                + f"{settings.default_image_generation_model}'."
             ),
         ] = None,
     ) -> ImageGenerationResult:
-        """Generate an image from the input description using ModelScope API."""
+        """
+        Generate an image based on the given text prompt and ModelScope AIGC model ID.
+        """
 
         # Use default model if not specified
         if model is None:
             model = settings.default_image_generation_model
 
-        if not description or not description.strip():
-            raise ValueError("Description cannot be empty")
+        if not prompt or not prompt.strip():
+            raise ValueError("Prompt cannot be empty")
 
         if not model:
             raise ValueError("Model name cannot be empty")
@@ -65,7 +68,7 @@ def register_aigc_tools(mcp: FastMCP) -> None:
 
         payload = {
             "model": model,
-            "prompt": description,
+            "prompt": prompt,
         }
 
         headers = {
@@ -75,7 +78,7 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         }
 
         logger.info(
-            f"Sending image generation request with model '{model}' and description '{description}'"
+            f"Sending image generation request with model '{model}' and prompt '{prompt}'"
         )
 
         try:

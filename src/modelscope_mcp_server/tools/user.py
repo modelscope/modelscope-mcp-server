@@ -30,7 +30,7 @@ def register_user_tools(mcp: FastMCP) -> None:
     )
     async def get_current_user() -> UserInfo:
         """
-        Get current authenticated user information from ModelScope (魔搭社区).
+        Get current authenticated user information from ModelScope.
         """
         if not settings.is_api_token_configured():
             return UserInfo(authenticated=False, reason="API token is not set")

@@ -34,13 +34,13 @@ async def demo_search_papers(client: Client) -> None:
 
 
 async def demo_generate_image(client: Client) -> None:
-    """Demo: Generate image URL from text description."""
-    print("3. Calling generate_image_url_from_text tool (using default model)\n")
+    """Demo: Generate image URL from text prompt."""
+    print("3. Calling generate_image tool (using default model)\n")
 
     result = await client.call_tool(
-        "generate_image_url_from_text",
+        "generate_image",
         {
-            "description": "A curious cat wearing a tiny wizard hat, casting magical rainbow sparkles while riding a flying donut through a candy cloud kingdom",
+            "prompt": "A curious cat wearing a tiny wizard hat, casting magical rainbow sparkles while riding a flying donut through a candy cloud kingdom",
         },
     )
 
