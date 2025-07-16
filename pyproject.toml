@@ -3,7 +3,7 @@ name = "modelscope-mcp-server"
 dynamic = ["version"]
 description = "ModelScope MCP Server"
 readme = "README.md"
-authors = [{ name = "pengqun" }]
+authors = [{ name = "ModelScope Team" }]
 license = { file = "LICENSE" }
 requires-python = ">=3.12"
 dependencies = [
@@ -30,8 +30,8 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/pengqun/modelscope-mcp-server"
-"Bug Tracker" = "https://github.com/pengqun/modelscope-mcp-server/issues"
+"Homepage" = "https://github.com/modelscope/modelscope-mcp-server"
+"Bug Tracker" = "https://github.com/modelscope/modelscope-mcp-server/issues"
 
 [project.scripts]
 modelscope-mcp-server = "modelscope_mcp_server:main"

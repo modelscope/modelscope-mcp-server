@@ -1,6 +1,9 @@
 # ModelScope MCP Server
 
-[![PyPI - Version](https://img.shields.io/pypi/v/modelscope-mcp-server.svg)](https://pypi.org/project/modelscope-mcp-server) [![Docker](https://img.shields.io/badge/docker-supported-blue?logo=docker)](https://github.com/pengqun/modelscope-mcp-server/blob/main/Dockerfile) [![Docker Hub](https://img.shields.io/docker/v/spadrian/modelscope-mcp-server?logo=docker)](https://hub.docker.com/r/spadrian/modelscope-mcp-server) [![License](https://img.shields.io/github/license/pengqun/modelscope-mcp-server.svg)](https://github.com/pengqun/modelscope-mcp-server/blob/main/LICENSE)
+[![PyPI - Version](https://img.shields.io/pypi/v/modelscope-mcp-server.svg)](https://pypi.org/project/modelscope-mcp-server)
+[![Docker](https://img.shields.io/badge/docker-supported-blue?logo=docker)](https://github.com/modelscope/modelscope-mcp-server/blob/main/Dockerfile)
+[![Docker Hub](https://img.shields.io/docker/v/spadrian/modelscope-mcp-server?logo=docker)](https://hub.docker.com/r/spadrian/modelscope-mcp-server)
+[![License](https://img.shields.io/github/license/modelscope/modelscope-mcp-server.svg)](https://github.com/modelscope/modelscope-mcp-server/blob/main/LICENSE)
 
 A Model Context Protocol (MCP) server that integrates with [ModelScope](https://modelscope.cn)'s ecosystem, providing seamless access to AI models, datasets, apps, papers, and generation capabilities through popular MCP clients.
 
@@ -40,7 +43,7 @@ Add the following JSON configuration to your MCP client's configuration file:
 }
 ```
 
-Or, you can use the Docker image (appro):
+Or, you can use the pre-built Docker image:
 
 ```json
 {
@@ -77,7 +80,7 @@ This format is widely adopted across the MCP ecosystem:
 1. **Clone and Setup**:
 
    ```bash
-   git clone https://github.com/pengqun/modelscope-mcp-server.git
+   git clone https://github.com/modelscope/modelscope-mcp-server.git
    cd modelscope-mcp-server
    uv sync
    ```
@@ -205,6 +208,6 @@ We welcome contributions! Please ensure that:
 - **[FastMCP v2](https://github.com/jlowin/fastmcp)** - High-performance MCP framework
 - **[MCP Example Servers](https://github.com/modelcontextprotocol/servers)** - Community server examples
 
----
+## 📜 License
 
-**License**: [MIT](LICENSE) | **Author**: [pengqun](https://github.com/pengqun)
+This project is licensed under the [Apache License (Version 2.0)](LICENSE).
