@@ -43,6 +43,12 @@ def register_model_tools(mcp: FastMCP) -> None:
                 description="Task category to filter by, available options: text-generation, text-to-image, image-to-image"
             ),
         ] = None,
+        filters: Annotated[
+            list[Literal["support_inference"]] | None,
+            Field(
+                description="Additional filter options for models. Available options: support_inference (filter models that support inference API)"
+            ),
+        ] = None,
         sort: Annotated[
             Literal["Default", "DownloadsCount", "StarsCount", "GmtModified"],
             Field(
@@ -52,9 +58,6 @@ def register_model_tools(mcp: FastMCP) -> None:
         limit: Annotated[
             int, Field(description="Number of models to return", ge=1, le=30)
         ] = 10,
-        support_inference: Annotated[
-            bool, Field(description="Whether to filter models that support inference")
-        ] = True,
     ) -> list[Model]:
         """
         Search for models on ModelScope.
@@ -86,17 +89,19 @@ def register_model_tools(mcp: FastMCP) -> None:
                     }
                 )
 
-        # Build single criterion based on support_inference parameter
+        # Build single criterion based on filters parameter
         single_criterion = []
-        if support_inference:
-            single_criterion.append(
-                {
-                    "category": "inference_type",
-                    "DateType": "int",
-                    "predicate": "equal",
-                    "IntValue": 1,
-                }
-            )
+        if filters:
+            for filter_type in filters:
+                if filter_type == "support_inference":
+                    single_criterion.append(
+                        {
+                            "category": "inference_type",
+                            "DateType": "int",
+                            "predicate": "equal",
+                            "IntValue": 1,
+                        }
+                    )
 
         request_data = {
             "Name": query,
@@ -141,6 +146,8 @@ def register_model_tools(mcp: FastMCP) -> None:
                 name=name,
                 chinese_name=model_data.get("ChineseName", ""),
                 created_by=model_data.get("CreatedBy"),
+                # Non-empty value means True, else False
+                support_inference=bool(model_data.get("SupportInference", "")),
                 downloads_count=model_data.get("Downloads", 0),
                 stars_count=model_data.get("Stars", 0),
                 created_at=model_data.get("CreatedTime", 0),

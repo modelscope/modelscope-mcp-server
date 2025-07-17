@@ -30,6 +30,11 @@ class Model(BaseModel):
     chinese_name: Annotated[str, Field(description="Chinese name")]
     created_by: Annotated[str, Field(description="User who created the model")]
 
+    # Capabilities
+    support_inference: Annotated[
+        bool, Field(description="Whether the model supports inference API")
+    ] = False
+
     # Metrics
     downloads_count: Annotated[int, Field(description="Number of downloads")] = 0
     stars_count: Annotated[int, Field(description="Number of stars")] = 0

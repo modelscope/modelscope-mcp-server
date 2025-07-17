@@ -23,33 +23,15 @@ async def demo_search_models(client: Client) -> None:
     """Demo: Search models using various parameters."""
     print("3. Calling search_models tool\n")
 
-    # Demo 1: Search text-to-image models
-    print("   📸 Searching text-to-image models with 'flux':")
+    print("   🤖 Searching text-generation models that support inference:")
     result = await client.call_tool(
         "search_models",
-        {"query": "flux", "task": "text-to-image", "limit": 2},
-    )
-
-    if result.content and len(result.content) > 0:
-        models = result.content[0].text  # type: ignore
-        print(f"   ✅ Found models: {models}\n")
-
-    # Demo 2: Search text-generation models sorted by stars
-    print("   🤖 Searching text-generation models sorted by stars:")
-    result = await client.call_tool(
-        "search_models",
-        {"query": "qwen", "task": "text-generation", "sort": "StarsCount", "limit": 2},
-    )
-
-    if result.content and len(result.content) > 0:
-        models = result.content[0].text  # type: ignore
-        print(f"   ✅ Found models: {models}\n")
-
-    # Demo 3: Search models without inference requirement
-    print("   🔍 Searching models without inference filter:")
-    result = await client.call_tool(
-        "search_models",
-        {"query": "bert", "support_inference": False, "limit": 2},
+        {
+            "query": "qwen",
+            "task": "text-generation",
+            "filters": ["support_inference"],
+            "limit": 3,
+        },
     )
 
     if result.content and len(result.content) > 0:
