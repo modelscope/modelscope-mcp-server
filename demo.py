@@ -19,6 +19,44 @@ async def demo_get_current_user(client: Client) -> None:
         print(f"✅ Current user info: {user_info}\n")
 
 
+async def demo_search_models(client: Client) -> None:
+    """Demo: Search models using various parameters."""
+    print("3. Calling search_models tool\n")
+
+    # Demo 1: Search text-to-image models
+    print("   📸 Searching text-to-image models with 'flux':")
+    result = await client.call_tool(
+        "search_models",
+        {"query": "flux", "task": "text-to-image", "limit": 2},
+    )
+
+    if result.content and len(result.content) > 0:
+        models = result.content[0].text  # type: ignore
+        print(f"   ✅ Found models: {models}\n")
+
+    # Demo 2: Search text-generation models sorted by stars
+    print("   🤖 Searching text-generation models sorted by stars:")
+    result = await client.call_tool(
+        "search_models",
+        {"query": "qwen", "task": "text-generation", "sort": "StarsCount", "limit": 2},
+    )
+
+    if result.content and len(result.content) > 0:
+        models = result.content[0].text  # type: ignore
+        print(f"   ✅ Found models: {models}\n")
+
+    # Demo 3: Search models without inference requirement
+    print("   🔍 Searching models without inference filter:")
+    result = await client.call_tool(
+        "search_models",
+        {"query": "bert", "support_inference": False, "limit": 2},
+    )
+
+    if result.content and len(result.content) > 0:
+        models = result.content[0].text  # type: ignore
+        print(f"   ✅ Found models: {models}\n")
+
+
 async def demo_search_papers(client: Client) -> None:
     """Demo: Search papers using query."""
     print("2. Calling search_papers tool\n")
@@ -35,7 +73,7 @@ async def demo_search_papers(client: Client) -> None:
 
 async def demo_generate_image(client: Client) -> None:
     """Demo: Generate image URL from text prompt."""
-    print("3. Calling generate_image tool (using default model)\n")
+    print("4. Calling generate_image tool (using default model)\n")
 
     result = await client.call_tool(
         "generate_image",
@@ -72,6 +110,7 @@ async def main():
 
     async with Client(mcp) as client:
         await demo_get_current_user(client)
+        await demo_search_models(client)
         await demo_search_papers(client)
         await demo_generate_image(client)
 

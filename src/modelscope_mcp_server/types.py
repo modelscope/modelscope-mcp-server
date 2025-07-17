@@ -20,11 +20,27 @@ class UserInfo(BaseModel):
     description: Annotated[str | None, Field(description="Description")] = None
 
 
-class ImageGenerationResult(BaseModel):
-    """Image generation result."""
+class Model(BaseModel):
+    """Model information."""
 
-    model_used: Annotated[str, Field(description="Model used for image generation")]
-    image_url: Annotated[str, Field(description="URL of the generated image")]
+    # Basic information
+    id: Annotated[str, Field(description="Unique model ID, formatted as 'path/name'")]
+    path: Annotated[str, Field(description="Model path, for example 'deepseek-ai'")]
+    name: Annotated[str, Field(description="Model name, for example 'DeepSeek-R1'")]
+    chinese_name: Annotated[str, Field(description="Chinese name")]
+    created_by: Annotated[str, Field(description="User who created the model")]
+
+    # Metrics
+    downloads_count: Annotated[int, Field(description="Number of downloads")] = 0
+    stars_count: Annotated[int, Field(description="Number of stars")] = 0
+
+    # Timestamps
+    created_at: Annotated[
+        int, Field(description="Created time (unix timestamp, seconds)")
+    ] = 0
+    updated_at: Annotated[
+        int, Field(description="Last updated time (unix timestamp, seconds)")
+    ] = 0
 
 
 class Paper(BaseModel):
@@ -48,3 +64,10 @@ class Paper(BaseModel):
     view_count: Annotated[int, Field(description="View count")] = 0
     favorite_count: Annotated[int, Field(description="Favorite count")] = 0
     comment_count: Annotated[int, Field(description="Comment count")] = 0
+
+
+class ImageGenerationResult(BaseModel):
+    """Image generation result."""
+
+    model_used: Annotated[str, Field(description="Model used for image generation")]
+    image_url: Annotated[str, Field(description="URL of the generated image")]
