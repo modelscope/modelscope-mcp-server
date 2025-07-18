@@ -39,21 +39,15 @@ def register_model_tools(mcp: FastMCP) -> None:
         ] = "",
         task: Annotated[
             Literal["text-generation", "text-to-image", "image-to-image"] | None,
-            Field(
-                description="Task category to filter by, available options: text-generation, text-to-image, image-to-image"
-            ),
+            Field(description="Task category to filter by"),
         ] = None,
         filters: Annotated[
             list[Literal["support_inference"]] | None,
-            Field(
-                description="Additional filter options for models. Available options: support_inference (filter models that support inference API)"
-            ),
+            Field(description="Additional filter options for models"),
         ] = None,
         sort: Annotated[
             Literal["Default", "DownloadsCount", "StarsCount", "GmtModified"],
-            Field(
-                description="Sort order, available options: Default, DownloadsCount, StarsCount, GmtModified"
-            ),
+            Field(description="Sort order"),
         ] = "Default",
         limit: Annotated[
             int, Field(description="Number of models to return", ge=1, le=30)

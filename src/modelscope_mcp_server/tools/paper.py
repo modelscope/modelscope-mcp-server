@@ -35,7 +35,7 @@ def register_paper_tools(mcp: FastMCP) -> None:
         query: Annotated[str, Field(description="Search query for papers")],
         sort: Annotated[
             Literal["default", "hot", "recommend"],
-            Field(description="Sort order, available options: default, hot, recommend"),
+            Field(description="Sort order"),
         ] = "default",
         limit: Annotated[
             int, Field(description="Number of papers to return", ge=1, le=100)
