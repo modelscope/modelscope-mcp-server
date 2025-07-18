@@ -94,22 +94,37 @@ def main():
             print("Release cancelled.")
             sys.exit(0)
 
-    # 9. Create git tag
+    # 9. Check PYPI_TOKEN before creating tag
+    print("🔑 Checking PYPI_TOKEN configuration...")
+    if not args.dry_run:
+        import os
+
+        pypi_token = os.environ.get("PYPI_TOKEN")
+        if not pypi_token:
+            print("❌ PYPI_TOKEN environment variable is not set!")
+            print("Please set PYPI_TOKEN before releasing:")
+            print("  export PYPI_TOKEN=your_token_here")
+            sys.exit(1)
+        print("✅ PYPI_TOKEN is configured")
+    else:
+        print("⚠️  [DRY RUN] PYPI_TOKEN check skipped")
+
+    # 10. Create git tag
     print(f"🏷️  Creating git tag v{version}...")
     run_command(f"git tag v{version}", dry_run=args.dry_run)
 
-    # 10. Push tag
+    # 11. Push tag
     print("📤 Pushing tag to origin...")
     run_command("git push origin --tags", dry_run=args.dry_run)
 
-    # 11. Publish to PyPI
+    # 12. Publish to PyPI
     print("📦 Publishing to PyPI...")
     run_command("uv publish --token $PYPI_TOKEN", dry_run=args.dry_run)
 
     print(f"✅ Successfully released version {version}!")
     print(f"🔗 Check: https://pypi.org/project/modelscope-mcp-server/{version}/")
 
-    # 12. Post-release instructions (from old script)
+    # 13. Post-release instructions (from old script)
     print("\n📝 Next steps:")
     print(f"1. Test installation: uv tool install modelscope-mcp-server=={version}")
     print(
