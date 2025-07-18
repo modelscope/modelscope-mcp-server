@@ -104,7 +104,21 @@ This format is widely adopted across the MCP ecosystem:
    MODELSCOPE_API_TOKEN="your-api-token"
    ```
 
-### Running the Server
+### Running the Demo Script
+
+Run a quick demo to explore the server's capabilities:
+
+```bash
+uv run python demo.py
+```
+
+Use the `--full` flag to demonstrate all available features:
+
+```bash
+uv run python demo.py --full
+```
+
+### Running the Server Locally
 
 ```bash
 # Standard stdio transport (default)
@@ -117,11 +131,25 @@ uv run modelscope-mcp-server --transport http
 uv run modelscope-mcp-server --transport [http/sse] --port 8080
 ```
 
-### Running the Demo
+For HTTP/SSE mode, connect using a local URL in your MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "modelscope-mcp-server": {
+      "url": "http://127.0.0.1:8000/mcp/"
+    }
+  }
+}
+```
+
+You can also debug the server using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector) tool:
 
 ```bash
-uv run python demo.py --full
+npx @modelcontextprotocol/inspector uv run modelscope-mcp-server
 ```
+
+The above command uses stdio transport by default; you can switch to HTTP or SSE in the Web UI as needed.
 
 ### Testing
 
