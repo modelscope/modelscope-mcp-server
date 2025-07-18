@@ -1,8 +1,16 @@
 """Type definitions for ModelScope MCP server."""
 
+from enum import Enum
 from typing import Annotated
 
 from pydantic import BaseModel, Field
+
+
+class GenerationType(str, Enum):
+    """Content generation types."""
+
+    TEXT_TO_IMAGE = "text-to-image"
+    IMAGE_TO_IMAGE = "image-to-image"
 
 
 class UserInfo(BaseModel):
@@ -74,5 +82,6 @@ class Paper(BaseModel):
 class ImageGenerationResult(BaseModel):
     """Image generation result."""
 
-    model_used: Annotated[str, Field(description="Model used for image generation")]
+    type: Annotated[GenerationType, Field(description="Type of image generation")]
+    model: Annotated[str, Field(description="Model used for image generation")]
     image_url: Annotated[str, Field(description="URL of the generated image")]

@@ -13,7 +13,7 @@ from fastmcp.utilities import logging
 from pydantic import Field
 
 from ..settings import settings
-from ..types import ImageGenerationResult
+from ..types import GenerationType, ImageGenerationResult
 
 logger = logging.get_logger(__name__)
 
@@ -42,18 +42,32 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         model: Annotated[
             str | None,
             Field(
-                description="The model ID from ModelScope to be used for image generation. If not provided, uses the default model '"
-                + f"{settings.default_image_generation_model}'."
+                description="The model ID from ModelScope to be used for image generation. If not provided, uses the default model provided in server settings."
+            ),
+        ] = None,
+        image_url: Annotated[
+            str | None,
+            Field(
+                description="The URL of the source image for image-to-image generation. If not provided, performs text-to-image generation."
             ),
         ] = None,
     ) -> ImageGenerationResult:
         """
         Generate an image based on the given text prompt and ModelScope AIGC model ID.
+        Supports both text-to-image and image-to-image generation.
         """
+
+        generation_type = (
+            GenerationType.IMAGE_TO_IMAGE if image_url else GenerationType.TEXT_TO_IMAGE
+        )
 
         # Use default model if not specified
         if model is None:
-            model = settings.default_image_generation_model
+            model = (
+                settings.default_text_to_image_model
+                if generation_type == GenerationType.TEXT_TO_IMAGE
+                else settings.default_image_to_image_model
+            )
 
         if not prompt or not prompt.strip():
             raise ValueError("Prompt cannot be empty")
@@ -71,6 +85,9 @@ def register_aigc_tools(mcp: FastMCP) -> None:
             "prompt": prompt,
         }
 
+        if generation_type == GenerationType.IMAGE_TO_IMAGE and image_url:
+            payload["image_url"] = image_url
+
         headers = {
             "Authorization": f"Bearer {settings.api_token}",
             "Content-Type": "application/json",
@@ -78,7 +95,7 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         }
 
         logger.info(
-            f"Sending image generation request with model '{model}' and prompt '{prompt}'"
+            f"Sending {generation_type.value} generation request with model '{model}' and prompt '{prompt}'"
         )
 
         try:
@@ -99,8 +116,11 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         response_data = response.json()
 
         if "images" in response_data and response_data["images"]:
-            image_url = response_data["images"][0]["url"]
-            logger.info(f"Successfully generated image URL: {image_url}")
-            return ImageGenerationResult(model_used=model, image_url=image_url)
-
+            generated_image_url = response_data["images"][0]["url"]
+            logger.info(f"Successfully generated image URL: {generated_image_url}")
+            return ImageGenerationResult(
+                type=generation_type,
+                model=model,
+                image_url=generated_image_url,
+            )
         raise Exception(f"Server returned error: {response_data}")

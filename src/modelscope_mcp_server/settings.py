@@ -4,7 +4,8 @@ from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .constants import (
-    DEFAULT_IMAGE_GENERATION_MODEL,
+    DEFAULT_IMAGE_TO_IMAGE_MODEL,
+    DEFAULT_TEXT_TO_IMAGE_MODEL,
     MODELSCOPE_API_ENDPOINT,
     MODELSCOPE_API_INFERENCE_ENDPOINT,
     MODELSCOPE_OPENAPI_ENDPOINT,
@@ -26,26 +27,27 @@ class Settings(BaseSettings):
     api_token: str | None = Field(
         default=None, description="ModelScope API token for authentication"
     )
-
     api_base_url: str = Field(
         default=MODELSCOPE_API_ENDPOINT,
         description="Base URL for ModelScope API",
     )
-
     openapi_base_url: str = Field(
         default=MODELSCOPE_OPENAPI_ENDPOINT,
         description="Base URL for ModelScope OpenAPI",
     )
-
     api_inference_base_url: str = Field(
         default=MODELSCOPE_API_INFERENCE_ENDPOINT,
         description="Base URL for ModelScope API Inference",
     )
 
     # Default model settings
-    default_image_generation_model: str = Field(
-        default=DEFAULT_IMAGE_GENERATION_MODEL,
-        description="Default model for image generation",
+    default_text_to_image_model: str = Field(
+        default=DEFAULT_TEXT_TO_IMAGE_MODEL,
+        description="Default model for text-to-image generation",
+    )
+    default_image_to_image_model: str = Field(
+        default=DEFAULT_IMAGE_TO_IMAGE_MODEL,
+        description="Default model for image-to-image generation",
     )
 
     # Logging settings

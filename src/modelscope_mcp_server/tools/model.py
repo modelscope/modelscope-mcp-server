@@ -34,7 +34,7 @@ def register_model_tools(mcp: FastMCP) -> None:
         query: Annotated[
             str,
             Field(
-                description="Search term for models. Leave blank and specify 'sort' and 'limit' to get e.g. 'Top 10 most downloaded models', 'Top 10 most recent models' etc."
+                description="Keyword to search for related models (e.g., 'Flux' will find models related to Flux). Leave empty to skip keyword matching and get all models based on other filters."
             ),
         ] = "",
         task: Annotated[
