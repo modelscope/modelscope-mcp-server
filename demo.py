@@ -45,7 +45,7 @@ async def demo_search_papers(client: Client) -> None:
 
     result = await client.call_tool(
         "search_papers",
-        {"query": "Qwen3", "page_number": 1, "page_size": 1},
+        {"query": "Qwen3", "limit": 1},
     )
 
     if result.content and len(result.content) > 0:
@@ -76,9 +76,8 @@ def show_configuration() -> None:
     print(f"   API Base URL: {settings.api_base_url}")
     print(f"   OpenAPI Base URL: {settings.openapi_base_url}")
     print(f"   API Inference Base URL: {settings.api_inference_base_url}")
-    print(
-        f"   Default Image Generation Model: {settings.default_image_generation_model}"
-    )
+    print(f"   Default Text-to-Image Model: {settings.default_text_to_image_model}")
+    print(f"   Default Image-to-Image Model: {settings.default_image_to_image_model}")
     print(f"   Log level: {settings.log_level}")
     print()
 

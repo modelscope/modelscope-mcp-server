@@ -6,7 +6,7 @@ from fastmcp import Client
 async def test_search_papers(mcp_server):
     async with Client(mcp_server) as client:
         result = await client.call_tool(
-            "search_papers", {"query": "nexus-gen", "page_size": 2}
+            "search_papers", {"query": "nexus-gen", "limit": 2}
         )
 
         assert hasattr(result, "data"), "Result should have data attribute"

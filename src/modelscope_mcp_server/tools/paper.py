@@ -33,14 +33,13 @@ def register_paper_tools(mcp: FastMCP) -> None:
     )
     async def search_papers(
         query: Annotated[str, Field(description="Search query for papers")],
-        page_number: Annotated[int, Field(description="Page number", ge=1)] = 1,
-        page_size: Annotated[
-            int, Field(description="Number of papers per page", ge=1, le=100)
-        ] = 2,
         sort: Annotated[
             Literal["default", "hot", "recommend"],
             Field(description="Sort order, available options: default, hot, recommend"),
         ] = "default",
+        limit: Annotated[
+            int, Field(description="Number of papers to return", ge=1, le=100)
+        ] = 10,
     ) -> list[Paper]:
         """
         Search for papers on ModelScope.
@@ -54,8 +53,8 @@ def register_paper_tools(mcp: FastMCP) -> None:
 
         request_data = {
             "Query": query,
-            "PageNumber": page_number,
-            "PageSize": page_size,
+            "PageNumber": 1,
+            "PageSize": limit,
             "Sort": sort,
             "Criterion": [],
         }
