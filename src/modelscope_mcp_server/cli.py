@@ -3,13 +3,14 @@
 import argparse
 import sys
 
+from ._version import __version__
 from .server import create_mcp_server
 
 
 def create_parser() -> argparse.ArgumentParser:
     """Create and configure the argument parser."""
     parser = argparse.ArgumentParser(
-        description="ModelScope MCP Server",
+        description=f"ModelScope MCP Server v{__version__}",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -34,9 +35,6 @@ Examples:
         default=8000,
         help="Port number for SSE/HTTP transport (default: 8000)",
     )
-
-    # Import version from __init__.py to avoid circular imports
-    from . import __version__
 
     parser.add_argument(
         "--version",

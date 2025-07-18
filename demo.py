@@ -6,6 +6,7 @@ import json
 
 from fastmcp import Client
 
+from modelscope_mcp_server import __version__
 from modelscope_mcp_server.server import create_mcp_server
 from modelscope_mcp_server.settings import settings
 
@@ -122,7 +123,7 @@ async def main():
     )
     args = parser.parse_args()
 
-    print("🤖 ModelScope MCP Server Demo")
+    print(f"🤖 ModelScope MCP Server Demo (v{__version__})")
     if not args.full:
         print(
             "💡 Running basic demos only. Use --full to include slow demos (like image generation)"
