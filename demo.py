@@ -1,6 +1,8 @@
 """Demo script showing all ModelScope MCP server capabilities."""
 
+import argparse
 import asyncio
+import json
 
 from fastmcp import Client
 
@@ -10,24 +12,35 @@ from modelscope_mcp_server.settings import settings
 
 async def demo_get_current_user(client: Client) -> None:
     """Demo: Get current user information."""
-    print("1. Calling get_current_user tool\n")
+    print("1. 🛠️ Tool: get_current_user")
+    print("   • Task: 👤 Get current user information")
 
     user_result = await client.call_tool("get_current_user", {})
 
     if user_result.content and len(user_result.content) > 0:
-        user_info = user_result.content[0].text  # type: ignore
-        print(f"✅ Current user info: {user_info}\n")
+        user_info = json.loads(user_result.content[0].text)  # type: ignore
+        username = user_info.get("username", "N/A")
+        email = user_info.get("email", "N/A")
+        authenticated = user_info.get("authenticated", "N/A")
+        print(
+            f"   • Result: Username={username}, Email={email}, Authenticated={authenticated}"
+        )
+    else:
+        print("   • Result: No user information retrieved")
+    print()
 
 
 async def demo_search_models(client: Client) -> None:
     """Demo: Search models using various parameters."""
-    print("3. Calling search_models tool\n")
+    print("2. 🛠️ Tool: search_models")
+    print(
+        "   • Task: 🔍 Search text-generation models (keyword='DeepSeek', support inference, limit 3 results)"
+    )
 
-    print("   🤖 Searching text-generation models that support inference:")
     result = await client.call_tool(
         "search_models",
         {
-            "query": "qwen",
+            "query": "DeepSeek",
             "task": "text-generation",
             "filters": ["support_inference"],
             "limit": 3,
@@ -35,27 +48,55 @@ async def demo_search_models(client: Client) -> None:
     )
 
     if result.content and len(result.content) > 0:
-        models = result.content[0].text  # type: ignore
-        print(f"   ✅ Found models: {models}\n")
+        models = json.loads(result.content[0].text)  # type: ignore
+        model_summary = []
+        for model in models:
+            name = model.get("chinese_name", model.get("name", "N/A"))
+            downloads = model.get("downloads_count", 0)
+            stars = model.get("stars_count", 0)
+            model_summary.append(f"{name}(Downloads {downloads:,}, Stars {stars})")
+        print(f"   • Result: Found {len(models)} models - {' | '.join(model_summary)}")
+    else:
+        print("   • Result: No models found")
+    print()
 
 
 async def demo_search_papers(client: Client) -> None:
     """Demo: Search papers using query."""
-    print("2. Calling search_papers tool\n")
+    print("3. 🛠️ Tool: search_papers")
+    print(
+        "   • Task: 📚 Search academic papers (keyword='Qwen3', sort='hot', limit 1 result)"
+    )
 
     result = await client.call_tool(
         "search_papers",
-        {"query": "Qwen3", "limit": 1},
+        {"query": "Qwen3", "sort": "hot", "limit": 1},
     )
 
     if result.content and len(result.content) > 0:
-        papers = result.content[0].text  # type: ignore
-        print(f"✅ Search papers: {papers}\n")
+        papers = json.loads(result.content[0].text)  # type: ignore
+        if papers:
+            paper = papers[0]
+            title = paper.get("title", "N/A")
+            authors = paper.get("authors", "N/A")
+            arxiv_id = paper.get("arxiv_id", "N/A")
+            views = paper.get("view_count", 0)
+            print(
+                f"   • Result: '{title}' Authors={authors}, ArXiv ID={arxiv_id}, Views={views:,}"
+            )
+        else:
+            print("   • Result: No papers found")
+    else:
+        print("   • Result: No papers found")
+    print()
 
 
 async def demo_generate_image(client: Client) -> None:
     """Demo: Generate image URL from text prompt."""
-    print("4. Calling generate_image tool (using default model)\n")
+    print("4. 🛠️ Tool: generate_image")
+    print(
+        "   • Task: 🎨 Generate image (prompt='A curious cat wearing a tiny wizard hat in candy cloud kingdom')"
+    )
 
     result = await client.call_tool(
         "generate_image",
@@ -66,26 +107,30 @@ async def demo_generate_image(client: Client) -> None:
 
     if result.content and len(result.content) > 0:
         image_url = result.content[0].text  # type: ignore
-        print(f"✅ Generated image URL: {image_url}\n")
-
-
-def show_configuration() -> None:
-    """Display current configuration settings."""
-    print("📋 Current configuration:")
-    print(f"   API Token: {settings.api_token}")
-    print(f"   API Base URL: {settings.api_base_url}")
-    print(f"   OpenAPI Base URL: {settings.openapi_base_url}")
-    print(f"   API Inference Base URL: {settings.api_inference_base_url}")
-    print(f"   Default Text-to-Image Model: {settings.default_text_to_image_model}")
-    print(f"   Default Image-to-Image Model: {settings.default_image_to_image_model}")
-    print(f"   Log level: {settings.log_level}")
+        print(f"   • Result: Image generated successfully - {image_url}")
+    else:
+        print("   • Result: Image generation failed")
     print()
 
 
 async def main():
-    print("🤖 ModelScope MCP server demo\n")
+    parser = argparse.ArgumentParser(description="ModelScope MCP server demo")
+    parser.add_argument(
+        "--full",
+        action="store_true",
+        help="Run all demos including slow ones (like image generation)",
+    )
+    args = parser.parse_args()
 
-    show_configuration()
+    print("🤖 ModelScope MCP Server Demo")
+    if not args.full:
+        print(
+            "💡 Running basic demos only. Use --full to include slow demos (like image generation)"
+        )
+
+    # Set log level to WARNING to avoid too many logs
+    settings.log_level = "WARNING"
+    settings.show_settings()
 
     mcp = create_mcp_server()
 
@@ -93,7 +138,12 @@ async def main():
         await demo_get_current_user(client)
         await demo_search_models(client)
         await demo_search_papers(client)
-        await demo_generate_image(client)
+
+        if args.full:
+            await demo_generate_image(client)
+        else:
+            print("⏭️  Skipping image generation demo (use --full to enable)")
+            print()
 
         print("✨ Demo complete!")
 

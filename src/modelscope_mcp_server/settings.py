@@ -77,6 +77,37 @@ class Settings(BaseSettings):
         """Check if API token is configured."""
         return self.api_token is not None and len(self.api_token) > 0
 
+    def show_settings(self) -> None:
+        """Display current configuration settings in a formatted way."""
+        print("=" * 60)
+        print("📋 Global Settings")
+        print("=" * 60)
+
+        # API Configuration
+        print("🔑 API Configuration:")
+        masked_token = (
+            self.api_token[:-8] + "********"
+            if self.api_token and len(self.api_token) > 4
+            else "Not configured"
+        )
+        print(f"  • Token: {masked_token}")
+        print(f"  • Base URL: {self.api_base_url}")
+        print(f"  • OpenAPI URL: {self.openapi_base_url}")
+        print(f"  • Inference URL: {self.api_inference_base_url}")
+        print()
+
+        # Default Models
+        print("🤖 Default Models:")
+        print(f"  • Text-to-Image: {self.default_text_to_image_model}")
+        print(f"  • Image-to-Image: {self.default_image_to_image_model}")
+        print()
+
+        # System Settings
+        print("⚙️ System Settings:")
+        print(f"  • Log Level: {self.log_level}")
+        print("=" * 60)
+        print()
+
 
 # Global settings instance
 settings = Settings()

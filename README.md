@@ -117,10 +117,10 @@ uv run modelscope-mcp-server --transport http
 uv run modelscope-mcp-server --transport [http/sse] --port 8080
 ```
 
-### Running the Demo (Optional)
+### Running the Demo
 
 ```bash
-uv run python demo.py
+uv run python demo.py --full
 ```
 
 ### Testing
