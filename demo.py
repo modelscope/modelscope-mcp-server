@@ -3,6 +3,9 @@
 import argparse
 import asyncio
 import json
+import os
+import signal
+import sys
 
 from fastmcp import Client
 
@@ -114,6 +117,16 @@ async def demo_generate_image(client: Client) -> None:
     print()
 
 
+def setup_signal_handler():
+    """Setup signal handler for graceful shutdown."""
+
+    def signal_handler(signum, frame):
+        print("\n🛑 Demo interrupted by user")
+        os._exit(0)
+
+    signal.signal(signal.SIGINT, signal_handler)
+
+
 async def main():
     parser = argparse.ArgumentParser(description="ModelScope MCP server demo")
     parser.add_argument(
@@ -146,8 +159,14 @@ async def main():
             print("⏭️  Skipping image generation demo (use --full to enable)")
             print()
 
-        print("✨ Demo complete!")
+    print("✨ Demo complete!")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    setup_signal_handler()
+
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        print(f"\n❌ Demo failed with error: {e}")
+        sys.exit(1)
