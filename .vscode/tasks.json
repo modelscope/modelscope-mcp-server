@@ -1,0 +1,90 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "uv run pre-commit run --all-files",
+      "detail": "Run pre-commit hooks on all files",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "pre-commit", "run", "--all-files"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "never",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "uv run modelscope-mcp-server --transport http",
+      "detail": "Run modelscope-mcp-server with HTTP transport",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "modelscope-mcp-server", "--transport", "http"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "uv run python demo.py",
+      "detail": "Run demo.py",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "python", "demo.py", "--full"],
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "npx @modelcontextprotocol/inspector",
+      "detail": "Run the Model Context Protocol Inspector",
+      "type": "shell",
+      "command": "npx",
+      "args": ["@modelcontextprotocol/inspector"],
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "uv run pytest -s",
+      "detail": "Run pytest tests with output",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "pytest", "-s"],
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": []
+    }
+  ]
+}

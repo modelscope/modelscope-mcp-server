@@ -18,8 +18,6 @@ htmlcov/
 !.env.example
 
 # IDE
-.vscode/
-.idea/
 *.swp
 *.swo
 
