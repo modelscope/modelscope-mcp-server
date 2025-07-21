@@ -5,7 +5,7 @@ description = "ModelScope MCP Server"
 readme = "README.md"
 authors = [{ name = "ModelScope Team" }]
 license = { file = "LICENSE" }
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
     "fastmcp>=2.10.5",
     "requests>=2.32.4",
@@ -26,6 +26,8 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
 
@@ -69,7 +71,7 @@ env = ["MODELSCOPE_LOG_LEVEL=INFO"]
 [tool.pyright]
 include = ["src"]
 exclude = ["**/__pycache__", ".venv", ".git", "dist"]
-pythonVersion = "3.12"
+pythonVersion = "3.10"
 pythonPlatform = "Darwin"
 typeCheckingMode = "basic"
 reportMissingImports = true
