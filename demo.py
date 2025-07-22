@@ -95,9 +95,41 @@ async def demo_search_papers(client: Client) -> None:
     print()
 
 
+async def demo_search_mcp_servers(client: Client) -> None:
+    """Demo: Search MCP servers using various parameters."""
+    print("4. 🛠️ Tool: search_mcp_servers")
+    print(
+        "   • Task: 🔍 Search MCP servers (keyword='Chrome', category='browser-automation', limit 3 results)"
+    )
+
+    result = await client.call_tool(
+        "search_mcp_servers",
+        {
+            "search": "Chrome",
+            "category": "browser-automation",
+            "limit": 3,
+        },
+    )
+
+    if result.content and len(result.content) > 0:
+        servers = json.loads(result.content[0].text)  # type: ignore
+        server_summary = []
+        for server in servers:
+            name = server.get("chinese_name", server.get("name", "N/A"))
+            publisher = server.get("publisher", "N/A")
+            views = server.get("view_count", 0)
+            server_summary.append(f"{name} by {publisher} (Views {views:,})")
+        print(
+            f"   • Result: Found {len(servers)} servers - {' | '.join(server_summary)}"
+        )
+    else:
+        print("   • Result: No MCP servers found")
+    print()
+
+
 async def demo_generate_image(client: Client) -> None:
     """Demo: Generate image URL from text prompt."""
-    print("4. 🛠️ Tool: generate_image")
+    print("5. 🛠️ Tool: generate_image")
     print(
         "   • Task: 🎨 Generate image (prompt='A curious cat wearing a tiny wizard hat in candy cloud kingdom')"
     )
@@ -152,6 +184,7 @@ async def main():
         await demo_get_current_user(client)
         await demo_search_models(client)
         await demo_search_papers(client)
+        await demo_search_mcp_servers(client)
 
         if args.full:
             await demo_generate_image(client)

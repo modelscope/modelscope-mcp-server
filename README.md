@@ -11,10 +11,10 @@ A Model Context Protocol (MCP) server that integrates with [ModelScope](https://
 
 - 🔐 **User Authentication** - Retrieve information about the currently authenticated ModelScope user
 - 🎨 **AI Image Generation** - Generate images from text prompts or transform existing images using AIGC models (supports both text-to-image and image-to-image generation)
-- 🔍 **Model Search** - Search for machine learning models on ModelScope with advanced filtering options (task type, author, inference support, etc.)
-- 📚 **Research Paper Search** - Search for arXiv papers indexed in ModelScope with comprehensive metadata
+- 🔍 **Resource Discovery** - Search and discover ModelScope resources including machine learning models, research papers, and MCP servers with advanced filtering options
+- 📋 **Resource Details** _(Coming Soon)_ - Get comprehensive details for specific resources including model specifications, paper abstracts, and MCP server configurations
 - 📖 **Documentation Search** _(Coming Soon)_ - Semantic search for ModelScope documentation and articles
-- 🚀 **Gradio API Integration** _(Coming Soon)_ - Invoke Gradio APIs exposed by any pre-configured ModelScope studio
+- 🚀 **Gradio API Integration** _(Coming Soon)_ - Invoke Gradio APIs exposed by any pre-configured ModelScope studio (AI app)
 
 ## 🚀 Quick Start
 

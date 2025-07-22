@@ -38,7 +38,7 @@ def register_paper_tools(mcp: FastMCP) -> None:
             Field(description="Sort order"),
         ] = "default",
         limit: Annotated[
-            int, Field(description="Number of papers to return", ge=1, le=100)
+            int, Field(description="Maximum number of papers to return", ge=1, le=100)
         ] = 10,
     ) -> list[Paper]:
         """

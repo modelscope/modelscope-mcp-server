@@ -36,7 +36,7 @@
       "problemMatcher": []
     },
     {
-      "label": "uv run python demo.py",
+      "label": "uv run python demo.py --full",
       "detail": "Run demo.py",
       "type": "shell",
       "command": "uv",

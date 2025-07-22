@@ -50,7 +50,7 @@ def register_model_tools(mcp: FastMCP) -> None:
             Field(description="Sort order"),
         ] = "Default",
         limit: Annotated[
-            int, Field(description="Number of models to return", ge=1, le=30)
+            int, Field(description="Maximum number of models to return", ge=1, le=30)
         ] = 10,
     ) -> list[Model]:
         """

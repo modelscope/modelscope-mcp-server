@@ -79,6 +79,24 @@ class Paper(BaseModel):
     comment_count: Annotated[int, Field(description="Comment count")] = 0
 
 
+class McpServer(BaseModel):
+    """MCP Server information."""
+
+    # Basic information
+    id: Annotated[str, Field(description="MCP Server ID")]
+    name: Annotated[str, Field(description="MCP Server name")]
+    chinese_name: Annotated[str, Field(description="Chinese name")]
+    description: Annotated[str, Field(description="Description")]
+    publisher: Annotated[str, Field(description="Publisher")]
+    tags: Annotated[list[str], Field(description="Tags")] = []
+
+    # Links
+    modelscope_url: Annotated[str, Field(description="ModelScope page URL")]
+
+    # Metrics
+    view_count: Annotated[int, Field(description="View count")] = 0
+
+
 class ImageGenerationResult(BaseModel):
     """Image generation result."""
 
