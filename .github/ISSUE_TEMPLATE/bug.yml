@@ -1,0 +1,33 @@
+name: 🔍 Bug Report
+description: Report a bug or unexpected behavior in ModelScope MCP Server
+labels: [bug, pending]
+assignees: [pengqun]
+
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for contributing to ModelScope MCP Server! 🙏
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        Please explain what you're experiencing and what you would expect to happen instead.
+
+        Provide as much detail as possible to help us understand and solve your problem quickly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: |
+        Add any other context about the problem here. This could include:
+        - The full error message and traceback (if applicable)
+        - Information about your environment (e.g., virtual environment, installed packages)
+        - Steps to reproduce the issue
+        - MCP client type and version (Claude Desktop, Cursor, VS Code, etc.)
+        - Whether your ModelScope API Token is valid (do not include the actual token)
+        - Any recent changes in your code or setup that might be relevant

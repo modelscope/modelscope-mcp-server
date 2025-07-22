@@ -1,0 +1,22 @@
+name: 💬 Question
+description: Ask a question about ModelScope MCP Server
+labels: [question, pending]
+assignees: [pengqun]
+
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for paying attention to ModelScope MCP Server! 🙏
+
+  - type: markdown
+    attributes:
+      value: Before asking a question, please make sure you have checked the [README](https://github.com/modelscope/modelscope-mcp-server?tab=readme-ov-file#modelscope-mcp-server) first.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: |
+        Please describe your question in detail.
+    validations:
+      required: true

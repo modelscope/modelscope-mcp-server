@@ -1,0 +1,52 @@
+name: ✨️ Enhancement Request
+description: Suggest an idea or improvement for ModelScope MCP Server
+labels: [enhancement, pending]
+assignees: [pengqun]
+
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for contributing to ModelScope MCP Server! 🙏
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Enhancement Description
+      description: |
+        Please describe the enhancement you'd like to see in ModelScope MCP Server.
+
+        - What problem would this solve?
+        - How would this improve your workflow or experience with ModelScope MCP Server?
+        - Which ModelScope features or tools would this enhancement relate to?
+        - Are there any alternative solutions you've considered?
+    validations:
+      required: true
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use Case
+      description: |
+        Describe a specific use case or scenario where this enhancement would be beneficial.
+        If possible, provide an example of how you envision using this feature with ModelScope's ecosystem (models, datasets, spaces, etc.).
+
+        Examples:
+        - Improving model search and filtering capabilities
+        - Adding new ModelScope API integrations
+        - Enhancing image generation workflows
+        - Better MCP client compatibility
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Proposed Implementation
+      description: >
+        If you have ideas about how this enhancement could be implemented,
+        please share them here. Code snippets, pseudocode, or general approaches are welcome.
+
+        This could include:
+        - New MCP tools or functions
+        - ModelScope API integrations
+        - Configuration options
+        - Client compatibility improvements
+      render: Python
