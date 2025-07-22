@@ -16,6 +16,8 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # TODO: enable this when we have a way to set the secrets
+    if: false
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
