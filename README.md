@@ -2,7 +2,7 @@
 
 [![PyPI - Version](https://img.shields.io/pypi/v/modelscope-mcp-server.svg)](https://pypi.org/project/modelscope-mcp-server)
 [![Docker](https://img.shields.io/badge/docker-supported-blue?logo=docker)](https://github.com/modelscope/modelscope-mcp-server/blob/main/Dockerfile)
-[![Docker Hub](https://img.shields.io/docker/v/spadrian/modelscope-mcp-server?logo=docker)](https://hub.docker.com/r/spadrian/modelscope-mcp-server)
+[![GitHub Container Registry](https://img.shields.io/badge/container-registry-blue?logo=github)](https://github.com/modelscope/modelscope-mcp-server/pkgs/container/modelscope-mcp-server)
 [![License](https://img.shields.io/github/license/modelscope/modelscope-mcp-server.svg)](https://github.com/modelscope/modelscope-mcp-server/blob/main/LICENSE)
 
 A Model Context Protocol (MCP) server that integrates with [ModelScope](https://modelscope.cn)'s ecosystem, providing seamless access to AI models, datasets, apps, papers, and generation capabilities through popular MCP clients.
@@ -53,7 +53,7 @@ Or, you can use the pre-built Docker image:
       "args": [
         "run", "--rm", "-i",
         "-e", "MODELSCOPE_API_TOKEN",
-        "spadrian/modelscope-mcp-server:latest"
+        "ghcr.io/modelscope/modelscope-mcp-server:main"
       ],
       "env": {
         "MODELSCOPE_API_TOKEN": "your-api-token"
