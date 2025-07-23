@@ -1,5 +1,5 @@
 # https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql
-name: "CodeQL"
+name: Scan code with CodeQL
 
 on:
   push:

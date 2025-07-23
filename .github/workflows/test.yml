@@ -1,10 +1,8 @@
-name: Test
+name: Run tests with pytest
 
 on:
   push:
-    branches: [ main, develop ]
   pull_request:
-    branches: [ main, develop ]
 
 env:
   # enable colored output
