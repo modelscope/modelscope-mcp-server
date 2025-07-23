@@ -182,25 +182,7 @@ uv run pre-commit run --all-files
 
 ## 📦 Release Management
 
-> TODO: trigger release from GitHub Actions
-
-### Release to PyPI
-
-```bash
-python scripts/pypi_release.py
-```
-
-### Release to Docker Hub
-
-```bash
-docker login
-
-# Release to Docker Hub (will auto-detect buildx or use traditional build)
-python scripts/docker_release.py
-
-# Release to Docker Hub (use traditional multi-arch build with manifest)
-python scripts/docker_release.py --traditional-multiarch
-```
+This project uses GitHub Actions for automated release management.
 
 ## 🤝 Contributing
 
