@@ -164,9 +164,10 @@ This project uses GitHub Actions for automated CI/CD workflows that run on every
 
 ### Automated Checks
 
-- **🔍 [CodeQL Analysis](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/codeql.yml)** - Security vulnerability scanning and code quality analysis
 - **✨ [Lint](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/lint.yml)** - Code formatting, linting, and style checks using pre-commit hooks
-- **🧪 [Test Suite](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/test.yml)** - Comprehensive testing across Python 3.10, 3.11, and 3.12
+- **🧪 [Test](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/test.yml)** - Comprehensive testing across all supported Python versions
+- **🔍 [CodeQL](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/codeql.yml)** - Security vulnerability scanning and code quality analysis
+- **🔒 [Gitleaks](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/gitleaks.yml)** - Detecting secrets like passwords, API keys, and tokens
 
 ### Local Development Checks
 
