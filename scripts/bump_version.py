@@ -3,9 +3,10 @@
 Version bumping script for ModelScope MCP Server releases.
 
 Usage:
-    python scripts/bump_version.py patch  # 1.2.3 -> 1.2.4
-    python scripts/bump_version.py minor  # 1.2.3 -> 1.3.0
-    python scripts/bump_version.py major  # 1.2.3 -> 2.0.0
+    python scripts/bump_version.py patch           # 1.2.3 -> 1.2.4
+    python scripts/bump_version.py minor           # 1.2.3 -> 1.3.0
+    python scripts/bump_version.py major           # 1.2.3 -> 2.0.0
+    python scripts/bump_version.py set {version}   # PEP 440 format, e.g. 1.2.3a1, 1.2.3.dev1
 """
 
 import re
@@ -13,44 +14,55 @@ import subprocess
 import sys
 from pathlib import Path
 
+# Constants
+PROJECT_ROOT = Path(__file__).parent.parent
+SRC_DIR = PROJECT_ROOT / "src"
+VERSION_FILE = SRC_DIR / "modelscope_mcp_server" / "_version.py"
+FILES_TO_COMMIT = "src/modelscope_mcp_server/_version.py"
+
+# PEP 440 version pattern
+PEP440_PATTERN = r"^(\d+)\.(\d+)\.(\d+)((a|b|rc)\d+|\.dev\d+|\.post\d+)?$"
+
+BUMP_TYPES = ["major", "minor", "patch"]
+
 
 def get_current_version():
     """Extract current version by importing the version module."""
-    # Add the src directory to Python path
-    src_path = Path(__file__).parent.parent / "src"
-    if str(src_path) not in sys.path:
-        sys.path.insert(0, str(src_path))
+    if str(SRC_DIR) not in sys.path:
+        sys.path.insert(0, str(SRC_DIR))
 
     try:
-        # Import the version module
         from modelscope_mcp_server._version import __version__
 
         return __version__
     except ImportError as e:
         raise ValueError(f"Could not import version module: {e}")
     finally:
-        # Clean up the sys.path
-        if str(src_path) in sys.path:
-            sys.path.remove(str(src_path))
+        if str(SRC_DIR) in sys.path:
+            sys.path.remove(str(SRC_DIR))
 
 
 def parse_version(version_string):
-    """Parse version string, handling legacy alpha suffix."""
-    # Handle legacy alpha suffix by treating it as the base version
-    if version_string.endswith(".alpha"):
-        base_version = version_string[:-6]  # Remove '.alpha'
-        try:
-            major, minor, patch = map(int, base_version.split("."))
-            return major, minor, patch
-        except ValueError:
-            raise ValueError(f"Invalid version format: {version_string}")
+    """Parse version string, extracting major.minor.patch from PEP 440 format."""
+    # Extract base version (major.minor.patch) from PEP 440 format
+    # Examples: 1.2.3 -> (1,2,3), 1.2.3a1 -> (1,2,3), 1.2.3.dev1 -> (1,2,3)
+    match = re.match(r"^(\d+)\.(\d+)\.(\d+)", version_string)
+    if not match:
+        raise ValueError(f"Invalid version format: {version_string}")
 
-    # Regular version without any suffix
     try:
-        major, minor, patch = map(int, version_string.split("."))
+        major, minor, patch = map(int, match.groups())
         return major, minor, patch
     except ValueError:
         raise ValueError(f"Invalid version format: {version_string}")
+
+
+def validate_version_format(version_string):
+    """Validate that the version string follows PEP 440 format."""
+    if not re.match(PEP440_PATTERN, version_string):
+        raise ValueError(
+            f"Invalid version format (should follow PEP 440): {version_string}"
+        )
 
 
 def bump_version(current_version, bump_type):
@@ -68,52 +80,70 @@ def bump_version(current_version, bump_type):
 
 
 def update_version(new_version):
-    """Update version in _version.py."""
-    version_path = (
-        Path(__file__).parent.parent / "src" / "modelscope_mcp_server" / "_version.py"
-    )
-    content = version_path.read_text()
-
-    # Update version
+    """Update version in _version.py and sync dependencies."""
+    content = VERSION_FILE.read_text()
     new_content = re.sub(
         r'__version__ = "[^"]+"', f'__version__ = "{new_version}"', content
     )
-
-    version_path.write_text(new_content)
+    VERSION_FILE.write_text(new_content)
 
     # Run uv sync to update lock file
     try:
-        subprocess.run(["uv", "sync"], check=True, cwd=Path(__file__).parent.parent)
+        subprocess.run(["uv", "sync"], check=True, cwd=PROJECT_ROOT)
     except subprocess.CalledProcessError as e:
         print(f"Warning: Failed to run 'uv sync': {e}")
 
 
+def handle_version_change(action_description, new_version):
+    """Common logic for handling version changes."""
+    current = get_current_version()
+    print(f"{action_description} from {current} to {new_version}")
+    update_version(new_version)
+    print("✓ Updated _version.py")
+    return new_version
+
+
+def print_next_steps(version):
+    """Print the next steps after version update."""
+    print("\nNext steps:")
+    print(
+        f"1. Commit the change: git add {FILES_TO_COMMIT} && git commit -m 'chore: bump version to {version}'"
+    )
+    print(f"2. Create and push tag: git tag v{version} && git push origin v{version}")
+    print(
+        "3. The GitHub Action will automatically create a release and publish to PyPI and Container Registry"
+    )
+
+
 def main():
-    if len(sys.argv) != 2 or sys.argv[1] not in ["major", "minor", "patch"]:
+    """Main function to handle version bumping."""
+    if len(sys.argv) not in [2, 3]:
         print(__doc__)
         sys.exit(1)
 
-    bump_type = sys.argv[1]
-
     try:
-        current = get_current_version()
-        new = bump_version(current, bump_type)
+        if len(sys.argv) == 2:
+            # Traditional bump: python bump_version.py major/minor/patch
+            bump_type = sys.argv[1]
+            if bump_type not in BUMP_TYPES:
+                print(__doc__)
+                sys.exit(1)
 
-        print(f"Bumping version from {current} to {new}")
-        update_version(new)
-        print("✓ Updated _version.py")
+            current = get_current_version()
+            new = bump_version(current, bump_type)
+            final_version = handle_version_change("Bumping version", new)
 
-        files_to_commit = "src/modelscope_mcp_server/_version.py"
+        elif len(sys.argv) == 3:
+            # Manual set: python bump_version.py set 1.2.3a1
+            if sys.argv[1] != "set":
+                print(__doc__)
+                sys.exit(1)
 
-        print("\nNext steps:")
-        print(
-            f"1. Commit the change: git add {files_to_commit} && git commit -m 'chore: bump version to {new}'"
-        )
-        print(f"2. Create and push tag: git tag v{new} && git push origin v{new}")
-        print(
-            "3. The GitHub Action will automatically create a release and publish to PyPI and Container Registry"
-        )
+            new = sys.argv[2]
+            validate_version_format(new)
+            final_version = handle_version_change("Setting version", new)
 
+        print_next_steps(final_version)
     except Exception as e:
         print(f"Error: {e}")
         sys.exit(1)
