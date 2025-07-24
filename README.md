@@ -4,8 +4,6 @@
 [![Docker](https://img.shields.io/badge/docker-supported-blue?logo=docker)](https://github.com/modelscope/modelscope-mcp-server/blob/main/Dockerfile)
 [![GitHub Container Registry](https://img.shields.io/badge/container-registry-blue?logo=github)](https://github.com/modelscope/modelscope-mcp-server/pkgs/container/modelscope-mcp-server)
 [![License](https://img.shields.io/github/license/modelscope/modelscope-mcp-server.svg)](https://github.com/modelscope/modelscope-mcp-server/blob/main/LICENSE)
-[![Lint](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/lint.yml/badge.svg)](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/lint.yml)
-[![Test](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/test.yml/badge.svg)](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/test.yml)
 
 A Model Context Protocol (MCP) server that integrates with [ModelScope](https://modelscope.cn)'s ecosystem, providing seamless access to AI models, datasets, apps, papers, and generation capabilities through popular MCP clients.
 

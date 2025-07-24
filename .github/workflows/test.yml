@@ -2,6 +2,12 @@ name: Test
 
 on:
   push:
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/workflows/test.yml'
   pull_request:
   workflow_dispatch:
 
