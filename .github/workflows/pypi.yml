@@ -1,14 +1,16 @@
 name: Publish to PyPI
+
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  pypi-publish:
+  publish-to-pypi:
     runs-on: ubuntu-latest
     permissions:
       # IMPORTANT: this permission is mandatory for trusted publishing
@@ -25,8 +27,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "Install uv"
+      - name: Set up uv
         uses: astral-sh/setup-uv@v6
+        with:
+          version: "latest"
 
       - name: Build
         run: uv build

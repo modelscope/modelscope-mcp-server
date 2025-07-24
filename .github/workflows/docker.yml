@@ -1,5 +1,5 @@
 # https://docs.github.com/en/actions/tutorials/publishing-packages/publishing-docker-images
-name: Publish Docker image to GitHub
+name: Docker
 
 on:
   push:

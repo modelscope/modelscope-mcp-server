@@ -53,7 +53,7 @@ Or, you can use the pre-built Docker image:
       "args": [
         "run", "--rm", "-i",
         "-e", "MODELSCOPE_API_TOKEN",
-        "ghcr.io/modelscope/modelscope-mcp-server:main"
+        "ghcr.io/modelscope/modelscope-mcp-server"
       ],
       "env": {
         "MODELSCOPE_API_TOKEN": "your-api-token"
