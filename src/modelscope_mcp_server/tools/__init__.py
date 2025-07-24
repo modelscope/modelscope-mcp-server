@@ -1,3 +1,1 @@
-"""
-ModelScope MCP Server tools package.
-"""
+"""ModelScope MCP Server tools package."""

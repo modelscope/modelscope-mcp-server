@@ -1,5 +1,4 @@
-"""
-ModelScope MCP Server MCP tools.
+"""ModelScope MCP Server MCP tools.
 
 Provides tools for MCP-related operations in the ModelScope MCP Server, such as searching for MCP servers.
 """
@@ -18,11 +17,11 @@ logger = logging.get_logger(__name__)
 
 
 def register_mcp_tools(mcp: FastMCP) -> None:
-    """
-    Register all MCP-related tools with the MCP server.
+    """Register all MCP-related tools with the MCP server.
 
     Args:
         mcp (FastMCP): The MCP server instance
+
     """
 
     @mcp.tool(
@@ -61,13 +60,9 @@ def register_mcp_tools(mcp: FastMCP) -> None:
             bool | None,
             Field(description="Filter by hosted status"),
         ] = None,
-        limit: Annotated[
-            int, Field(description="Maximum number of servers to return", ge=1, le=100)
-        ] = 10,
+        limit: Annotated[int, Field(description="Maximum number of servers to return", ge=1, le=100)] = 10,
     ) -> list[McpServer]:
-        """
-        Search for MCP servers on ModelScope.
-        """
+        """Search for MCP servers on ModelScope."""
         url = f"{MODELSCOPE_OPENAPI_ENDPOINT}/mcp/servers"
 
         headers = {
@@ -91,20 +86,16 @@ def register_mcp_tools(mcp: FastMCP) -> None:
 
         try:
             response = requests.put(url, json=request_data, headers=headers, timeout=10)
-        except requests.exceptions.Timeout:
-            raise TimeoutError("Request timeout - please try again later")
+        except requests.exceptions.Timeout as e:
+            raise TimeoutError("Request timeout - please try again later") from e
 
         if response.status_code != 200:
-            raise Exception(
-                f"Server returned non-200 status code: {response.status_code} {response.text}"
-            )
+            raise Exception(f"Server returned non-200 status code: {response.status_code} {response.text}")
 
         data = response.json()
 
         if data.get("code") != 200:
-            raise Exception(
-                f"Server returned error: {data.get('message', 'Unknown error')}"
-            )
+            raise Exception(f"Server returned error: {data.get('message', 'Unknown error')}")
 
         result_data = data.get("data", {})
         servers_data = result_data.get("mcp_server_list", [])

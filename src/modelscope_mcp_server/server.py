@@ -1,3 +1,5 @@
+"""ModelScope MCP Server implementation."""
+
 from typing import cast
 
 from fastmcp import FastMCP
@@ -22,7 +24,6 @@ logger = logging.get_logger(__name__)
 
 def create_mcp_server() -> FastMCP:
     """Create and configure the MCP server with all ModelScope tools."""
-
     fastmcp_settings.log_level = cast(LOG_LEVEL, settings.log_level)
 
     mcp = FastMCP(

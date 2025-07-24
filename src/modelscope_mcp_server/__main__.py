@@ -1,4 +1,4 @@
-"""Entry point for python -m modelscope_mcp_server"""
+"""Entry point for python -m modelscope_mcp_server."""
 
 from . import main
 

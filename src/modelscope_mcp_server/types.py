@@ -16,12 +16,8 @@ class GenerationType(str, Enum):
 class UserInfo(BaseModel):
     """User information."""
 
-    authenticated: Annotated[
-        bool, Field(description="Whether the user is authenticated")
-    ]
-    reason: Annotated[
-        str | None, Field(description="Reason for failed authentication")
-    ] = None
+    authenticated: Annotated[bool, Field(description="Whether the user is authenticated")]
+    reason: Annotated[str | None, Field(description="Reason for failed authentication")] = None
     username: Annotated[str | None, Field(description="Username")] = None
     email: Annotated[str | None, Field(description="Email")] = None
     avatar_url: Annotated[str | None, Field(description="Avatar URL")] = None
@@ -39,21 +35,15 @@ class Model(BaseModel):
     created_by: Annotated[str, Field(description="User who created the model")]
 
     # Capabilities
-    support_inference: Annotated[
-        bool, Field(description="Whether the model supports inference API")
-    ] = False
+    support_inference: Annotated[bool, Field(description="Whether the model supports inference API")] = False
 
     # Metrics
     downloads_count: Annotated[int, Field(description="Number of downloads")] = 0
     stars_count: Annotated[int, Field(description="Number of stars")] = 0
 
     # Timestamps
-    created_at: Annotated[
-        int, Field(description="Created time (unix timestamp, seconds)")
-    ] = 0
-    updated_at: Annotated[
-        int, Field(description="Last updated time (unix timestamp, seconds)")
-    ] = 0
+    created_at: Annotated[int, Field(description="Created time (unix timestamp, seconds)")] = 0
+    updated_at: Annotated[int, Field(description="Last updated time (unix timestamp, seconds)")] = 0
 
 
 class Paper(BaseModel):

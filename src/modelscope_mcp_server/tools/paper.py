@@ -1,5 +1,4 @@
-"""
-ModelScope MCP Server Paper tools.
+"""ModelScope MCP Server Paper tools.
 
 Provides MCP tools for paper-related operations, such as searching for papers, getting paper details, etc.
 """
@@ -19,11 +18,11 @@ logger = logging.get_logger(__name__)
 
 
 def register_paper_tools(mcp: FastMCP) -> None:
-    """
-    Register all paper-related tools with the MCP server.
+    """Register all paper-related tools with the MCP server.
 
     Args:
         mcp (FastMCP): The MCP server instance
+
     """
 
     @mcp.tool(
@@ -37,13 +36,9 @@ def register_paper_tools(mcp: FastMCP) -> None:
             Literal["default", "hot", "recommend"],
             Field(description="Sort order"),
         ] = "default",
-        limit: Annotated[
-            int, Field(description="Maximum number of papers to return", ge=1, le=100)
-        ] = 10,
+        limit: Annotated[int, Field(description="Maximum number of papers to return", ge=1, le=100)] = 10,
     ) -> list[Paper]:
-        """
-        Search for papers on ModelScope.
-        """
+        """Search for papers on ModelScope."""
         url = f"{settings.api_base_url}/dolphin/papers"
 
         headers = {
@@ -61,13 +56,11 @@ def register_paper_tools(mcp: FastMCP) -> None:
 
         try:
             response = requests.put(url, json=request_data, headers=headers, timeout=10)
-        except requests.exceptions.Timeout:
-            raise TimeoutError("Request timeout - please try again later")
+        except requests.exceptions.Timeout as e:
+            raise TimeoutError("Request timeout - please try again later") from e
 
         if response.status_code != 200:
-            raise Exception(
-                f"Server returned non-200 status code: {response.status_code} {response.text}"
-            )
+            raise Exception(f"Server returned non-200 status code: {response.status_code} {response.text}")
 
         data = response.json()
 

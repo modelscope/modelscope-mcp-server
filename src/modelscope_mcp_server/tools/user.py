@@ -1,5 +1,4 @@
-"""
-ModelScope MCP Server User tools.
+"""ModelScope MCP Server User tools.
 
 Provides MCP tools for user-related operations, such as querying user information.
 """
@@ -15,11 +14,11 @@ logger = logging.get_logger(__name__)
 
 
 def register_user_tools(mcp: FastMCP) -> None:
-    """
-    Register all user-related tools with the MCP server.
+    """Register all user-related tools with the MCP server.
 
     Args:
         mcp (FastMCP): The MCP server instance
+
     """
 
     @mcp.tool(
@@ -29,9 +28,7 @@ def register_user_tools(mcp: FastMCP) -> None:
         }
     )
     async def get_current_user() -> UserInfo:
-        """
-        Get current authenticated user information from ModelScope.
-        """
+        """Get current authenticated user information from ModelScope."""
         if not settings.is_api_token_configured():
             return UserInfo(authenticated=False, reason="API token is not set")
 
@@ -50,9 +47,7 @@ def register_user_tools(mcp: FastMCP) -> None:
                 reason=f"Invalid API token: server returned {response.status_code}",
             )
         elif response.status_code != 200:
-            raise Exception(
-                f"Server returned non-200 status code: {response.status_code} {response.text}"
-            )
+            raise Exception(f"Server returned non-200 status code: {response.status_code} {response.text}")
 
         data = response.json()
 

@@ -1,4 +1,4 @@
-"""Command line interface for ModelScope MCP Server"""
+"""Command line interface for ModelScope MCP Server."""
 
 import argparse
 import sys
@@ -52,7 +52,7 @@ def validate_args(args: argparse.Namespace) -> None:
 
 
 def main() -> None:
-    """Main CLI entry point."""
+    """Handle CLI entry point operations."""
     parser = create_parser()
     args = parser.parse_args()
 

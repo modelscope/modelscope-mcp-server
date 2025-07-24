@@ -1,7 +1,7 @@
-"""
-ModelScope MCP Server Model tools.
+"""ModelScope MCP Server Model tools.
 
-Provides tools for model-related operations in the ModelScope MCP Server, such as searching for models and retrieving model details.
+Provides tools for model-related operations in the ModelScope MCP Server,
+such as searching for models and retrieving model details.
 """
 
 from typing import Annotated, Literal
@@ -18,11 +18,11 @@ logger = logging.get_logger(__name__)
 
 
 def register_model_tools(mcp: FastMCP) -> None:
-    """
-    Register all model-related tools with the MCP server.
+    """Register all model-related tools with the MCP server.
 
     Args:
         mcp (FastMCP): The MCP server instance
+
     """
 
     @mcp.tool(
@@ -34,7 +34,8 @@ def register_model_tools(mcp: FastMCP) -> None:
         query: Annotated[
             str,
             Field(
-                description="Keyword to search for related models (e.g., 'Flux' will find models related to Flux). Leave empty to skip keyword matching and get all models based on other filters."
+                description="Keyword to search for related models (e.g., 'Flux' will find models related to Flux). "
+                "Leave empty to skip keyword matching and get all models based on other filters."
             ),
         ] = "",
         task: Annotated[
@@ -49,13 +50,9 @@ def register_model_tools(mcp: FastMCP) -> None:
             Literal["Default", "DownloadsCount", "StarsCount", "GmtModified"],
             Field(description="Sort order"),
         ] = "Default",
-        limit: Annotated[
-            int, Field(description="Maximum number of models to return", ge=1, le=30)
-        ] = 10,
+        limit: Annotated[int, Field(description="Maximum number of models to return", ge=1, le=30)] = 10,
     ) -> list[Model]:
-        """
-        Search for models on ModelScope.
-        """
+        """Search for models on ModelScope."""
         url = f"{settings.api_base_url}/dolphin/models"
 
         headers = {
@@ -108,13 +105,11 @@ def register_model_tools(mcp: FastMCP) -> None:
 
         try:
             response = requests.put(url, json=request_data, headers=headers, timeout=10)
-        except requests.exceptions.Timeout:
-            raise TimeoutError("Request timeout - please try again later")
+        except requests.exceptions.Timeout as e:
+            raise TimeoutError("Request timeout - please try again later") from e
 
         if response.status_code != 200:
-            raise Exception(
-                f"Server returned non-200 status code: {response.status_code} {response.text}"
-            )
+            raise Exception(f"Server returned non-200 status code: {response.status_code} {response.text}")
 
         data = response.json()
 
@@ -129,9 +124,7 @@ def register_model_tools(mcp: FastMCP) -> None:
             name = model_data.get("Name", "")
 
             if not path or not name:
-                logger.warning(
-                    f"Skipping model with invalid path or name: {model_data}"
-                )
+                logger.warning(f"Skipping model with invalid path or name: {model_data}")
                 continue
 
             model = Model(

@@ -24,9 +24,7 @@ class Settings(BaseSettings):
     )
 
     # ModelScope API settings
-    api_token: str | None = Field(
-        default=None, description="ModelScope API token for authentication"
-    )
+    api_token: str | None = Field(default=None, description="ModelScope API token for authentication")
     api_base_url: str = Field(
         default=MODELSCOPE_API_ENDPOINT,
         description="Base URL for ModelScope API",
@@ -86,9 +84,7 @@ class Settings(BaseSettings):
         # API Configuration
         print("🔑 API Configuration:")
         masked_token = (
-            self.api_token[:-8] + "********"
-            if self.api_token and len(self.api_token) > 4
-            else "Not configured"
+            self.api_token[:-8] + "********" if self.api_token and len(self.api_token) > 4 else "Not configured"
         )
         print(f"  • Token: {masked_token}")
         print(f"  • Base URL: {self.api_base_url}")

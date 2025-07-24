@@ -1,5 +1,4 @@
-"""
-ModelScope MCP Server AIGC tools.
+"""ModelScope MCP Server AIGC tools.
 
 Provides MCP tools for text-to-image generation, etc.
 """
@@ -19,11 +18,11 @@ logger = logging.get_logger(__name__)
 
 
 def register_aigc_tools(mcp: FastMCP) -> None:
-    """
-    Register all AIGC-related tools with the MCP server.
+    """Register all AIGC-related tools with the MCP server.
 
     Args:
         mcp (FastMCP): The MCP server instance
+
     """
 
     @mcp.tool(
@@ -36,30 +35,30 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         prompt: Annotated[
             str,
             Field(
-                description="The prompt of the image to be generated, containing the desired elements and visual features."
+                description="The prompt of the image to be generated, "
+                "containing the desired elements and visual features."
             ),
         ],
         model: Annotated[
             str | None,
             Field(
-                description="The model ID from ModelScope to be used for image generation. If not provided, uses the default model provided in server settings."
+                description="The model's ID fo be used for image generation. "
+                "If not provided, uses the default model provided in server settings."
             ),
         ] = None,
         image_url: Annotated[
             str | None,
             Field(
-                description="The URL of the source image for image-to-image generation. If not provided, performs text-to-image generation."
+                description="The URL of the source image for image-to-image generation."
+                "If not provided, performs text-to-image generation."
             ),
         ] = None,
     ) -> ImageGenerationResult:
-        """
-        Generate an image based on the given text prompt and ModelScope AIGC model ID.
+        """Generate an image based on the given text prompt and ModelScope AIGC model ID.
+
         Supports both text-to-image and image-to-image generation.
         """
-
-        generation_type = (
-            GenerationType.IMAGE_TO_IMAGE if image_url else GenerationType.TEXT_TO_IMAGE
-        )
+        generation_type = GenerationType.IMAGE_TO_IMAGE if image_url else GenerationType.TEXT_TO_IMAGE
 
         # Use default model if not specified
         if model is None:
@@ -94,9 +93,7 @@ def register_aigc_tools(mcp: FastMCP) -> None:
             "User-Agent": "modelscope-mcp-server",
         }
 
-        logger.info(
-            f"Sending {generation_type.value} generation request with model '{model}' and prompt '{prompt}'"
-        )
+        logger.info(f"Sending {generation_type.value} generation request with model '{model}' and prompt '{prompt}'")
 
         try:
             response = requests.post(
@@ -105,13 +102,11 @@ def register_aigc_tools(mcp: FastMCP) -> None:
                 headers=headers,
                 timeout=300,
             )
-        except requests.exceptions.Timeout:
-            raise TimeoutError("Request timeout - please try again later")
+        except requests.exceptions.Timeout as e:
+            raise TimeoutError("Request timeout - please try again later") from e
 
         if response.status_code != 200:
-            raise Exception(
-                f"Server returned non-200 status code: {response.status_code} {response.text}"
-            )
+            raise Exception(f"Server returned non-200 status code: {response.status_code} {response.text}")
 
         response_data = response.json()
 

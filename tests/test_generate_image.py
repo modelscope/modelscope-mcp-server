@@ -21,20 +21,15 @@ class MockResponse:
     def __init__(self, json_data, status_code=200):
         self.json_data = json_data
         self.status_code = status_code
-        self.text = (
-            json.dumps(json_data) if isinstance(json_data, dict) else str(json_data)
-        )
+        self.text = json.dumps(json_data) if isinstance(json_data, dict) else str(json_data)
 
     def json(self):
         return self.json_data
 
 
-@pytest.mark.asyncio
 async def test_text_to_image_generation_success(mcp_server):
     """Test successful text-to-image generation."""
-    mock_response_data = {
-        "images": [{"url": "https://example.com/generated_image.jpg"}]
-    }
+    mock_response_data = {"images": [{"url": "https://example.com/generated_image.jpg"}]}
 
     with patch("requests.post") as mock_post:
         mock_post.return_value = MockResponse(mock_response_data, 200)
@@ -53,20 +48,15 @@ async def test_text_to_image_generation_success(mcp_server):
 
             print(f"✅ Generated text-to-image result: {image_result}")
 
-            assert image_result.type == GenerationType.TEXT_TO_IMAGE.value, (
-                "Should be text-to-image generation"
+            assert image_result.type == GenerationType.TEXT_TO_IMAGE.value, "Should be text-to-image generation"
+            assert image_result.model == "iic/text-to-image-7b", "Model should match input"
+            assert image_result.image_url == "https://example.com/generated_image.jpg", (
+                "Image URL should match mock response"
             )
-            assert image_result.model == "iic/text-to-image-7b", (
-                "Model should match input"
-            )
-            assert (
-                image_result.image_url == "https://example.com/generated_image.jpg"
-            ), "Image URL should match mock response"
 
             mock_post.assert_called_once()
 
 
-@pytest.mark.asyncio
 async def test_image_to_image_generation_success(mcp_server):
     """Test successful image-to-image generation."""
     mock_response_data = {"images": [{"url": "https://example.com/modified_image.jpg"}]}
@@ -89,12 +79,8 @@ async def test_image_to_image_generation_success(mcp_server):
 
             print(f"✅ Generated image-to-image result: {image_result}")
 
-            assert image_result.type == GenerationType.IMAGE_TO_IMAGE.value, (
-                "Should be image-to-image generation"
-            )
-            assert image_result.model == "iic/image-to-image-7b", (
-                "Model should match input"
-            )
+            assert image_result.type == GenerationType.IMAGE_TO_IMAGE.value, "Should be image-to-image generation"
+            assert image_result.model == "iic/image-to-image-7b", "Model should match input"
             assert image_result.image_url == "https://example.com/modified_image.jpg", (
                 "Image URL should match mock response"
             )
@@ -102,12 +88,9 @@ async def test_image_to_image_generation_success(mcp_server):
             mock_post.assert_called_once()
 
 
-@pytest.mark.asyncio
 async def test_generate_image_with_default_model(mcp_server):
     """Test image generation with default model when no model is specified."""
-    mock_response_data = {
-        "images": [{"url": "https://example.com/default_model_image.jpg"}]
-    }
+    mock_response_data = {"images": [{"url": "https://example.com/default_model_image.jpg"}]}
 
     with patch("requests.post") as mock_post:
         mock_post.return_value = MockResponse(mock_response_data, 200)
@@ -131,7 +114,6 @@ async def test_generate_image_with_default_model(mcp_server):
             )
 
 
-@pytest.mark.asyncio
 async def test_generate_image_empty_prompt_error(mcp_server):
     """Test error handling for empty prompt."""
     async with Client(mcp_server) as client:
@@ -145,7 +127,6 @@ async def test_generate_image_empty_prompt_error(mcp_server):
         assert "Prompt cannot be empty" in str(exc_info.value)
 
 
-@pytest.mark.asyncio
 async def test_generate_image_api_error_response(mcp_server):
     """Test handling of API error response."""
     error_response_data = {"error": "Model not found", "code": "MODEL_NOT_FOUND"}
@@ -164,7 +145,6 @@ async def test_generate_image_api_error_response(mcp_server):
             assert "Server returned non-200 status code: 404" in str(exc_info.value)
 
 
-@pytest.mark.asyncio
 async def test_generate_image_timeout_error(mcp_server):
     """Test handling of request timeout."""
     with patch("requests.post") as mock_post:
@@ -184,7 +164,6 @@ async def test_generate_image_timeout_error(mcp_server):
             assert "Request timeout" in str(exc_info.value)
 
 
-@pytest.mark.asyncio
 async def test_generate_image_malformed_response(mcp_server):
     """Test handling of malformed API response."""
     malformed_response_data = {
@@ -209,7 +188,6 @@ async def test_generate_image_malformed_response(mcp_server):
             assert "Server returned error" in str(exc_info.value)
 
 
-@pytest.mark.asyncio
 async def test_generate_image_request_parameters(mcp_server):
     """Test that the correct parameters are sent in the request."""
     mock_response_data = {"images": [{"url": "https://example.com/test_image.jpg"}]}

@@ -1,9 +1,11 @@
 [project]
 name = "modelscope-mcp-server"
 dynamic = ["version"]
-description = "ModelScope MCP Server"
+description = "A Model Context Protocol (MCP) server that integrates with ModelScope's ecosystem."
 readme = "README.md"
-authors = [{ name = "ModelScope Team" }]
+authors = [
+    { name = "ModelScope Team", email = "contact@modelscope.cn" }
+]
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
 dependencies = [
@@ -14,21 +16,16 @@ dependencies = [
 keywords = [
     "modelscope",
     "mcp",
-    "mcp server",
     "model-context-protocol",
-    "fastmcp",
     "llm",
-    "agent",
+    "ai",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
 ]
 
 [project.urls]
@@ -50,29 +47,29 @@ packages = ["src/modelscope_mcp_server"]
 
 [dependency-groups]
 dev = [
-    "build>=1.2.2.post1",
-    "twine>=6.1.0",
     "pytest>=8.4.1",
-    "pyright>=1.1.403",
-    "pre-commit>=4.2.0",
-    "ruff>=0.12.3",
     "pytest-asyncio>=1.0.0",
     "pytest-cov>=6.2.1",
-    "pytest-env>=1.1.5",
-    "pytest-report>=0.2.1",
-    "pytest-timeout>=2.4.0",
+    "pyright>=1.1.403",
+    "ruff>=0.12.3",
 ]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-env = ["MODELSCOPE_LOG_LEVEL=INFO"]
+testpaths = ["tests"]
+addopts = [
+    "--cov=src/modelscope_mcp_server",
+    "--cov-report=term-missing",
+]
+env = [
+    "MODELSCOPE_LOG_LEVEL=INFO"
+]
 
 
 [tool.pyright]
-include = ["src"]
-exclude = ["**/__pycache__", ".venv", ".git", "dist"]
+include = ["src", "tests"]
+exclude = ["**/__pycache__"]
 pythonVersion = "3.10"
-pythonPlatform = "Darwin"
 typeCheckingMode = "basic"
 reportMissingImports = true
 reportMissingTypeStubs = false
@@ -80,5 +77,31 @@ useLibraryCodeForTypes = true
 venvPath = "."
 venv = ".venv"
 
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+
 [tool.ruff.lint]
-extend-select = ["I", "UP"]
+extend-select = [
+    "E",   # pycodestyle errors (PEP 8 style violations)
+    "W",   # pycodestyle warnings (PEP 8 style warnings)
+    "F",   # pyflakes (unused imports, variables, etc.)
+    "I",   # isort (import sorting and organization)
+    "B",   # flake8-bugbear (common bug patterns)
+    "UP",  # pyupgrade (Python version upgrade suggestions)
+    "D",   # pydocstyle (docstring style checking)
+]
+ignore = [
+    "D203",  # 1 blank line required before class docstring (conflicts with D211)
+    "D213",  # Multi-line docstring summary should start at the second line (conflicts with D212)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*" = ["D"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["modelscope_mcp_server"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

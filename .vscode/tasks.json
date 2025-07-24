@@ -70,11 +70,11 @@
       "problemMatcher": []
     },
     {
-      "label": "uv run pytest -s",
-      "detail": "Run pytest tests with output",
+      "label": "uv run pytest",
+      "detail": "Run pytest tests",
       "type": "shell",
       "command": "uv",
-      "args": ["run", "pytest", "-s"],
+      "args": ["run", "pytest"],
       "group": {
         "kind": "test",
         "isDefault": false
