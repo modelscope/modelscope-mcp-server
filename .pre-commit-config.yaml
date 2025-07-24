@@ -28,3 +28,8 @@ repos:
     hooks:
       - id: pyright-pretty
         files: ^src/|^tests/
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.28.0
+    hooks:
+      - id: gitleaks
