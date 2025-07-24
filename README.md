@@ -4,6 +4,8 @@
 [![Docker](https://img.shields.io/badge/docker-supported-blue?logo=docker)](https://github.com/modelscope/modelscope-mcp-server/blob/main/Dockerfile)
 [![GitHub Container Registry](https://img.shields.io/badge/container-registry-blue?logo=github)](https://github.com/modelscope/modelscope-mcp-server/pkgs/container/modelscope-mcp-server)
 [![License](https://img.shields.io/github/license/modelscope/modelscope-mcp-server.svg)](https://github.com/modelscope/modelscope-mcp-server/blob/main/LICENSE)
+[![Lint](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/lint.yml/badge.svg)](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/lint.yml)
+[![Test](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/test.yml/badge.svg)](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/test.yml)
 
 A Model Context Protocol (MCP) server that integrates with [ModelScope](https://modelscope.cn)'s ecosystem, providing seamless access to AI models, datasets, apps, papers, and generation capabilities through popular MCP clients.
 
@@ -21,7 +23,7 @@ A Model Context Protocol (MCP) server that integrates with [ModelScope](https://
 ### 1. Get Your API Token
 
 1. Visit [ModelScope](https://modelscope.cn/home) and sign in to your account
-2. Navigate to **[Home] → [Access Tokens]** to retrieve your default API token or create a new one
+2. Navigate to **[Home] → [Access Tokens]** to retrieve or create your API token
 
 > 📖 For detailed instructions, refer to the [ModelScope Token Documentation](https://modelscope.cn/docs/accounts/token)
 
@@ -85,23 +87,17 @@ This format is widely adopted across the MCP ecosystem:
    uv sync
    ```
 
-2. **Activate Environment**:
+2. **Activate Environment** (or use your IDE):
 
    ```bash
    source .venv/bin/activate  # Linux/macOS
-   # or via your IDE
    ```
 
-3. **Set Your API Token Environment Variable**:
+3. **Set Your API Token** (see Quick Start section for token setup):
 
    ```bash
    export MODELSCOPE_API_TOKEN="your-api-token"
-   ```
-
-   Or, you can set the API token in the `.env` file (under the project root) for convenience:
-
-   ```env
-   MODELSCOPE_API_TOKEN="your-api-token"
+   # Or create .env file: echo 'MODELSCOPE_API_TOKEN="your-api-token"' > .env
    ```
 
 ### Running the Demo Script
@@ -112,7 +108,7 @@ Run a quick demo to explore the server's capabilities:
 uv run python demo.py
 ```
 
-Use the `--full` flag to demonstrate all available features:
+Use the `--full` flag for comprehensive feature demonstration:
 
 ```bash
 uv run python demo.py --full
@@ -149,49 +145,77 @@ You can also debug the server using the [MCP Inspector](https://github.com/model
 npx @modelcontextprotocol/inspector uv run modelscope-mcp-server
 ```
 
-The above command uses stdio transport by default; you can switch to HTTP or SSE in the Web UI as needed.
+Uses stdio transport by default; switch to HTTP/SSE in the Web UI as needed.
 
 ### Testing
 
-Run the complete test suite:
-
 ```bash
-# Basic test run
+# Run all tests
 uv run pytest
 
-# Run tests for a specific file
+# Run specific test file
 uv run pytest tests/test_search_papers.py
 
 # With coverage report
-uv run pytest --cov=src --cov=examples --cov-report=html
+uv run pytest --cov=src --cov-report=html
 ```
 
-### Code Quality
+## 🔄 Continuous Integration
 
-This project uses `pre-commit` hooks for automated code formatting, linting, and type checking:
+This project uses GitHub Actions for automated CI/CD workflows that run on every push and pull request:
+
+### Automated Checks
+
+- **🔍 [CodeQL Analysis](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/codeql.yml)** - Security vulnerability scanning and code quality analysis
+- **✨ [Lint](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/lint.yml)** - Code formatting, linting, and style checks using pre-commit hooks
+- **🧪 [Test Suite](https://github.com/modelscope/modelscope-mcp-server/actions/workflows/test.yml)** - Comprehensive testing across Python 3.10, 3.11, and 3.12
+
+### Local Development Checks
+
+Run the same checks locally before submitting PRs:
 
 ```bash
-# Install hooks
+# Install and run pre-commit hooks
 uv run pre-commit install
-
-# Run all checks manually
 uv run pre-commit run --all-files
+
+# Run tests
+uv run pytest
 ```
 
-**All PRs must pass these checks and include appropriate tests.**
+Monitor CI status in the [Actions tab](https://github.com/modelscope/modelscope-mcp-server/actions).
 
 ## 📦 Release Management
 
-This project uses GitHub Actions for automated release management.
+This project uses GitHub Actions for automated release management. To create a new release:
+
+1. **Update version** using the bump script:
+
+   ```bash
+   uv run python scripts/bump_version.py [patch|minor|major]
+   # Or set specific version: uv run python scripts/bump_version.py set 1.2.3.dev1
+   ```
+
+2. **Commit and tag** (follow the script's output instructions):
+
+   ```bash
+   git add src/modelscope_mcp_server/_version.py
+   git commit -m "chore: bump version to v{version}"
+   git tag v{version} && git push origin v{version}
+   ```
+
+3. **Automated publishing** - GitHub Actions will automatically:
+   - Create a new [GitHub Release](https://github.com/modelscope/modelscope-mcp-server/releases)
+   - Publish package to [PyPI repository](https://pypi.org/project/modelscope-mcp-server/)
+   - Build and push Docker image to [GitHub Container Registry](https://github.com/modelscope/modelscope-mcp-server/pkgs/container/modelscope-mcp-server)
 
 ## 🤝 Contributing
 
-We welcome contributions! Please ensure that:
+We welcome contributions! Please ensure your PRs:
 
-1. All PRs include relevant tests and pass the full test suite
-2. Code follows our style guidelines (enforced by pre-commit hooks)
-3. Documentation is updated for new features
-4. Commit messages follow conventional commit format
+- Include relevant tests and pass all CI checks
+- Update documentation for new features
+- Follow conventional commit format
 
 ## 📚 References
 
