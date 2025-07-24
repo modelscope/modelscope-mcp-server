@@ -1,3 +1,3 @@
 """Version information for ModelScope MCP Server."""
 
-__version__ = "0.1.4.dev3"
+__version__ = "0.1.4"
