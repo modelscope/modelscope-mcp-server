@@ -1,6 +1,6 @@
-"""ModelScope MCP Server User tools.
+"""ModelScope MCP Server Context tools.
 
-Provides MCP tools for user-related operations, such as querying user information.
+Provides MCP tools about the current context you are operating in, such as the current user.
 """
 
 import requests
@@ -13,8 +13,8 @@ from ..types import UserInfo
 logger = logging.get_logger(__name__)
 
 
-def register_user_tools(mcp: FastMCP) -> None:
-    """Register all user-related tools with the MCP server.
+def register_context_tools(mcp: FastMCP) -> None:
+    """Register all context-related tools with the MCP server.
 
     Args:
         mcp (FastMCP): The MCP server instance
@@ -28,7 +28,11 @@ def register_user_tools(mcp: FastMCP) -> None:
         }
     )
     async def get_current_user() -> UserInfo:
-        """Get current authenticated user information from ModelScope."""
+        """Get current authenticated user information from ModelScope.
+
+        Use this when a request is about the user's own profile for ModelScope.
+        Or when information is missing to build other tool calls.
+        """
         if not settings.is_api_token_configured():
             return UserInfo(authenticated=False, reason="API token is not set")
 
