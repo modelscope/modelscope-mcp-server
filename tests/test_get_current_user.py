@@ -4,6 +4,7 @@ from fastmcp import Client
 from modelscope_mcp_server.settings import settings
 
 
+@pytest.mark.integration
 async def test_get_current_user_with_api_token(mcp_server):
     if not settings.is_api_token_configured():
         pytest.skip("API token not configured, skipping test")
@@ -24,6 +25,7 @@ async def test_get_current_user_with_api_token(mcp_server):
         assert len(user_info.username) > 0, "Username should not be empty"
 
 
+@pytest.mark.integration
 async def test_get_current_user_no_api_token(mcp_server):
     """Test get_current_user when API token is not configured."""
     # Temporarily remove API token
@@ -49,6 +51,7 @@ async def test_get_current_user_no_api_token(mcp_server):
         settings.api_token = original_api_token
 
 
+@pytest.mark.integration
 async def test_get_current_user_invalid_api_token(mcp_server):
     """Test get_current_user when API token is invalid."""
     # Temporarily set invalid API token

@@ -1,6 +1,8 @@
+import pytest
 from fastmcp import Client
 
 
+@pytest.mark.integration
 async def test_search_papers(mcp_server):
     async with Client(mcp_server) as client:
         result = await client.call_tool("search_papers", {"query": "nexus-gen", "limit": 2})

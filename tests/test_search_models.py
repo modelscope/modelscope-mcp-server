@@ -1,3 +1,4 @@
+import pytest
 from fastmcp import Client
 
 
@@ -52,6 +53,7 @@ def validate_model_fields(model):
         assert field in model, f"Model should have {field}"
 
 
+@pytest.mark.integration
 async def test_search_models(mcp_server):
     async with Client(mcp_server) as client:
         models = await search_models_helper(client, {"query": "flux", "task": "text-to-image", "limit": 5})
@@ -62,6 +64,7 @@ async def test_search_models(mcp_server):
         validate_model_fields(models[0])
 
 
+@pytest.mark.integration
 async def test_search_models_without_task_filter(mcp_server):
     async with Client(mcp_server) as client:
         models = await search_models_helper(client, {"query": "bert", "limit": 3})
@@ -69,6 +72,7 @@ async def test_search_models_without_task_filter(mcp_server):
         print_models_list(models, "without task filter", ["stars_count"])
 
 
+@pytest.mark.integration
 async def test_search_models_with_filters(mcp_server):
     async with Client(mcp_server) as client:
         models = await search_models_helper(client, {"query": "qwen", "filters": ["support_inference"], "limit": 3})
@@ -80,6 +84,7 @@ async def test_search_models_with_filters(mcp_server):
             assert model.get("support_inference", False), f"Model {model.get('id', '')} should support inference"
 
 
+@pytest.mark.integration
 async def test_search_models_sort_by_stars(mcp_server):
     async with Client(mcp_server) as client:
         models = await search_models_helper(client, {"query": "llama", "sort": "StarsCount", "limit": 3})

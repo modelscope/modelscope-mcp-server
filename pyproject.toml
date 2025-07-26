@@ -47,10 +47,13 @@ packages = ["src/modelscope_mcp_server"]
 
 [dependency-groups]
 dev = [
+    "coverage[toml]>=7.10.0",
     "pre-commit>=4.2.0",
     "pytest>=8.4.1",
     "pytest-asyncio>=1.0.0",
     "pytest-cov>=6.2.1",
+    "pytest-env>=1.1.5",
+    "pytest-mock>=3.14.1",
     "pyright>=1.1.403",
     "ruff>=0.12.3",
 ]
@@ -58,14 +61,21 @@ dev = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-addopts = [
-    "--cov=src/modelscope_mcp_server",
-    "--cov-report=term-missing",
-]
+addopts = ["-m", "not slow", "--cov=src", "--cov-report="]
 env = [
-    "MODELSCOPE_LOG_LEVEL=INFO"
+    "MODELSCOPE_LOG_LEVEL=INFO",
+]
+markers = [
+    "integration: marks tests as integration tests (require external dependencies)",
+    "slow: marks tests as slow (may take a long time to run)",
 ]
 
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+precision = 2
 
 [tool.pyright]
 include = ["src", "tests"]

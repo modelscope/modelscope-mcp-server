@@ -1,3 +1,4 @@
+import pytest
 from fastmcp import Client
 
 
@@ -50,6 +51,7 @@ def validate_server_fields(server):
         assert field in server, f"Server should have {field}"
 
 
+@pytest.mark.integration
 async def test_search_mcp_servers(mcp_server):
     """Test basic MCP servers search."""
     async with Client(mcp_server) as client:
@@ -62,6 +64,7 @@ async def test_search_mcp_servers(mcp_server):
             validate_server_fields(servers[0])
 
 
+@pytest.mark.integration
 async def test_search_mcp_servers_empty_search(mcp_server):
     """Test searching MCP servers with empty search term."""
     async with Client(mcp_server) as client:
@@ -70,6 +73,7 @@ async def test_search_mcp_servers_empty_search(mcp_server):
         print_servers_list(servers, "with empty search", ["view_count"])
 
 
+@pytest.mark.integration
 async def test_search_mcp_servers_with_category_filter(mcp_server):
     """Test searching MCP servers with category filter."""
     async with Client(mcp_server) as client:
@@ -78,6 +82,7 @@ async def test_search_mcp_servers_with_category_filter(mcp_server):
         print_servers_list(servers, "with developer-tools category", ["view_count"])
 
 
+@pytest.mark.integration
 async def test_search_mcp_servers_with_hosted_filter(mcp_server):
     """Test searching MCP servers with hosted filter."""
     async with Client(mcp_server) as client:
@@ -86,6 +91,7 @@ async def test_search_mcp_servers_with_hosted_filter(mcp_server):
         print_servers_list(servers, "with hosted filter", ["view_count"])
 
 
+@pytest.mark.integration
 async def test_search_mcp_servers_multiple_categories(mcp_server):
     """Test searching MCP servers in different categories."""
     categories = ["browser-automation", "search", "developer-tools"]
@@ -97,6 +103,7 @@ async def test_search_mcp_servers_multiple_categories(mcp_server):
             print_servers_list(servers, f"in {category} category", ["view_count"])
 
 
+@pytest.mark.integration
 async def test_search_mcp_servers_large_limit(mcp_server):
     """Test searching MCP servers with large limit."""
     async with Client(mcp_server) as client:
@@ -108,6 +115,7 @@ async def test_search_mcp_servers_large_limit(mcp_server):
         assert len(servers) <= 20, "Should not exceed the specified limit"
 
 
+@pytest.mark.integration
 async def test_search_mcp_servers_all_filters(mcp_server):
     """Test searching MCP servers with all filters combined."""
     async with Client(mcp_server) as client:

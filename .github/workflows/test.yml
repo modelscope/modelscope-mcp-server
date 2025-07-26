@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/**'
       - 'tests/**'
+      - '*.py'
       - 'pyproject.toml'
       - 'uv.lock'
       - '.github/workflows/test.yml'
@@ -42,10 +43,44 @@ jobs:
     - name: Install dependencies
       run: uv sync --locked
 
-    - name: Run all tests
-      run: uv run pytest
+    - name: Run unit tests
+      run: uv run pytest -m "not integration" -v --cov-append
       env:
         MODELSCOPE_API_TOKEN: ${{ secrets.MODELSCOPE_API_TOKEN }}
+
+    - name: Run integration tests (fast)
+      run: uv run pytest -m "integration and not slow" -v --cov-append
+      env:
+        MODELSCOPE_API_TOKEN: ${{ secrets.MODELSCOPE_API_TOKEN }}
+
+    - name: Run integration tests (slow)
+      run: uv run pytest -m "integration and slow" -v -s --cov-append
+      env:
+        MODELSCOPE_API_TOKEN: ${{ secrets.MODELSCOPE_API_TOKEN }}
+
+    - name: Generate coverage report
+      run: |
+        echo "📊 Generating final coverage report..."
+        uv run coverage html
+        echo "📋 Coverage Summary:"
+        uv run coverage report
+
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v4
+      if: matrix.python-version == '3.12'  # Only upload once to avoid duplicates
+      with:
+        name: coverage-report-${{ matrix.python-version }}
+        path: htmlcov/
+        retention-days: 30
+
+    - name: Display coverage summary
+      if: matrix.python-version == '3.12'  # Only show summary once
+      run: |
+        echo "## 📊 Coverage Report" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        uv run coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "📁 **Download detailed HTML report from Artifacts section below**" >> $GITHUB_STEP_SUMMARY
 
     - name: Optimize uv cache for CI
       run: uv cache prune --ci
