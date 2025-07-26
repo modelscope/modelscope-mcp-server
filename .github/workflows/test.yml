@@ -44,17 +44,18 @@ jobs:
       run: uv sync --locked
 
     - name: Run unit tests
-      run: uv run pytest -m "not integration" -v --cov-append
+      run: uv run pytest -m "not integration" -v --cov=src --cov-append --cov-report=term-missing
       env:
         MODELSCOPE_API_TOKEN: ${{ secrets.MODELSCOPE_API_TOKEN }}
 
     - name: Run integration tests (fast)
-      run: uv run pytest -m "integration and not slow" -v --cov-append
+      run: uv run pytest -m "integration and not slow" -v --cov=src --cov-append --cov-report=term-missing
       env:
         MODELSCOPE_API_TOKEN: ${{ secrets.MODELSCOPE_API_TOKEN }}
 
     - name: Run integration tests (slow)
-      run: uv run pytest -m "integration and slow" -v -s --cov-append
+      run: uv run pytest -m "integration and slow" -v -s --cov=src --cov-append --cov-report=term-missing
+      if: matrix.python-version == '3.12'  # Only run once to reduce costs
       env:
         MODELSCOPE_API_TOKEN: ${{ secrets.MODELSCOPE_API_TOKEN }}
 

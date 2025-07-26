@@ -61,7 +61,7 @@ dev = [
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-addopts = ["-m", "not slow", "--cov=src", "--cov-report="]
+addopts = ["-m", "not slow"]
 env = [
     "MODELSCOPE_LOG_LEVEL=INFO",
 ]
