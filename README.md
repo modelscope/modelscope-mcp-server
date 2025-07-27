@@ -7,7 +7,7 @@
 
 English | [中文](README_zh-CN.md)
 
-A Model Context Protocol (MCP) server that integrates with [ModelScope](https://modelscope.cn)'s ecosystem, providing seamless access to AI models, datasets, apps, papers, and generation capabilities through popular MCP clients.
+Empowers AI agents and chatbots with direct access to [ModelScope](https://modelscope.cn)'s rich ecosystem of AI resources. From generating images to discovering cutting-edge models, datasets, apps and research papers, this MCP server makes ModelScope's vast collection of tools and services accessible through simple conversational interactions.
 
 ## ✨ Features
 

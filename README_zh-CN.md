@@ -7,7 +7,7 @@
 
 [English](README.md) | 中文
 
-一个集成 [ModelScope](https://modelscope.cn)（魔搭社区）生态的模型上下文协议（MCP）服务器，通过流行的 MCP 客户端无缝访问 AI 模型、数据集、应用、论文和内容生成能力。
+魔搭社区（[ModelScope](https://modelscope.cn)）官方 MCP 服务器，为你的 AI 应用提供一站式接入能力，轻松访问平台海量的模型、数据集、创空间、论文、MCP 服务，以及各种 AIGC 生成能力。
 
 ## ✨ 功能特性
 
