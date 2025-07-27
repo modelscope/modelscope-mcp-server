@@ -93,3 +93,12 @@ class ImageGenerationResult(BaseModel):
     type: Annotated[GenerationType, Field(description="Type of image generation")]
     model: Annotated[str, Field(description="Model used for image generation")]
     image_url: Annotated[str, Field(description="URL of the generated image")]
+
+
+class EnvironmentInfo(BaseModel):
+    """Environment information."""
+
+    server_version: Annotated[str, Field(description="ModelScope MCP Server version")]
+    fastmcp_version: Annotated[str, Field(description="FastMCP framework version")]
+    mcp_protocol_version: Annotated[str, Field(description="MCP protocol version")]
+    python_version: Annotated[str, Field(description="Python runtime version")]

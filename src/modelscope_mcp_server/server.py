@@ -11,13 +11,13 @@ from fastmcp.server.middleware.timing import TimingMiddleware
 from fastmcp.settings import LOG_LEVEL
 from fastmcp.utilities import logging
 
-from ._version import __version__
 from .settings import settings
 from .tools.aigc import register_aigc_tools
 from .tools.context import register_context_tools
 from .tools.mcp import register_mcp_tools
 from .tools.model import register_model_tools
 from .tools.paper import register_paper_tools
+from .utils.metadata import get_server_name_with_version
 
 logger = logging.get_logger(__name__)
 
@@ -27,7 +27,7 @@ def create_mcp_server() -> FastMCP:
     fastmcp_settings.log_level = cast(LOG_LEVEL, settings.log_level)
 
     mcp = FastMCP(
-        name=f"ModelScope MCP Server v{__version__}",
+        name=get_server_name_with_version(),
         instructions="""
             This server provides tools for calling ModelScope (魔搭社区) API.
         """,

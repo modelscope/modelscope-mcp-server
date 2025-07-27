@@ -3,14 +3,14 @@
 import argparse
 import sys
 
-from ._version import __version__
 from .server import create_mcp_server
+from .utils.metadata import get_server_name, get_server_name_with_version, get_server_version
 
 
 def create_parser() -> argparse.ArgumentParser:
     """Create and configure the argument parser."""
     parser = argparse.ArgumentParser(
-        description=f"ModelScope MCP Server v{__version__}",
+        description=get_server_name_with_version(),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -39,7 +39,7 @@ Examples:
     parser.add_argument(
         "--version",
         action="version",
-        version=f"%(prog)s {__version__}",
+        version=f"%(prog)s {get_server_version()}",
     )
 
     return parser
@@ -81,7 +81,7 @@ def main() -> None:
                 show_banner=False,
             )
     except KeyboardInterrupt:
-        print("\nShutting down ModelScope MCP Server...", file=sys.stderr)
+        print(f"\nShutting down {get_server_name()}...", file=sys.stderr)
         sys.exit(0)
     except Exception as e:
         print(f"Error starting server: {e}", file=sys.stderr)

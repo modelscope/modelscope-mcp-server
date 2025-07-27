@@ -8,7 +8,8 @@ from fastmcp import FastMCP
 from fastmcp.utilities import logging
 
 from ..settings import settings
-from ..types import UserInfo
+from ..types import EnvironmentInfo, UserInfo
+from ..utils.metadata import get_fastmcp_version, get_mcp_protocol_version, get_python_version, get_server_version
 
 logger = logging.get_logger(__name__)
 
@@ -66,4 +67,23 @@ def register_context_tools(mcp: FastMCP) -> None:
             email=user_data.get("Email"),
             avatar_url=user_data.get("Avatar"),
             description=user_data.get("Description") or "",
+        )
+
+    @mcp.tool(
+        annotations={
+            "title": "Get Environment Info",
+            "readOnlyHint": True,
+        }
+    )
+    async def get_environment_info() -> EnvironmentInfo:
+        """Get current MCP server environment information.
+
+        Returns version information for the server, FastMCP framework, MCP protocol, and Python runtime.
+        Useful for debugging and compatibility checking.
+        """
+        return EnvironmentInfo(
+            server_version=get_server_version(),
+            fastmcp_version=get_fastmcp_version(),
+            mcp_protocol_version=get_mcp_protocol_version(),
+            python_version=get_python_version(),
         )
