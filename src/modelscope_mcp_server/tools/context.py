@@ -3,9 +3,11 @@
 Provides MCP tools about the current context you are operating in, such as the current user.
 """
 
-import requests
 from fastmcp import FastMCP
 from fastmcp.utilities import logging
+from requests.exceptions import HTTPError
+
+from modelscope_mcp_server.client import default_client
 
 from ..settings import settings
 from ..types import EnvironmentInfo, UserInfo
@@ -37,29 +39,19 @@ def register_context_tools(mcp: FastMCP) -> None:
         if not settings.is_api_token_configured():
             return UserInfo(authenticated=False, reason="API token is not set")
 
-        # Should change to use the official OpenAPI when it's available
         url = f"{settings.api_base_url}/users/login/info"
 
-        headers = {
-            "Cookie": f"m_session_id={settings.api_token}",
-            "User-Agent": "modelscope-mcp-server",
-        }
+        try:
+            response = default_client.get(url)
+        except HTTPError as e:
+            if e.response.status_code == 401 or e.response.status_code == 403:
+                return UserInfo(
+                    authenticated=False,
+                    reason=f"Invalid API token: server returned {e.response.status_code}",
+                )
+            raise e
 
-        response = requests.get(url, headers=headers, timeout=10)
-        if response.status_code == 401 or response.status_code == 403:
-            return UserInfo(
-                authenticated=False,
-                reason=f"Invalid API token: server returned {response.status_code}",
-            )
-        elif response.status_code != 200:
-            raise Exception(f"Server returned non-200 status code: {response.status_code} {response.text}")
-
-        data = response.json()
-
-        if not data.get("Success", False):
-            raise Exception(f"Server returned error: {data}")
-
-        user_data = data.get("Data", {})
+        user_data = response.get("Data", {})
 
         return UserInfo(
             authenticated=True,

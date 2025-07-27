@@ -180,6 +180,12 @@ async def main() -> None:
         action="store_true",
         help="Run all demos including slow operations like image generation",
     )
+    parser.add_argument(
+        "--log-level",
+        type=str,
+        default="WARNING",
+        help="Set log level",
+    )
     args = parser.parse_args()
 
     print(f"🤖 {get_server_name_with_version()} Demo")
@@ -189,8 +195,7 @@ async def main() -> None:
     else:
         print("🚀 Running all demos including slow operations")
 
-    # Set log level to WARNING to avoid too many logs
-    settings.log_level = "WARNING"
+    settings.log_level = args.log_level
     settings.show_settings()
 
     mcp = create_mcp_server()

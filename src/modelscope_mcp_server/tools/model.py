@@ -6,11 +6,11 @@ such as searching for models and retrieving model details.
 
 from typing import Annotated, Literal
 
-import requests
 from fastmcp import FastMCP
 from fastmcp.utilities import logging
 from pydantic import Field
 
+from ..client import default_client
 from ..settings import settings
 from ..types import Model
 
@@ -55,11 +55,6 @@ def register_model_tools(mcp: FastMCP) -> None:
         """Search for models on ModelScope."""
         url = f"{settings.api_base_url}/dolphin/models"
 
-        headers = {
-            "Content-Type": "application/json",
-            "User-Agent": "modelscope-mcp-server",
-        }
-
         # Build criterion for task filter
         criterion = []
         if task:
@@ -103,20 +98,9 @@ def register_model_tools(mcp: FastMCP) -> None:
             "PageSize": limit,
         }
 
-        try:
-            response = requests.put(url, json=request_data, headers=headers, timeout=10)
-        except requests.exceptions.Timeout as e:
-            raise TimeoutError("Request timeout - please try again later") from e
+        response = default_client.put(url, json_data=request_data)
 
-        if response.status_code != 200:
-            raise Exception(f"Server returned non-200 status code: {response.status_code} {response.text}")
-
-        data = response.json()
-
-        if not data.get("Success", False):
-            raise Exception(f"Server returned error: {data}")
-
-        models_data = data.get("Data", {}).get("Model", {}).get("Models", [])
+        models_data = response.get("Data", {}).get("Model", {}).get("Models", [])
 
         models = []
         for model_data in models_data:

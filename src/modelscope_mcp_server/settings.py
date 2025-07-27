@@ -4,6 +4,8 @@ from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .constants import (
+    DEFAULT_API_TIMEOUT_SECONDS,
+    DEFAULT_IMAGE_GENERATION_TIMEOUT_SECONDS,
     DEFAULT_IMAGE_TO_IMAGE_MODEL,
     DEFAULT_TEXT_TO_IMAGE_MODEL,
     MODELSCOPE_API_ENDPOINT,
@@ -46,6 +48,16 @@ class Settings(BaseSettings):
     default_image_to_image_model: str = Field(
         default=DEFAULT_IMAGE_TO_IMAGE_MODEL,
         description="Default model for image-to-image generation",
+    )
+
+    # Default timeout settings
+    default_api_timeout_seconds: int = Field(
+        default=DEFAULT_API_TIMEOUT_SECONDS,
+        description="Default timeout for API requests",
+    )
+    default_image_generation_timeout_seconds: int = Field(
+        default=DEFAULT_IMAGE_GENERATION_TIMEOUT_SECONDS,
+        description="Default timeout for image generation requests",
     )
 
     # Logging settings

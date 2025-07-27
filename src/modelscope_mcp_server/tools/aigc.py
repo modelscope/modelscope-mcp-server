@@ -3,14 +3,13 @@
 Provides MCP tools for text-to-image generation, etc.
 """
 
-import json
 from typing import Annotated
 
-import requests
 from fastmcp import FastMCP
 from fastmcp.utilities import logging
 from pydantic import Field
 
+from ..client import default_client
 from ..settings import settings
 from ..types import GenerationType, ImageGenerationResult
 
@@ -87,35 +86,21 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         if generation_type == GenerationType.IMAGE_TO_IMAGE and image_url:
             payload["image_url"] = image_url
 
-        headers = {
-            "Authorization": f"Bearer {settings.api_token}",
-            "Content-Type": "application/json",
-            "User-Agent": "modelscope-mcp-server",
-        }
+        response = default_client.post(
+            url, json_data=payload, timeout=settings.default_image_generation_timeout_seconds
+        )
 
-        logger.info(f"Sending {generation_type.value} generation request with model '{model}' and prompt '{prompt}'")
+        images_data = response.get("images", [])
 
-        try:
-            response = requests.post(
-                url,
-                data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
-                headers=headers,
-                timeout=300,
-            )
-        except requests.exceptions.Timeout as e:
-            raise TimeoutError("Request timeout - please try again later") from e
+        if len(images_data) == 0:
+            raise Exception(f"No images found in response: {response}")
 
-        if response.status_code != 200:
-            raise Exception(f"Server returned non-200 status code: {response.status_code} {response.text}")
+        generated_image_url = images_data[0].get("url", "")
+        if len(generated_image_url) == 0:
+            raise Exception(f"No image URL found in response: {response}")
 
-        response_data = response.json()
-
-        if "images" in response_data and response_data["images"]:
-            generated_image_url = response_data["images"][0]["url"]
-            logger.info(f"Successfully generated image URL: {generated_image_url}")
-            return ImageGenerationResult(
-                type=generation_type,
-                model=model,
-                image_url=generated_image_url,
-            )
-        raise Exception(f"Server returned error: {response_data}")
+        return ImageGenerationResult(
+            type=generation_type,
+            model=model,
+            image_url=generated_image_url,
+        )

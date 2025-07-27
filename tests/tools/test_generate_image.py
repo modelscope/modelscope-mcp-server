@@ -1,9 +1,3 @@
-"""
-Tests for ModelScope MCP Server AIGC image generation functionality.
-"""
-
-import json
-
 import pytest
 import requests
 from fastmcp import Client
@@ -12,22 +6,10 @@ from modelscope_mcp_server import settings
 from modelscope_mcp_server.types import GenerationType
 
 
-class MockResponse:
-    """Mock response class for requests.post calls."""
-
-    def __init__(self, json_data, status_code=200):
-        self.json_data = json_data
-        self.status_code = status_code
-        self.text = json.dumps(json_data) if isinstance(json_data, dict) else str(json_data)
-
-    def json(self):
-        return self.json_data
-
-
 async def test_text_to_image_generation_success(mcp_server, mocker):
     """Test successful text-to-image generation."""
     mock_response_data = {"images": [{"url": "https://example.com/generated_image.jpg"}]}
-    mock_post = mocker.patch("requests.post", return_value=MockResponse(mock_response_data, 200))
+    mock_post = mocker.patch("modelscope_mcp_server.client.default_client.post", return_value=mock_response_data)
 
     async with Client(mcp_server) as client:
         result = await client.call_tool(
@@ -55,7 +37,7 @@ async def test_text_to_image_generation_success(mcp_server, mocker):
 async def test_image_to_image_generation_success(mcp_server, mocker):
     """Test successful image-to-image generation."""
     mock_response_data = {"images": [{"url": "https://example.com/modified_image.jpg"}]}
-    mock_post = mocker.patch("requests.post", return_value=MockResponse(mock_response_data, 200))
+    mock_post = mocker.patch("modelscope_mcp_server.client.default_client.post", return_value=mock_response_data)
 
     async with Client(mcp_server) as client:
         result = await client.call_tool(
@@ -84,7 +66,7 @@ async def test_image_to_image_generation_success(mcp_server, mocker):
 async def test_generate_image_with_default_model(mcp_server, mocker):
     """Test image generation with default model when no model is specified."""
     mock_response_data = {"images": [{"url": "https://example.com/default_model_image.jpg"}]}
-    _ = mocker.patch("requests.post", return_value=MockResponse(mock_response_data, 200))
+    mocker.patch("modelscope_mcp_server.client.default_client.post", return_value=mock_response_data)
 
     async with Client(mcp_server) as client:
         result = await client.call_tool(
@@ -120,8 +102,11 @@ async def test_generate_image_empty_prompt_error(mcp_server):
 
 async def test_generate_image_api_error_response(mcp_server, mocker):
     """Test handling of API error response."""
-    error_response_data = {"error": "Model not found", "code": "MODEL_NOT_FOUND"}
-    _ = mocker.patch("requests.post", return_value=MockResponse(error_response_data, 404))
+    # Mock client.post to raise an HTTPError
+    mocker.patch(
+        "modelscope_mcp_server.client.default_client.post",
+        side_effect=requests.exceptions.HTTPError("404 Client Error: Not Found"),
+    )
 
     async with Client(mcp_server) as client:
         with pytest.raises(Exception) as exc_info:
@@ -131,12 +116,15 @@ async def test_generate_image_api_error_response(mcp_server, mocker):
             )
 
         print(f"✅ API error handled correctly: {exc_info.value}")
-        assert "Server returned non-200 status code: 404" in str(exc_info.value)
+        assert "404 Client Error" in str(exc_info.value)
 
 
 async def test_generate_image_timeout_error(mcp_server, mocker):
     """Test handling of request timeout."""
-    _ = mocker.patch("requests.post", side_effect=requests.exceptions.Timeout("Request timeout"))
+    mocker.patch(
+        "modelscope_mcp_server.client.default_client.post",
+        side_effect=TimeoutError("Request timeout - please try again later"),
+    )
 
     async with Client(mcp_server) as client:
         with pytest.raises(Exception) as exc_info:
@@ -158,7 +146,7 @@ async def test_generate_image_malformed_response(mcp_server, mocker):
         "result": "success",
         # Missing 'images' field
     }
-    _ = mocker.patch("requests.post", return_value=MockResponse(malformed_response_data, 200))
+    mocker.patch("modelscope_mcp_server.client.default_client.post", return_value=malformed_response_data)
 
     async with Client(mcp_server) as client:
         with pytest.raises(Exception) as exc_info:
@@ -171,13 +159,13 @@ async def test_generate_image_malformed_response(mcp_server, mocker):
             )
 
         print(f"✅ Malformed response error handled correctly: {exc_info.value}")
-        assert "Server returned error" in str(exc_info.value)
+        assert "No images found in response" in str(exc_info.value)
 
 
 async def test_generate_image_request_parameters(mcp_server, mocker):
     """Test that the correct parameters are sent in the request."""
     mock_response_data = {"images": [{"url": "https://example.com/test_image.jpg"}]}
-    mock_post = mocker.patch("requests.post", return_value=MockResponse(mock_response_data, 200))
+    mock_post = mocker.patch("modelscope_mcp_server.client.default_client.post", return_value=mock_response_data)
 
     async with Client(mcp_server) as client:
         await client.call_tool(
@@ -193,20 +181,17 @@ async def test_generate_image_request_parameters(mcp_server, mocker):
         mock_post.assert_called_once()
         call_args = mock_post.call_args
 
-        # Check URL
-        assert "images/generations" in call_args.args[0]
-
-        # Check headers
-        headers = call_args.kwargs["headers"]
-        assert headers["Content-Type"] == "application/json"
-        assert "Authorization" in headers
-        assert headers["User-Agent"] == "modelscope-mcp-server"
+        # Check URL - should contain images/generations
+        url = call_args.args[0]
+        assert "images/generations" in url
 
         # Check payload
-        payload_bytes = call_args.kwargs["data"]
-        payload = json.loads(payload_bytes.decode("utf-8"))
-        assert payload["model"] == "test-model"
-        assert payload["prompt"] == "Test prompt"
-        assert payload["image_url"] == "https://example.com/input.jpg"
+        json_data = call_args.kwargs["json_data"]
+        assert json_data["model"] == "test-model"
+        assert json_data["prompt"] == "Test prompt"
+        assert json_data["image_url"] == "https://example.com/input.jpg"
+
+        # Check timeout
+        assert call_args.kwargs["timeout"] == 300
 
         print("✅ Request parameters verified correctly")

@@ -5,11 +5,11 @@ Provides tools for MCP-related operations in the ModelScope MCP Server, such as 
 
 from typing import Annotated, Literal
 
-import requests
 from fastmcp import FastMCP
 from fastmcp.utilities import logging
 from pydantic import Field
 
+from ..client import default_client
 from ..constants import MODELSCOPE_DOMAIN, MODELSCOPE_OPENAPI_ENDPOINT
 from ..types import McpServer
 
@@ -65,11 +65,6 @@ def register_mcp_tools(mcp: FastMCP) -> None:
         """Search for MCP servers on ModelScope."""
         url = f"{MODELSCOPE_OPENAPI_ENDPOINT}/mcp/servers"
 
-        headers = {
-            "Content-Type": "application/json",
-            "User-Agent": "modelscope-mcp-server",
-        }
-
         # Build filter object
         filter_obj = {}
         if category is not None:
@@ -84,21 +79,9 @@ def register_mcp_tools(mcp: FastMCP) -> None:
             "search": search,
         }
 
-        try:
-            response = requests.put(url, json=request_data, headers=headers, timeout=10)
-        except requests.exceptions.Timeout as e:
-            raise TimeoutError("Request timeout - please try again later") from e
+        response = default_client.put(url, json_data=request_data)
 
-        if response.status_code != 200:
-            raise Exception(f"Server returned non-200 status code: {response.status_code} {response.text}")
-
-        data = response.json()
-
-        if data.get("code") != 200:
-            raise Exception(f"Server returned error: {data.get('message', 'Unknown error')}")
-
-        result_data = data.get("data", {})
-        servers_data = result_data.get("mcp_server_list", [])
+        servers_data = response.get("data", {}).get("mcp_server_list", [])
 
         servers = []
         for server_data in servers_data:

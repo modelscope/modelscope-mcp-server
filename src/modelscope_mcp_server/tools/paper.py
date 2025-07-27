@@ -5,11 +5,11 @@ Provides MCP tools for paper-related operations, such as searching for papers, g
 
 from typing import Annotated, Literal
 
-import requests
 from fastmcp import FastMCP
 from fastmcp.utilities import logging
 from pydantic import Field
 
+from ..client import default_client
 from ..constants import MODELSCOPE_DOMAIN
 from ..settings import settings
 from ..types import Paper
@@ -41,11 +41,6 @@ def register_paper_tools(mcp: FastMCP) -> None:
         """Search for papers on ModelScope."""
         url = f"{settings.api_base_url}/dolphin/papers"
 
-        headers = {
-            "Content-Type": "application/json",
-            "User-Agent": "modelscope-mcp-server",
-        }
-
         request_data = {
             "Query": query,
             "PageNumber": 1,
@@ -54,20 +49,9 @@ def register_paper_tools(mcp: FastMCP) -> None:
             "Criterion": [],
         }
 
-        try:
-            response = requests.put(url, json=request_data, headers=headers, timeout=10)
-        except requests.exceptions.Timeout as e:
-            raise TimeoutError("Request timeout - please try again later") from e
+        response = default_client.put(url, json_data=request_data)
 
-        if response.status_code != 200:
-            raise Exception(f"Server returned non-200 status code: {response.status_code} {response.text}")
-
-        data = response.json()
-
-        if not data.get("Success", False):
-            raise Exception(f"Server returned error: {data}")
-
-        papers_data = data.get("Data", {}).get("Papers", [])
+        papers_data = response.get("Data", {}).get("Papers", [])
 
         papers = []
         for paper_data in papers_data:

@@ -3,13 +3,13 @@
 from typing import cast
 
 from fastmcp import FastMCP
-from fastmcp import settings as fastmcp_settings
 from fastmcp.server.middleware.error_handling import ErrorHandlingMiddleware
 from fastmcp.server.middleware.logging import LoggingMiddleware
 from fastmcp.server.middleware.rate_limiting import RateLimitingMiddleware
 from fastmcp.server.middleware.timing import TimingMiddleware
 from fastmcp.settings import LOG_LEVEL
 from fastmcp.utilities import logging
+from fastmcp.utilities.logging import configure_logging
 
 from .settings import settings
 from .tools.aigc import register_aigc_tools
@@ -24,7 +24,7 @@ logger = logging.get_logger(__name__)
 
 def create_mcp_server() -> FastMCP:
     """Create and configure the MCP server with all ModelScope tools."""
-    fastmcp_settings.log_level = cast(LOG_LEVEL, settings.log_level)
+    configure_logging(level=cast(LOG_LEVEL, settings.log_level))
 
     mcp = FastMCP(
         name=get_server_name_with_version(),
