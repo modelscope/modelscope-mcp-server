@@ -5,6 +5,8 @@
 [![GitHub Container Registry](https://img.shields.io/badge/container-registry-blue?logo=github)](https://github.com/modelscope/modelscope-mcp-server/pkgs/container/modelscope-mcp-server)
 [![License](https://img.shields.io/github/license/modelscope/modelscope-mcp-server.svg)](https://github.com/modelscope/modelscope-mcp-server/blob/main/LICENSE)
 
+English | [中文](README_zh-CN.md)
+
 A Model Context Protocol (MCP) server that integrates with [ModelScope](https://modelscope.cn)'s ecosystem, providing seamless access to AI models, datasets, apps, papers, and generation capabilities through popular MCP clients.
 
 ## ✨ Features
@@ -13,7 +15,7 @@ A Model Context Protocol (MCP) server that integrates with [ModelScope](https://
 - 🔍 **Resource Discovery** - Search and discover ModelScope resources including machine learning models, research papers, and MCP servers with advanced filtering options
 - 📋 **Resource Details** _(Coming Soon)_ - Get comprehensive details for specific resources including model specifications, paper abstracts, and MCP server configurations
 - 📖 **Documentation Search** _(Coming Soon)_ - Semantic search for ModelScope documentation and articles
-- 🚀 **Gradio API Integration** _(Coming Soon)_ - Invoke Gradio APIs exposed by any pre-configured ModelScope studio (AI app)
+- 🚀 **Gradio API Integration** _(Coming Soon)_ - Invoke Gradio APIs exposed by any pre-configured ModelScope Studio (AI app)
 - 🔐 **Context Information** - Access current operational context including authenticated user information and environment details
 
 ## 🚀 Quick Start
