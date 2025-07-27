@@ -22,6 +22,7 @@ async def test_get_current_user_success(mcp_server):
         assert user_info.authenticated is True, "User should be authenticated"
         assert user_info.username is not None, "Username should be present"
         assert user_info.email is not None, "Email should be present"
+        assert user_info.modelscope_url is not None, "ModelScope URL should be present"
 
 
 @pytest.mark.integration

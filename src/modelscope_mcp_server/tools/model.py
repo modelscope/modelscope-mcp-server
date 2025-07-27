@@ -106,6 +106,7 @@ def register_model_tools(mcp: FastMCP) -> None:
         for model_data in models_data:
             path = model_data.get("Path", "")
             name = model_data.get("Name", "")
+            modelscope_url = f"{settings.main_domain}/models/{path}/{name}"
 
             if not path or not name:
                 logger.warning(f"Skipping model with invalid path or name: {model_data}")
@@ -117,6 +118,7 @@ def register_model_tools(mcp: FastMCP) -> None:
                 name=name,
                 chinese_name=model_data.get("ChineseName", ""),
                 created_by=model_data.get("CreatedBy"),
+                modelscope_url=modelscope_url,
                 # Non-empty value means True, else False
                 support_inference=bool(model_data.get("SupportInference", "")),
                 downloads_count=model_data.get("Downloads", 0),

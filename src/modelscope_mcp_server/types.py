@@ -16,12 +16,18 @@ class GenerationType(str, Enum):
 class UserInfo(BaseModel):
     """User information."""
 
+    # Authentication result
     authenticated: Annotated[bool, Field(description="Whether the user is authenticated")]
     reason: Annotated[str | None, Field(description="Reason for failed authentication")] = None
+
+    # Basic information
     username: Annotated[str | None, Field(description="Username")] = None
     email: Annotated[str | None, Field(description="Email")] = None
     avatar_url: Annotated[str | None, Field(description="Avatar URL")] = None
     description: Annotated[str | None, Field(description="Description")] = None
+
+    # Links
+    modelscope_url: Annotated[str | None, Field(description="Profile page URL on ModelScope")] = None
 
 
 class Model(BaseModel):
@@ -33,6 +39,9 @@ class Model(BaseModel):
     name: Annotated[str, Field(description="Model name, for example 'DeepSeek-R1'")]
     chinese_name: Annotated[str, Field(description="Chinese name")]
     created_by: Annotated[str, Field(description="User who created the model")]
+
+    # Links
+    modelscope_url: Annotated[str, Field(description="Detail page URL on ModelScope")]
 
     # Capabilities
     support_inference: Annotated[bool, Field(description="Whether the model supports inference API")] = False
@@ -58,7 +67,7 @@ class Paper(BaseModel):
     abstract_en: Annotated[str, Field(description="Abstract in English")]
 
     # Links
-    modelscope_url: Annotated[str, Field(description="ModelScope page URL")]
+    modelscope_url: Annotated[str, Field(description="Detail page URL on ModelScope")]
     arxiv_url: Annotated[str, Field(description="Arxiv page URL")]
     pdf_url: Annotated[str, Field(description="PDF URL")]
     code_link: Annotated[str | None, Field(description="Code link")] = None
@@ -81,7 +90,7 @@ class McpServer(BaseModel):
     tags: Annotated[list[str], Field(description="Tags")] = []
 
     # Links
-    modelscope_url: Annotated[str, Field(description="ModelScope page URL")]
+    modelscope_url: Annotated[str, Field(description="Detail page URL on ModelScope")]
 
     # Metrics
     view_count: Annotated[int, Field(description="View count")] = 0

@@ -53,12 +53,16 @@ def register_context_tools(mcp: FastMCP) -> None:
 
         user_data = response.get("Data", {})
 
+        username = user_data.get("Name")
+        modelscope_url = f"{settings.main_domain}/profile/{username}"
+
         return UserInfo(
             authenticated=True,
-            username=user_data.get("Name"),
+            username=username,
             email=user_data.get("Email"),
             avatar_url=user_data.get("Avatar"),
             description=user_data.get("Description") or "",
+            modelscope_url=modelscope_url,
         )
 
     @mcp.tool(

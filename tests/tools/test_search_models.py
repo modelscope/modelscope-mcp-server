@@ -42,6 +42,7 @@ def validate_model_fields(model):
         "path",
         "chinese_name",
         "created_by",
+        "modelscope_url",
         "support_inference",
         "downloads_count",
         "stars_count",
