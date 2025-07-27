@@ -10,7 +10,7 @@ from fastmcp.utilities import logging
 from pydantic import Field
 
 from ..client import default_client
-from ..constants import MODELSCOPE_DOMAIN, MODELSCOPE_OPENAPI_ENDPOINT
+from ..settings import settings
 from ..types import McpServer
 
 logger = logging.get_logger(__name__)
@@ -63,7 +63,7 @@ def register_mcp_tools(mcp: FastMCP) -> None:
         limit: Annotated[int, Field(description="Maximum number of servers to return", ge=1, le=100)] = 10,
     ) -> list[McpServer]:
         """Search for MCP servers on ModelScope."""
-        url = f"{MODELSCOPE_OPENAPI_ENDPOINT}/mcp/servers"
+        url = f"{settings.main_domain}/openapi/v1/mcp/servers"
 
         # Build filter object
         filter_obj = {}
@@ -86,7 +86,7 @@ def register_mcp_tools(mcp: FastMCP) -> None:
         servers = []
         for server_data in servers_data:
             id = server_data.get("id", "")
-            modelscope_url = f"{MODELSCOPE_DOMAIN}/mcp/servers/{id}"
+            modelscope_url = f"{settings.main_domain}/mcp/servers/{id}"
 
             server = McpServer(
                 id=id,

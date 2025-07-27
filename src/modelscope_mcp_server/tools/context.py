@@ -39,7 +39,7 @@ def register_context_tools(mcp: FastMCP) -> None:
         if not settings.is_api_token_configured():
             return UserInfo(authenticated=False, reason="API token is not set")
 
-        url = f"{settings.api_base_url}/users/login/info"
+        url = f"{settings.main_domain}/api/v1/users/login/info"
 
         try:
             response = default_client.get(url)
@@ -78,4 +78,8 @@ def register_context_tools(mcp: FastMCP) -> None:
             fastmcp_version=get_fastmcp_version(),
             mcp_protocol_version=get_mcp_protocol_version(),
             python_version=get_python_version(),
+            main_domain=settings.main_domain,
+            api_inference_domain=settings.api_inference_domain,
+            default_text_to_image_model=settings.default_text_to_image_model,
+            default_image_to_image_model=settings.default_image_to_image_model,
         )

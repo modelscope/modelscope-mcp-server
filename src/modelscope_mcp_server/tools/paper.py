@@ -10,7 +10,6 @@ from fastmcp.utilities import logging
 from pydantic import Field
 
 from ..client import default_client
-from ..constants import MODELSCOPE_DOMAIN
 from ..settings import settings
 from ..types import Paper
 
@@ -39,7 +38,7 @@ def register_paper_tools(mcp: FastMCP) -> None:
         limit: Annotated[int, Field(description="Maximum number of papers to return", ge=1, le=100)] = 10,
     ) -> list[Paper]:
         """Search for papers on ModelScope."""
-        url = f"{settings.api_base_url}/dolphin/papers"
+        url = f"{settings.main_domain}/api/v1/dolphin/papers"
 
         request_data = {
             "Query": query,
@@ -56,7 +55,7 @@ def register_paper_tools(mcp: FastMCP) -> None:
         papers = []
         for paper_data in papers_data:
             arxiv_id = paper_data.get("ArxivId")
-            modelscope_url = f"{MODELSCOPE_DOMAIN}/papers/{arxiv_id}"
+            modelscope_url = f"{settings.main_domain}/papers/{arxiv_id}"
 
             paper = Paper(
                 arxiv_id=arxiv_id,

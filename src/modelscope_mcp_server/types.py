@@ -98,7 +98,16 @@ class ImageGenerationResult(BaseModel):
 class EnvironmentInfo(BaseModel):
     """Environment information."""
 
+    # Versions
     server_version: Annotated[str, Field(description="ModelScope MCP Server version")]
     fastmcp_version: Annotated[str, Field(description="FastMCP framework version")]
     mcp_protocol_version: Annotated[str, Field(description="MCP protocol version")]
     python_version: Annotated[str, Field(description="Python runtime version")]
+
+    # Domains
+    main_domain: Annotated[str, Field(description="ModelScope website domain")]
+    api_inference_domain: Annotated[str, Field(description="ModelScope API inference domain")]
+
+    # Settings
+    default_text_to_image_model: Annotated[str, Field(description="Default text-to-image model")]
+    default_image_to_image_model: Annotated[str, Field(description="Default image-to-image model")]

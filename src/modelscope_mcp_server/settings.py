@@ -7,10 +7,9 @@ from .constants import (
     DEFAULT_API_TIMEOUT_SECONDS,
     DEFAULT_IMAGE_GENERATION_TIMEOUT_SECONDS,
     DEFAULT_IMAGE_TO_IMAGE_MODEL,
+    DEFAULT_MODELSCOPE_API_INFERENCE_DOMAIN,
+    DEFAULT_MODELSCOPE_DOMAIN,
     DEFAULT_TEXT_TO_IMAGE_MODEL,
-    MODELSCOPE_API_ENDPOINT,
-    MODELSCOPE_API_INFERENCE_ENDPOINT,
-    MODELSCOPE_OPENAPI_ENDPOINT,
 )
 
 
@@ -25,19 +24,17 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    # ModelScope API settings
+    # Authentication settings
     api_token: str | None = Field(default=None, description="ModelScope API token for authentication")
-    api_base_url: str = Field(
-        default=MODELSCOPE_API_ENDPOINT,
-        description="Base URL for ModelScope API",
+
+    # Domain settings
+    main_domain: str = Field(
+        default=DEFAULT_MODELSCOPE_DOMAIN,
+        description="ModelScope website domain",
     )
-    openapi_base_url: str = Field(
-        default=MODELSCOPE_OPENAPI_ENDPOINT,
-        description="Base URL for ModelScope OpenAPI",
-    )
-    api_inference_base_url: str = Field(
-        default=MODELSCOPE_API_INFERENCE_ENDPOINT,
-        description="Base URL for ModelScope API Inference",
+    api_inference_domain: str = Field(
+        default=DEFAULT_MODELSCOPE_API_INFERENCE_DOMAIN,
+        description="ModelScope API inference domain",
     )
 
     # Default model settings
@@ -99,9 +96,8 @@ class Settings(BaseSettings):
             self.api_token[:-8] + "********" if self.api_token and len(self.api_token) > 4 else "Not configured"
         )
         print(f"  • Token: {masked_token}")
-        print(f"  • Base URL: {self.api_base_url}")
-        print(f"  • OpenAPI URL: {self.openapi_base_url}")
-        print(f"  • Inference URL: {self.api_inference_base_url}")
+        print(f"  • Main Domain: {self.main_domain}")
+        print(f"  • API Inference Domain: {self.api_inference_domain}")
         print()
 
         # Default Models

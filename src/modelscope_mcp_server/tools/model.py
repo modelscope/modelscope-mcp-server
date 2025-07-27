@@ -53,7 +53,7 @@ def register_model_tools(mcp: FastMCP) -> None:
         limit: Annotated[int, Field(description="Maximum number of models to return", ge=1, le=30)] = 10,
     ) -> list[Model]:
         """Search for models on ModelScope."""
-        url = f"{settings.api_base_url}/dolphin/models"
+        url = f"{settings.main_domain}/api/v1/dolphin/models"
 
         # Build criterion for task filter
         criterion = []

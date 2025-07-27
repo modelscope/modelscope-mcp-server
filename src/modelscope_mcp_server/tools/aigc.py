@@ -76,7 +76,7 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         if not settings.is_api_token_configured():
             raise ValueError("API token is not set")
 
-        url = f"{settings.api_inference_base_url}/images/generations"
+        url = f"{settings.api_inference_domain}/v1/images/generations"
 
         payload = {
             "model": model,
