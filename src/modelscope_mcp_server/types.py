@@ -39,6 +39,7 @@ class Model(BaseModel):
     name: Annotated[str, Field(description="Model name, for example 'DeepSeek-R1'")]
     chinese_name: Annotated[str, Field(description="Chinese name")]
     created_by: Annotated[str, Field(description="User who created the model")]
+    license: Annotated[str, Field(description="Open source license")]
 
     # Links
     modelscope_url: Annotated[str, Field(description="Detail page URL on ModelScope")]
@@ -49,6 +50,29 @@ class Model(BaseModel):
     # Metrics
     downloads_count: Annotated[int, Field(description="Number of downloads")] = 0
     stars_count: Annotated[int, Field(description="Number of stars")] = 0
+
+    # Timestamps
+    created_at: Annotated[int, Field(description="Created time (unix timestamp, seconds)")] = 0
+    updated_at: Annotated[int, Field(description="Last updated time (unix timestamp, seconds)")] = 0
+
+
+class Dataset(BaseModel):
+    """Dataset information."""
+
+    # Basic information
+    id: Annotated[str, Field(description="Unique dataset ID, formatted as 'path/name'")]
+    path: Annotated[str, Field(description="Dataset path, for example 'opencompass'")]
+    name: Annotated[str, Field(description="Dataset name, for example 'mmlu'")]
+    chinese_name: Annotated[str, Field(description="Chinese name")]
+    created_by: Annotated[str, Field(description="User who created the dataset")]
+    license: Annotated[str, Field(description="Open source license")]
+
+    # Links
+    modelscope_url: Annotated[str, Field(description="Detail page URL on ModelScope")]
+
+    # Metrics
+    downloads_count: Annotated[int, Field(description="Number of downloads")] = 0
+    likes_count: Annotated[int, Field(description="Number of likes")] = 0
 
     # Timestamps
     created_at: Annotated[int, Field(description="Created time (unix timestamp, seconds)")] = 0

@@ -13,6 +13,17 @@ from modelscope_mcp_server.server import create_mcp_server
 from modelscope_mcp_server.settings import settings
 from modelscope_mcp_server.utils.metadata import get_server_name_with_version
 
+# Global counter for demo step numbering
+demo_step = 0
+
+
+def print_step_title(tool_name: str, task_description: str) -> None:
+    """Print demo step title."""
+    global demo_step
+    demo_step += 1
+    print(f"{demo_step}. 🛠️ Tool: {tool_name}")
+    print(f"   • Task: {task_description}")
+
 
 def parse_tool_response(result) -> dict:
     """Parse tool response and return JSON data."""
@@ -27,10 +38,10 @@ def parse_tool_response(result) -> dict:
 
 async def demo_user_info(client: Client) -> None:
     """Demo getting current user information."""
-    print("1. 🛠️ Tool: get_current_user")
-    print("   • Task: 👤 Get current user information")
+    tool_name = "get_current_user"
+    print_step_title(tool_name, "👤 Get current user information")
 
-    result = await client.call_tool("get_current_user", {})
+    result = await client.call_tool(tool_name, {})
     data = parse_tool_response(result)
 
     username = data.get("username", "N/A")
@@ -43,10 +54,10 @@ async def demo_user_info(client: Client) -> None:
 
 async def demo_environment_info(client: Client) -> None:
     """Demo getting environment information."""
-    print("2. 🛠️ Tool: get_environment_info")
-    print("   • Task: 🔧 Get current MCP server environment information")
+    tool_name = "get_environment_info"
+    print_step_title(tool_name, "🔧 Get current MCP server environment information")
 
-    result = await client.call_tool("get_environment_info", {})
+    result = await client.call_tool(tool_name, {})
     data = parse_tool_response(result)
 
     print(f"   • Result: {data}")
@@ -55,11 +66,13 @@ async def demo_environment_info(client: Client) -> None:
 
 async def demo_search_models(client: Client) -> None:
     """Demo searching models."""
-    print("3. 🛠️ Tool: search_models")
-    print("   • Task: 🔍 Search text-generation models (keyword='DeepSeek', support inference, limit 3 results)")
+    tool_name = "search_models"
+    print_step_title(
+        tool_name, "🔍 Search text-generation models (keyword='DeepSeek', support inference, limit 3 results)"
+    )
 
     result = await client.call_tool(
-        "search_models",
+        tool_name,
         {
             "query": "DeepSeek",
             "task": "text-generation",
@@ -82,28 +95,59 @@ async def demo_search_models(client: Client) -> None:
     print()
 
 
-async def demo_search_papers(client: Client) -> None:
-    """Demo searching papers."""
-    print("4. 🛠️ Tool: search_papers")
-    print("   • Task: 📚 Search academic papers (keyword='Qwen3', sort='hot', limit 1 result)")
+async def demo_search_datasets(client: Client) -> None:
+    """Demo searching datasets."""
+    tool_name = "search_datasets"
+    print_step_title(tool_name, "📊 Search datasets (keyword='金融', sort='downloads', limit 3 results)")
 
     result = await client.call_tool(
-        "search_papers",
+        tool_name,
         {
-            "query": "Qwen3",
-            "sort": "hot",
-            "limit": 1,
+            "query": "金融",
+            "sort": "downloads",
+            "limit": 3,
         },
     )
     data = parse_tool_response(result)
 
     if isinstance(data, list) and data:
-        paper = data[0]
-        title = paper.get("title", "N/A")
-        arxiv_id = paper.get("arxiv_id", "N/A")
-        view_count = paper.get("view_count", 0)
-        modelscope_url = paper.get("modelscope_url", "N/A")
-        print(f"   • Result: '{title}' ArXiv ID={arxiv_id}, Views={view_count:,} ModelScope URL={modelscope_url}")
+        summaries = []
+        for dataset in data:
+            name = dataset.get("name", "N/A")
+            chinese_name = dataset.get("chinese_name", "N/A")
+            downloads = dataset.get("downloads_count", 0)
+            likes = dataset.get("likes_count", 0)
+            summaries.append(f"{name} ({chinese_name}) - Downloads {downloads:,}, Likes {likes}")
+        print(f"   • Result: Found {len(data)} items - {' | '.join(summaries)}")
+    else:
+        print("   • Result: No datasets found")
+    print()
+
+
+async def demo_search_papers(client: Client) -> None:
+    """Demo searching papers."""
+    tool_name = "search_papers"
+    print_step_title(tool_name, "📚 Search papers (keyword='Qwen3', sort='hot', limit 3 result)")
+
+    result = await client.call_tool(
+        tool_name,
+        {
+            "query": "Qwen3",
+            "sort": "hot",
+            "limit": 3,
+        },
+    )
+    data = parse_tool_response(result)
+
+    if isinstance(data, list) and data:
+        summaries = []
+        for paper in data:
+            title = paper.get("title", "N/A")
+            arxiv_id = paper.get("arxiv_id", "N/A")
+            view_count = paper.get("view_count", 0)
+            modelscope_url = paper.get("modelscope_url", "N/A")
+            summaries.append(f"{title} (ArXiv={arxiv_id}, Views={view_count:,} URL={modelscope_url})")
+        print(f"   • Result: Found {len(data)} items - {' | '.join(summaries)}")
     else:
         print("   • Result: No papers found")
     print()
@@ -111,11 +155,13 @@ async def demo_search_papers(client: Client) -> None:
 
 async def demo_search_mcp_servers(client: Client) -> None:
     """Demo searching MCP servers."""
-    print("5. 🛠️ Tool: search_mcp_servers")
-    print("   • Task: 🔍 Search MCP servers (keyword='Chrome', category='browser-automation', limit 3 results)")
+    tool_name = "search_mcp_servers"
+    print_step_title(
+        tool_name, "🔍 Search MCP servers (keyword='Chrome', category='browser-automation', limit 3 results)"
+    )
 
     result = await client.call_tool(
-        "search_mcp_servers",
+        tool_name,
         {
             "search": "Chrome",
             "category": "browser-automation",
@@ -139,24 +185,15 @@ async def demo_search_mcp_servers(client: Client) -> None:
 
 async def demo_generate_image(client: Client) -> None:
     """Demo image generation."""
-    print("6. 🛠️ Tool: generate_image")
-    print("   • Task: 🎨 Generate image (prompt='A curious cat wearing a tiny wizard hat in candy cloud kingdom')")
+    tool_name = "generate_image"
+    prompt = "A curious cat wearing a tiny wizard hat in candy cloud kingdom"
+    print_step_title(tool_name, f"🎨 Generate image with prompt: {prompt}")
 
-    result = await client.call_tool(
-        "generate_image",
-        {
-            "prompt": "A curious cat wearing a tiny wizard hat in candy cloud kingdom",
-        },
-    )
+    result = await client.call_tool(tool_name, {"prompt": prompt})
     data = parse_tool_response(result)
 
-    image_url = data.get("image_url")
-    model = data.get("model")
-
-    if not image_url:
-        raise RuntimeError("Missing required field 'image_url' in response")
-    if not model:
-        raise RuntimeError("Missing required field 'model' in response")
+    image_url = data.get("image_url", "N/A")
+    model = data.get("model", "N/A")
 
     print(f"   • Result: Image generated using model '{model}' - URL: {image_url}")
     print()
@@ -204,6 +241,7 @@ async def main() -> None:
         await demo_user_info(client)
         await demo_environment_info(client)
         await demo_search_models(client)
+        await demo_search_datasets(client)
         await demo_search_papers(client)
         await demo_search_mcp_servers(client)
 

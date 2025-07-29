@@ -142,10 +142,12 @@ For HTTP/SSE mode, connect using a local URL in your MCP client configuration:
 You can also debug the server using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector) tool:
 
 ```bash
+# Run in UI mode with stdio transport (can switch to HTTP/SSE in the Web UI as needed)
 npx @modelcontextprotocol/inspector uv run modelscope-mcp-server
-```
 
-Uses stdio transport by default; switch to HTTP/SSE in the Web UI as needed.
+# Run in CLI mode with HTTP transportt (can do operations across tools, resources, and prompts)
+npx @modelcontextprotocol/inspector --cli http://127.0.0.1:8000/mcp/ --transport http --method tools/list
+```
 
 ### Testing
 

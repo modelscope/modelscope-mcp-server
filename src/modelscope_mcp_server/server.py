@@ -14,6 +14,7 @@ from fastmcp.utilities.logging import configure_logging
 from .settings import settings
 from .tools.aigc import register_aigc_tools
 from .tools.context import register_context_tools
+from .tools.dataset import register_dataset_tools
 from .tools.mcp import register_mcp_tools
 from .tools.model import register_model_tools
 from .tools.paper import register_paper_tools
@@ -28,9 +29,7 @@ def create_mcp_server() -> FastMCP:
 
     mcp = FastMCP(
         name=get_server_name_with_version(),
-        instructions="""
-            This server provides tools for calling ModelScope (魔搭社区) API.
-        """,
+        instructions="This server provides tools for calling ModelScope (魔搭社区) API.",
     )
 
     # Add middleware in logical order
@@ -42,6 +41,7 @@ def create_mcp_server() -> FastMCP:
     # Register all tools
     register_context_tools(mcp)
     register_model_tools(mcp)
+    register_dataset_tools(mcp)
     register_paper_tools(mcp)
     register_mcp_tools(mcp)
     register_aigc_tools(mcp)

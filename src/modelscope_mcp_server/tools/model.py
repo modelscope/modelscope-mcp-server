@@ -34,8 +34,8 @@ def register_model_tools(mcp: FastMCP) -> None:
         query: Annotated[
             str,
             Field(
-                description="Keyword to search for related models (e.g., 'Flux' will find models related to Flux). "
-                "Leave empty to skip keyword matching and get all models based on other filters."
+                description="Keyword to search for related models. "
+                "Leave empty to get all models based on other filters."
             ),
         ] = "",
         task: Annotated[
@@ -118,6 +118,7 @@ def register_model_tools(mcp: FastMCP) -> None:
                 name=name,
                 chinese_name=model_data.get("ChineseName", ""),
                 created_by=model_data.get("CreatedBy"),
+                license=model_data.get("License", ""),
                 modelscope_url=modelscope_url,
                 # Non-empty value means True, else False
                 support_inference=bool(model_data.get("SupportInference", "")),
