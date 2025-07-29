@@ -79,6 +79,38 @@ class Dataset(BaseModel):
     updated_at: Annotated[int, Field(description="Last updated time (unix timestamp, seconds)")] = 0
 
 
+class Studio(BaseModel):
+    """Studio information."""
+
+    # Basic information
+    id: Annotated[str, Field(description="Unique studio ID")]
+    path: Annotated[str, Field(description="Studio path, for example 'ttwwwaa'")]
+    name: Annotated[str, Field(description="Studio name, for example 'ChatTTS_Speaker'")]
+    chinese_name: Annotated[str, Field(description="Chinese name")]
+    description: Annotated[str, Field(description="Studio description")]
+    created_by: Annotated[str, Field(description="User who created the studio")]
+    license: Annotated[str, Field(description="Open source license")]
+
+    # Links
+    modelscope_url: Annotated[str, Field(description="Detail page URL on ModelScope")]
+    independent_url: Annotated[str | None, Field(description="Independent access URL")] = None
+    cover_image: Annotated[str | None, Field(description="Cover image URL")] = None
+
+    # Classification
+    type: Annotated[str, Field(description="Studio type, for example 'programmatic' or 'interactive'")]
+    status: Annotated[str, Field(description="Current status, for example 'Running'")]
+    domains: Annotated[list[str], Field(description="Domain categories")] = []
+
+    # Metrics
+    stars: Annotated[int, Field(description="Number of stars")] = 0
+    visits: Annotated[int, Field(description="Number of visits")] = 0
+
+    # Timestamps
+    created_at: Annotated[int, Field(description="Created time (unix timestamp, seconds)")] = 0
+    updated_at: Annotated[int, Field(description="Last updated time (unix timestamp, seconds)")] = 0
+    deployed_at: Annotated[int, Field(description="Deployed time (unix timestamp, seconds)")] = 0
+
+
 class Paper(BaseModel):
     """Paper information."""
 

@@ -18,6 +18,7 @@ from .tools.dataset import register_dataset_tools
 from .tools.mcp import register_mcp_tools
 from .tools.model import register_model_tools
 from .tools.paper import register_paper_tools
+from .tools.studio import register_studio_tools
 from .utils.metadata import get_server_name_with_version
 
 logger = logging.get_logger(__name__)
@@ -42,6 +43,7 @@ def create_mcp_server() -> FastMCP:
     register_context_tools(mcp)
     register_model_tools(mcp)
     register_dataset_tools(mcp)
+    register_studio_tools(mcp)
     register_paper_tools(mcp)
     register_mcp_tools(mcp)
     register_aigc_tools(mcp)

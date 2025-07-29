@@ -124,6 +124,31 @@ async def demo_search_datasets(client: Client) -> None:
     print()
 
 
+async def demo_search_studios(client: Client) -> None:
+    """Demo searching studios."""
+    tool_name = "search_studios"
+    print_step_title(tool_name, "🔍 Search studios (keyword='TTS', sort='VisitsCount', limit 3 results)")
+
+    result = await client.call_tool(tool_name, {"query": "TTS", "sort": "VisitsCount", "limit": 3})
+    data = parse_tool_response(result)
+
+    if isinstance(data, list) and data:
+        summaries = []
+        for studio in data:
+            name = studio.get("name", "N/A")
+            chinese_name = studio.get("chinese_name", "N/A")
+            status = studio.get("status", "N/A")
+            stars = studio.get("stars", 0)
+            visits = studio.get("visits", 0)
+
+            summaries.append(f"{name} ({chinese_name}) - Status={status}, Stars={stars}, Visits={visits}")
+
+        print(f"   • Result: Found {len(data)} items - {' | '.join(summaries)}")
+    else:
+        print("   • Result: No studios found")
+    print()
+
+
 async def demo_search_papers(client: Client) -> None:
     """Demo searching papers."""
     tool_name = "search_papers"
@@ -242,6 +267,7 @@ async def main() -> None:
         await demo_environment_info(client)
         await demo_search_models(client)
         await demo_search_datasets(client)
+        await demo_search_studios(client)
         await demo_search_papers(client)
         await demo_search_mcp_servers(client)
 
