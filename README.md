@@ -146,7 +146,7 @@ You can also debug the server using the [MCP Inspector](https://github.com/model
 # Run in UI mode with stdio transport (can switch to HTTP/SSE in the Web UI as needed)
 npx @modelcontextprotocol/inspector uv run modelscope-mcp-server
 
-# Run in CLI mode with HTTP transportt (can do operations across tools, resources, and prompts)
+# Run in CLI mode with HTTP transport (can do operations across tools, resources, and prompts)
 npx @modelcontextprotocol/inspector --cli http://127.0.0.1:8000/mcp/ --transport http --method tools/list
 ```
 

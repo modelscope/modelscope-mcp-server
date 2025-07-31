@@ -41,8 +41,8 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         model: Annotated[
             str | None,
             Field(
-                description="The model's ID fo be used for image generation. "
-                "If not provided, uses the default model provided in server settings."
+                description="The model's ID to be used for image generation. "
+                "If not provided, the default model for the corresponding generation type (text-to-image or image-to-image) is used."
             ),
         ] = None,
         image_url: Annotated[
