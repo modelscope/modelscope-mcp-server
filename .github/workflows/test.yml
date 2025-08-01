@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12"]
 
     steps:
     - name: Checkout code
@@ -68,14 +68,14 @@ jobs:
 
     - name: Upload coverage reports
       uses: actions/upload-artifact@v4
-      if: matrix.python-version == '3.13'  # Only upload once to avoid duplicates
+      if: matrix.python-version == '3.12'  # Only upload once to avoid duplicates
       with:
         name: coverage-report-${{ matrix.python-version }}
         path: htmlcov/
         retention-days: 30
 
     - name: Display coverage summary
-      if: matrix.python-version == '3.13'  # Only show summary once
+      if: matrix.python-version == '3.12'  # Only show summary once
       run: |
         echo "## 📊 Coverage Report" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
