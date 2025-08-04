@@ -14,7 +14,7 @@ Empowers AI agents and chatbots with direct access to [ModelScope](https://model
 
 - 🎨 **AI Image Generation** - Generate images from prompts (text-to-image) or transform existing images (image-to-image) using AIGC models
 - 🔍 **Resource Discovery** - Search and discover ModelScope resources including models, datasets, studios (AI apps), research papers, and MCP servers with advanced filtering options
-- 📋 **Resource Details** _(Coming Soon)_ - Get comprehensive details for specific resources
+- 📋 **Resource Details** - Get comprehensive details for specific resources
 - 📖 **Documentation Search** _(Coming Soon)_ - Semantic search for ModelScope documentation and articles
 - 🚀 **Gradio API Integration** _(Coming Soon)_ - Invoke Gradio APIs exposed by any pre-configured ModelScope studios
 - 🔐 **Context Information** - Access current operational context including authenticated user information and environment details

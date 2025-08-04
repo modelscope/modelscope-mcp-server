@@ -11,7 +11,7 @@ from pydantic import Field
 
 from ..client import default_client
 from ..settings import settings
-from ..types import McpServer
+from ..types import McpServer, McpServerDetail
 
 logger = logging.get_logger(__name__)
 
@@ -90,14 +90,55 @@ def register_mcp_tools(mcp: FastMCP) -> None:
 
             server = McpServer(
                 id=id,
-                modelscope_url=modelscope_url,
                 name=server_data.get("name", ""),
-                chinese_name=server_data.get("chinese_name", ""),
                 description=server_data.get("description", ""),
-                publisher=server_data.get("publisher", ""),
                 tags=server_data.get("tags", []),
+                logo_url=server_data.get("logo_url"),
+                modelscope_url=modelscope_url,
                 view_count=server_data.get("view_count", 0),
             )
             servers.append(server)
 
         return servers
+
+    @mcp.tool(
+        annotations={
+            "title": "Get MCP Server Detail",
+        }
+    )
+    async def get_mcp_server_detail(
+        server_id: Annotated[
+            str,
+            Field(description="MCP Server ID in format 'author/name', e.g., 'pengqun/modelscope-mcp-server'"),
+        ],
+    ) -> McpServerDetail:
+        """Get detailed information about a specific MCP server."""
+        url = f"{settings.main_domain}/openapi/v1/mcp/servers/{server_id}"
+
+        response = default_client.get(url)
+        server_data = response.get("data", {})
+
+        id = server_data.get("id", "")
+        modelscope_url = f"{settings.main_domain}/mcp/servers/{id}"
+
+        server_detail = McpServerDetail(
+            # McpServer fields
+            id=id,
+            name=server_data.get("name", ""),
+            description=server_data.get("description", ""),
+            tags=server_data.get("tags", []),
+            logo_url=server_data.get("logo_url"),
+            modelscope_url=modelscope_url,
+            view_count=server_data.get("view_count", 0),
+            # Additional fields
+            author=server_data.get("author", ""),
+            server_config=server_data.get("server_config", []),
+            env_schema=server_data.get("env_schema", ""),
+            is_hosted=server_data.get("is_hosted", False),
+            is_verified=server_data.get("is_verified", False),
+            source_url=server_data.get("source_url", ""),
+            readme=server_data.get("readme", ""),
+            github_stars=server_data.get("github_stars", 0),
+        )
+
+        return server_detail

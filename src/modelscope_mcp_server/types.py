@@ -140,16 +140,39 @@ class McpServer(BaseModel):
     # Basic information
     id: Annotated[str, Field(description="MCP Server ID")]
     name: Annotated[str, Field(description="MCP Server name")]
-    chinese_name: Annotated[str, Field(description="Chinese name")]
     description: Annotated[str, Field(description="Description")]
-    publisher: Annotated[str, Field(description="Publisher")]
     tags: Annotated[list[str], Field(description="Tags")] = []
 
     # Links
+    logo_url: Annotated[str | None, Field(description="Logo image URL")] = None
     modelscope_url: Annotated[str, Field(description="Detail page URL on ModelScope")]
 
     # Metrics
     view_count: Annotated[int, Field(description="View count")] = 0
+
+
+class McpServerDetail(McpServer):
+    """Detailed MCP Server information extending basic MCP Server info."""
+
+    # Basic information
+    author: Annotated[str, Field(description="Author")]
+
+    # Configuration
+    server_config: Annotated[list[dict], Field(description="Server configuration")] = []
+    env_schema: Annotated[str, Field(description="JSON schema for environment variables")]
+
+    # Status flags
+    is_hosted: Annotated[bool, Field(description="Whether the server supports hosted mode")]
+    is_verified: Annotated[bool, Field(description="Whether the server's hosted mode is verified")]
+
+    # Additional links
+    source_url: Annotated[str, Field(description="Source code URL")]
+
+    # Additional metrics
+    github_stars: Annotated[int, Field(description="GitHub stars count")] = 0
+
+    # Documentation
+    readme: Annotated[str, Field(description="README content")]
 
 
 class ImageGenerationResult(BaseModel):

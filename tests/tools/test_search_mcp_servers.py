@@ -14,12 +14,7 @@ async def search_mcp_servers_helper(client, params):
 
 def print_server_info(server, extra_fields=None):
     """Print server information with optional extra fields."""
-    base_info = (
-        f"id: {server.get('id', '')} | "
-        f"name: {server.get('name', '')} | "
-        f"chinese_name: {server.get('chinese_name', '')} | "
-        f"publisher: {server.get('publisher', '')}"
-    )
+    base_info = f"id: {server.get('id', '')} | name: {server.get('name', '')}"
 
     if extra_fields:
         for field in extra_fields:
@@ -40,10 +35,10 @@ def validate_server_fields(server):
     required_fields = [
         "id",
         "name",
-        "chinese_name",
         "description",
-        "publisher",
         "tags",
+        "logo_url",
+        "modelscope_url",
         "view_count",
     ]
 

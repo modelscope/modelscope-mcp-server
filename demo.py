@@ -199,12 +199,48 @@ async def demo_search_mcp_servers(client: Client) -> None:
         summaries = []
         for server in data:
             name = server.get("name", "N/A")
-            publisher = server.get("publisher", "N/A")
             view_count = server.get("view_count", 0)
-            summaries.append(f"{name} by {publisher} (Views {view_count})")
+            summaries.append(f"{name} (Views {view_count})")
         print(f"   • Result: Found {len(data)} items - {' | '.join(summaries)}")
     else:
         print("   • Result: No servers found")
+    print()
+
+
+async def demo_get_mcp_server_detail(client: Client) -> None:
+    """Demo getting MCP server detail."""
+    tool_name = "get_mcp_server_detail"
+    server_id = "pengqun/modelscope-mcp-server"
+    print_step_title(tool_name, f"🔍 Get MCP server detail for '{server_id}'")
+
+    result = await client.call_tool(
+        tool_name,
+        {
+            "server_id": server_id,
+        },
+    )
+    data = parse_tool_response(result)
+
+    if data:
+        name = data.get("name", "N/A")
+        author = data.get("author", "N/A")
+        description = data.get("description", "N/A")
+        is_hosted = data.get("is_hosted", False)
+        is_verified = data.get("is_verified", False)
+        view_count = data.get("view_count", 0)
+        github_stars = data.get("github_stars", 0)
+        tags = ", ".join(data.get("tags", []))
+        modelscope_url = data.get("modelscope_url", "N/A")
+
+        print(f"   • Name: {name}")
+        print(f"   • Author: {author}")
+        print(f"   • Description: {description[:80]}{'...' if len(description) > 80 else ''}")
+        print(f"   • Status: {'Hosted' if is_hosted else 'Not Hosted'}, {'Verified' if is_verified else 'Unverified'}")
+        print(f"   • Metrics: {view_count:,} views, {github_stars:,} GitHub stars")
+        print(f"   • Tags: {tags}")
+        print(f"   • ModelScope URL: {modelscope_url}")
+    else:
+        print("   • Result: Server detail not found")
     print()
 
 
@@ -270,6 +306,7 @@ async def main() -> None:
         await demo_search_studios(client)
         await demo_search_papers(client)
         await demo_search_mcp_servers(client)
+        await demo_get_mcp_server_detail(client)
 
         if args.full:
             await demo_generate_image(client)
