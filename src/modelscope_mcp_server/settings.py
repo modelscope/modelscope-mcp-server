@@ -92,10 +92,8 @@ class Settings(BaseSettings):
 
         # API Configuration
         print("🔑 API Configuration:")
-        masked_token = (
-            self.api_token[:-8] + "********" if self.api_token and len(self.api_token) > 4 else "Not configured"
-        )
-        print(f"  • Token: {masked_token}")
+        token_status = "Configured" if self.api_token else "Not configured"
+        print(f"  • Token: {token_status}")
         print(f"  • Main Domain: {self.main_domain}")
         print(f"  • API Inference Domain: {self.api_inference_domain}")
         print()
