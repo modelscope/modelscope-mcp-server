@@ -11,3 +11,6 @@ DEFAULT_IMAGE_TO_IMAGE_MODEL = "black-forest-labs/FLUX.1-Kontext-dev"
 # Default timeout for requests
 DEFAULT_API_TIMEOUT_SECONDS = 5
 DEFAULT_IMAGE_GENERATION_TIMEOUT_SECONDS = 300
+
+# Task polling interval (seconds)
+DEFAULT_TASK_POLL_INTERVAL_SECONDS = 5

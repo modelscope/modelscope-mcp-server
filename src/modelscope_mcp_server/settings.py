@@ -9,6 +9,7 @@ from .constants import (
     DEFAULT_IMAGE_TO_IMAGE_MODEL,
     DEFAULT_MODELSCOPE_API_INFERENCE_DOMAIN,
     DEFAULT_MODELSCOPE_DOMAIN,
+    DEFAULT_TASK_POLL_INTERVAL_SECONDS,
     DEFAULT_TEXT_TO_IMAGE_MODEL,
 )
 
@@ -55,6 +56,12 @@ class Settings(BaseSettings):
     default_image_generation_timeout_seconds: int = Field(
         default=DEFAULT_IMAGE_GENERATION_TIMEOUT_SECONDS,
         description="Default timeout for image generation requests",
+    )
+
+    # Task polling
+    task_poll_interval_seconds: int = Field(
+        default=DEFAULT_TASK_POLL_INTERVAL_SECONDS,
+        description="Polling interval in seconds when waiting for async tasks",
     )
 
     # Logging settings

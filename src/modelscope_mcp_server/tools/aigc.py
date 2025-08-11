@@ -3,6 +3,7 @@
 Provides MCP tools for text-to-image generation, etc.
 """
 
+import time
 from typing import Annotated
 
 from fastmcp import FastMCP
@@ -77,7 +78,8 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         if not settings.is_api_token_configured():
             raise ValueError("API token is not set")
 
-        url = f"{settings.api_inference_domain}/v1/images/generations"
+        # Step 1: submit async generation task
+        submit_url = f"{settings.api_inference_domain}/v1/images/generations"
 
         payload = {
             "model": model,
@@ -87,21 +89,44 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         if generation_type == GenerationType.IMAGE_TO_IMAGE and image_url:
             payload["image_url"] = image_url
 
-        response = default_client.post(
-            url, json_data=payload, timeout=settings.default_image_generation_timeout_seconds
+        submit_response = default_client.post(
+            submit_url,
+            json_data=payload,
+            timeout=settings.default_image_generation_timeout_seconds,
+            headers={"X-ModelScope-Async-Mode": "true"},
         )
 
-        images_data = response.get("images", [])
+        task_id = submit_response.get("task_id")
+        if not task_id:
+            raise Exception(f"No task_id found in response: {submit_response}")
 
-        if len(images_data) == 0:
-            raise Exception(f"No images found in response: {response}")
+        # Step 2: poll task result until succeed/failed or timeout
+        start_time = time.time()
+        task_url = f"{settings.api_inference_domain}/v1/tasks/{task_id}"
+        while True:
+            # timeout check
+            if time.time() - start_time > settings.default_image_generation_timeout_seconds:
+                raise TimeoutError("Image generation timed out - please try again later")
 
-        generated_image_url = images_data[0].get("url", "")
-        if len(generated_image_url) == 0:
-            raise Exception(f"No image URL found in response: {response}")
+            task_result = default_client.get(
+                task_url,
+                timeout=settings.default_api_timeout_seconds,
+                headers={"X-ModelScope-Task-Type": "image_generation"},
+            )
 
-        return ImageGenerationResult(
-            type=generation_type,
-            model=model,
-            image_url=generated_image_url,
-        )
+            status = task_result.get("task_status")
+            if status == "SUCCEED":
+                output_images = task_result.get("output_images") or []
+                if not output_images:
+                    raise Exception(f"No output images found in task result: {task_result}")
+                generated_image_url = output_images[0]
+                return ImageGenerationResult(
+                    type=generation_type,
+                    model=model,
+                    image_url=generated_image_url,
+                )
+            if status == "FAILED":
+                raise Exception("Image Generation Failed.")
+
+            logger.info(f"Image generation task {task_id} is {status}, waiting for next poll...")
+            time.sleep(settings.task_poll_interval_seconds)

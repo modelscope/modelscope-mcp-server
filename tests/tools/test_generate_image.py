@@ -7,9 +7,18 @@ from modelscope_mcp_server.types import GenerationType
 
 
 async def test_text_to_image_generation_success(mcp_server, mocker):
-    """Test successful text-to-image generation."""
-    mock_response_data = {"images": [{"url": "https://example.com/generated_image.jpg"}]}
-    mock_post = mocker.patch("modelscope_mcp_server.client.default_client.post", return_value=mock_response_data)
+    """Test successful text-to-image generation with async polling."""
+    mock_post = mocker.patch(
+        "modelscope_mcp_server.client.default_client.post",
+        return_value={"task_id": "task-text-1"},
+    )
+    mock_get = mocker.patch(
+        "modelscope_mcp_server.client.default_client.get",
+        return_value={
+            "task_status": "SUCCEED",
+            "output_images": ["https://example.com/generated_image.jpg"],
+        },
+    )
 
     async with Client(mcp_server) as client:
         result = await client.call_tool(
@@ -32,12 +41,22 @@ async def test_text_to_image_generation_success(mcp_server, mocker):
         )
 
         mock_post.assert_called_once()
+        mock_get.assert_called()
 
 
 async def test_image_to_image_generation_success(mcp_server, mocker):
-    """Test successful image-to-image generation."""
-    mock_response_data = {"images": [{"url": "https://example.com/modified_image.jpg"}]}
-    mock_post = mocker.patch("modelscope_mcp_server.client.default_client.post", return_value=mock_response_data)
+    """Test successful image-to-image generation with async polling."""
+    mock_post = mocker.patch(
+        "modelscope_mcp_server.client.default_client.post",
+        return_value={"task_id": "task-image-1"},
+    )
+    mock_get = mocker.patch(
+        "modelscope_mcp_server.client.default_client.get",
+        return_value={
+            "task_status": "SUCCEED",
+            "output_images": ["https://example.com/modified_image.jpg"],
+        },
+    )
 
     async with Client(mcp_server) as client:
         result = await client.call_tool(
@@ -61,12 +80,22 @@ async def test_image_to_image_generation_success(mcp_server, mocker):
         )
 
         mock_post.assert_called_once()
+        mock_get.assert_called()
 
 
 async def test_generate_image_with_default_model(mcp_server, mocker):
-    """Test image generation with default model when no model is specified."""
-    mock_response_data = {"images": [{"url": "https://example.com/default_model_image.jpg"}]}
-    mocker.patch("modelscope_mcp_server.client.default_client.post", return_value=mock_response_data)
+    """Test image generation with default model when no model is specified (async)."""
+    mocker.patch(
+        "modelscope_mcp_server.client.default_client.post",
+        return_value={"task_id": "task-default-1"},
+    )
+    mocker.patch(
+        "modelscope_mcp_server.client.default_client.get",
+        return_value={
+            "task_status": "SUCCEED",
+            "output_images": ["https://example.com/default_model_image.jpg"],
+        },
+    )
 
     async with Client(mcp_server) as client:
         result = await client.call_tool(
@@ -141,10 +170,10 @@ async def test_generate_image_timeout_error(mcp_server, mocker):
 
 
 async def test_generate_image_malformed_response(mcp_server, mocker):
-    """Test handling of malformed API response."""
+    """Test handling of malformed API response on submit (missing task_id)."""
     malformed_response_data = {
         "result": "success",
-        # Missing 'images' field
+        # Missing 'task_id' field
     }
     mocker.patch("modelscope_mcp_server.client.default_client.post", return_value=malformed_response_data)
 
@@ -159,13 +188,22 @@ async def test_generate_image_malformed_response(mcp_server, mocker):
             )
 
         print(f"✅ Malformed response error handled correctly: {exc_info.value}")
-        assert "No images found in response" in str(exc_info.value)
+        assert "No task_id found in response" in str(exc_info.value)
 
 
 async def test_generate_image_request_parameters(mcp_server, mocker):
-    """Test that the correct parameters are sent in the request."""
-    mock_response_data = {"images": [{"url": "https://example.com/test_image.jpg"}]}
-    mock_post = mocker.patch("modelscope_mcp_server.client.default_client.post", return_value=mock_response_data)
+    """Test that the correct parameters are sent in the request (async)."""
+    mock_post = mocker.patch(
+        "modelscope_mcp_server.client.default_client.post",
+        return_value={"task_id": "task-param-1"},
+    )
+    mock_get = mocker.patch(
+        "modelscope_mcp_server.client.default_client.get",
+        return_value={
+            "task_status": "SUCCEED",
+            "output_images": ["https://example.com/test_image.jpg"],
+        },
+    )
 
     async with Client(mcp_server) as client:
         await client.call_tool(
@@ -177,7 +215,7 @@ async def test_generate_image_request_parameters(mcp_server, mocker):
             },
         )
 
-        # Verify the request was called with correct parameters
+        # Verify the submit request was called with correct parameters
         mock_post.assert_called_once()
         call_args = mock_post.call_args
 
@@ -193,5 +231,12 @@ async def test_generate_image_request_parameters(mcp_server, mocker):
 
         # Check timeout
         assert call_args.kwargs["timeout"] == 300
+
+        # Check headers include async mode
+        headers = call_args.kwargs.get("headers", {})
+        assert headers.get("X-ModelScope-Async-Mode") == "true"
+
+        # Verify polling was performed
+        mock_get.assert_called()
 
         print("✅ Request parameters verified correctly")
