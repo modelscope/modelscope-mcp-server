@@ -247,7 +247,7 @@ async def demo_get_mcp_server_detail(client: Client) -> None:
 async def demo_generate_image(client: Client) -> None:
     """Demo image generation."""
     tool_name = "generate_image"
-    prompt = "A curious cat wearing a tiny wizard hat in candy cloud kingdom"
+    prompt = 'Chinese calligraphy on parchment reading "ModelScope MCP Server by 魔搭社区" '
     print_step_title(tool_name, f"🎨 Generate image with prompt: {prompt}")
 
     result = await client.call_tool(tool_name, {"prompt": prompt})

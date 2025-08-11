@@ -5,7 +5,7 @@ DEFAULT_MODELSCOPE_DOMAIN = "https://modelscope.cn"
 DEFAULT_MODELSCOPE_API_INFERENCE_DOMAIN = "https://api-inference.modelscope.cn"
 
 # Default model IDs for content generation
-DEFAULT_TEXT_TO_IMAGE_MODEL = "MusePublic/489_ckpt_FLUX_1"
+DEFAULT_TEXT_TO_IMAGE_MODEL = "Qwen/Qwen-Image"
 DEFAULT_IMAGE_TO_IMAGE_MODEL = "black-forest-labs/FLUX.1-Kontext-dev"
 
 # Default timeout for requests
