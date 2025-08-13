@@ -10,6 +10,8 @@
 
 魔搭社区（[ModelScope](https://modelscope.cn)）官方 MCP 服务器，为你的 AI 应用提供一站式接入能力，轻松访问平台海量的模型、数据集、创空间、论文、MCP 服务，以及各种 AIGC 生成能力。
 
+如需快速体验和托管部署，可访问魔搭社区 MCP 广场：[@modelscope/modelscope-mcp-server](https://modelscope.cn/mcp/servers/@modelscope/modelscope-mcp-server)
+
 ## ✨ 核心功能
 
 - 🎨 **AI 图像生成** - 借助 AIGC 模型，轻松实现文生图（根据描述生成图像）或图生图（转换现有图像）
