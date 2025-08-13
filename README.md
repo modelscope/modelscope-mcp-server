@@ -10,7 +10,7 @@ English | [中文](README_zh-CN.md)
 
 Empowers AI agents and chatbots with direct access to [ModelScope](https://modelscope.cn)'s rich ecosystem of AI resources. From generating images to discovering cutting-edge models, datasets, apps and research papers, this MCP server makes ModelScope's vast collection of tools and services accessible through simple conversational interactions.
 
-For a quick trial or a hosted option, visit the project page on the ModelScope MCP Plaza: [@modelscope/modelscope-mcp-server](https://modelscope.cn/mcp/servers/@modelscope/modelscope-mcp-server)
+For a quick trial or a hosted option, visit the [project page](https://modelscope.cn/mcp/servers/@modelscope/modelscope-mcp-server) on the ModelScope MCP Plaza.
 
 ## ✨ Features
 
