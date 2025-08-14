@@ -7,6 +7,7 @@ from .constants import (
     DEFAULT_API_TIMEOUT_SECONDS,
     DEFAULT_IMAGE_GENERATION_TIMEOUT_SECONDS,
     DEFAULT_IMAGE_TO_IMAGE_MODEL,
+    DEFAULT_MAX_POLL_ATTEMPTS,
     DEFAULT_MODELSCOPE_API_INFERENCE_DOMAIN,
     DEFAULT_MODELSCOPE_DOMAIN,
     DEFAULT_TASK_POLL_INTERVAL_SECONDS,
@@ -62,6 +63,10 @@ class Settings(BaseSettings):
     task_poll_interval_seconds: int = Field(
         default=DEFAULT_TASK_POLL_INTERVAL_SECONDS,
         description="Polling interval in seconds when waiting for async tasks",
+    )
+    max_poll_attempts: int = Field(
+        default=DEFAULT_MAX_POLL_ATTEMPTS,
+        description="Maximum number of polling attempts for async tasks",
     )
 
     # Logging settings

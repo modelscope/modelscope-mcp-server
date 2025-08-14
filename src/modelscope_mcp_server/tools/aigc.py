@@ -105,10 +105,14 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         # Step 2: poll task result until succeed/failed or timeout
         start_time = time.time()
         task_url = f"{settings.api_inference_domain}/v1/tasks/{task_id}"
-        while True:
+        attempt_count = 0
+
+        while attempt_count < settings.max_poll_attempts:
             # timeout check
             if time.time() - start_time > settings.default_image_generation_timeout_seconds:
                 raise TimeoutError("Image generation timed out - please try again later")
+
+            attempt_count += 1
 
             task_result = default_client.get(
                 task_url,
@@ -138,5 +142,13 @@ def register_aigc_tools(mcp: FastMCP) -> None:
                     f"Image generation failed: {error_msg}. Task ID: {task_id}, Request ID: {request_id}"
                 )
 
-            logger.info(f"Image generation task {task_id} is {status}, waiting for next poll...")
+            logger.info(
+                f"Image generation task {task_id} is {status}, waiting for next poll... "
+                f"(attempt {attempt_count}/{settings.max_poll_attempts})"
+            )
             time.sleep(settings.task_poll_interval_seconds)
+
+        # If we exit the loop without success or failure, max attempts exceeded
+        raise TimeoutError(
+            f"Image generation exceeded maximum polling attempts ({settings.max_poll_attempts}). Task ID: {task_id}"
+        )

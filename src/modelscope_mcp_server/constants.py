@@ -14,3 +14,6 @@ DEFAULT_IMAGE_GENERATION_TIMEOUT_SECONDS = 300
 
 # Task polling interval (seconds)
 DEFAULT_TASK_POLL_INTERVAL_SECONDS = 5
+
+# Maximum number of polling attempts for async tasks
+DEFAULT_MAX_POLL_ATTEMPTS = 60  # 60 attempts * 5 seconds = 5 minutes max
