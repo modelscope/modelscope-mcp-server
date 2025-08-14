@@ -109,7 +109,7 @@ def register_mcp_tools(mcp: FastMCP) -> None:
     async def get_mcp_server_detail(
         server_id: Annotated[
             str,
-            Field(description="MCP Server ID in format 'author/name', e.g., 'pengqun/modelscope-mcp-server'"),
+            Field(description="MCP Server's unique ID, for example '@modelscope/modelscope-mcp-server'"),
         ],
     ) -> McpServerDetail:
         """Get detailed information about a specific MCP server."""

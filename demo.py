@@ -210,7 +210,7 @@ async def demo_search_mcp_servers(client: Client) -> None:
 async def demo_get_mcp_server_detail(client: Client) -> None:
     """Demo getting MCP server detail."""
     tool_name = "get_mcp_server_detail"
-    server_id = "pengqun/modelscope-mcp-server"
+    server_id = "@modelscope/modelscope-mcp-server"
     print_step_title(tool_name, f"🔍 Get MCP server detail for '{server_id}'")
 
     result = await client.call_tool(

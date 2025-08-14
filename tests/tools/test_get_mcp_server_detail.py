@@ -71,7 +71,7 @@ def validate_server_detail_fields(server_detail):
 async def test_get_mcp_server_detail(mcp_server):
     """Test get_mcp_server_detail with a known server ID."""
     async with Client(mcp_server) as client:
-        server_id = "pengqun/modelscope-mcp-server"
+        server_id = "@modelscope/modelscope-mcp-server"
         server_detail = await get_mcp_server_detail_helper(client, server_id)
 
         # Validate response structure
@@ -83,5 +83,5 @@ async def test_get_mcp_server_detail(mcp_server):
 
         # Validate specific fields for known server
         assert server_detail.id == server_id, f"Server ID should be {server_id}"
-        assert server_detail.author == "pengqun", "Author should be pengqun"
+        assert server_detail.author == "modelscope", "Author should be modelscope"
         assert server_detail.name != "", "Name should not be empty"
