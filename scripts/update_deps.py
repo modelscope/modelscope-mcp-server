@@ -6,11 +6,11 @@ import subprocess
 import sys
 
 
-def run_command(cmd: str, description: str) -> bool:
+def run_command(cmd: list[str], description: str) -> bool:
     """Run command and display results."""
     print(f"🔄 {description}...")
     try:
-        result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
+        result = subprocess.run(cmd, check=True, capture_output=True, text=True)
         if result.stdout.strip():
             print(result.stdout)
         return True
@@ -24,7 +24,7 @@ def run_command(cmd: str, description: str) -> bool:
 def get_dependency_versions() -> dict[str, str]:
     """Get current dependency versions using uv tree."""
     try:
-        result = subprocess.run("uv tree --depth 1", shell=True, check=True, capture_output=True, text=True)
+        result = subprocess.run(["uv", "tree", "--depth", "1"], check=True, capture_output=True, text=True)
 
         versions = {}
         for line in result.stdout.split("\n"):
@@ -66,11 +66,11 @@ def main():
     versions_before = get_dependency_versions()
 
     # 1. Update Python dependencies
-    if not run_command("uv sync --upgrade", "Updating Python dependencies"):
+    if not run_command(["uv", "sync", "--upgrade"], "Updating Python dependencies"):
         sys.exit(1)
 
     # 2. Update pre-commit hooks
-    if not run_command("uv run pre-commit autoupdate", "Updating pre-commit hooks"):
+    if not run_command(["uv", "run", "pre-commit", "autoupdate"], "Updating pre-commit hooks"):
         sys.exit(1)
 
     # Get versions after update
@@ -81,7 +81,7 @@ def main():
 
     # 3. Show file changes
     print("\n📋 Reviewing file changes:")
-    run_command("git status --porcelain", "Checking modified files")
+    run_command(["git", "status", "--porcelain"], "Checking modified files")
 
     print("\n✅ Dependency updates completed!")
     print("💡 Recommendations:")
