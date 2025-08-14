@@ -61,6 +61,8 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         """
         generation_type = GenerationType.IMAGE_TO_IMAGE if image_url else GenerationType.TEXT_TO_IMAGE
 
+        # API Doc: https://www.modelscope.cn/docs/model-service/API-Inference/intro
+
         # Use default model if not specified
         if model is None:
             model = (
@@ -98,7 +100,7 @@ def register_aigc_tools(mcp: FastMCP) -> None:
 
         task_id = submit_response.get("task_id")
         if not task_id:
-            raise Exception(f"No task_id found in response: {submit_response}")
+            raise RuntimeError(f"No task_id found in response: {submit_response}")
 
         # Step 2: poll task result until succeed/failed or timeout
         start_time = time.time()
@@ -115,18 +117,26 @@ def register_aigc_tools(mcp: FastMCP) -> None:
             )
 
             status = task_result.get("task_status")
+
             if status == "SUCCEED":
                 output_images = task_result.get("output_images") or []
                 if not output_images:
-                    raise Exception(f"No output images found in task result: {task_result}")
+                    raise RuntimeError(f"No output images found in task result: {task_result}")
                 generated_image_url = output_images[0]
                 return ImageGenerationResult(
                     type=generation_type,
                     model=model,
                     image_url=generated_image_url,
                 )
+
             if status == "FAILED":
-                raise Exception("Image Generation Failed.")
+                error_msg = "Unknown error"
+                if "errors" in task_result and isinstance(task_result["errors"], dict):
+                    error_msg = task_result["errors"].get("message", error_msg)
+                request_id = task_result.get("request_id", "N/A")
+                raise RuntimeError(
+                    f"Image generation failed: {error_msg}. Task ID: {task_id}, Request ID: {request_id}"
+                )
 
             logger.info(f"Image generation task {task_id} is {status}, waiting for next poll...")
             time.sleep(settings.task_poll_interval_seconds)
