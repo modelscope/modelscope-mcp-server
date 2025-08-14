@@ -85,7 +85,7 @@ class ModelScopeClient:
         try:
             response_json = response.json()
         except json.JSONDecodeError as e:
-            raise Exception(f"Failed to parse JSON response: {e}") from e
+            raise ValueError(f"Failed to parse JSON response: {e}") from e
 
         # Log JSON body if DEBUG level is enabled
         if logger.isEnabledFor(std_logging.DEBUG):
@@ -99,7 +99,7 @@ class ModelScopeClient:
         if isinstance(response_json, dict):
             for key in response_json:
                 if key.lower() == "success" and response_json[key] is False:
-                    raise Exception(f"Server returned error: {response_json}")
+                    raise RuntimeError(f"Server returned error: {response_json}")
 
         return response_json
 

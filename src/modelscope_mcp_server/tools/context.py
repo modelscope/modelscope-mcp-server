@@ -49,7 +49,7 @@ def register_context_tools(mcp: FastMCP) -> None:
                     authenticated=False,
                     reason=f"Invalid API token: server returned {e.response.status_code}",
                 )
-            raise e
+            raise
 
         user_data = response.get("Data", {})
 
