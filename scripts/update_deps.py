@@ -57,7 +57,7 @@ def compare_versions(before: dict[str, str], after: dict[str, str]) -> None:
         print("\n📦 No dependency versions were updated")
 
 
-def main():
+def main() -> None:
     """Run the dependency update script."""
     print("🚀 Starting dependency updates...")
 

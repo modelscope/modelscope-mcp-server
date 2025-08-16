@@ -18,7 +18,7 @@ logger = logging.get_logger(__name__)
 class ModelScopeClient:
     """Unified client for ModelScope API requests."""
 
-    def __init__(self, timeout: int = settings.default_api_timeout_seconds):
+    def __init__(self, timeout: int = settings.default_api_timeout_seconds) -> None:
         """Initialize the ModelScope client.
 
         Args:
@@ -204,15 +204,15 @@ class ModelScopeClient:
         except requests.exceptions.Timeout as e:
             raise TimeoutError("Request timeout - please try again later") from e
 
-    def close(self):
+    def close(self) -> None:
         """Close the session."""
         self._session.close()
 
-    def __enter__(self):
+    def __enter__(self) -> "ModelScopeClient":
         """Context manager entry."""
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         """Context manager exit."""
         self.close()
 

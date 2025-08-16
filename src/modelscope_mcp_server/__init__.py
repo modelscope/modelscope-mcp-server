@@ -4,7 +4,7 @@ from ._version import __version__
 from .settings import settings
 
 
-def main():
+def main() -> None:
     """Serve as the main entry point for ModelScope MCP Server."""
     from .cli import main as cli_main
 

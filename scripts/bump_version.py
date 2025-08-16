@@ -25,7 +25,7 @@ PEP440_PATTERN = r"^(\d+)\.(\d+)\.(\d+)((a|b|rc)\d+|\.dev\d+|\.post\d+)?$"
 BUMP_TYPES = ["major", "minor", "patch"]
 
 
-def get_current_version():
+def get_current_version() -> str:
     """Extract current version by importing the version module."""
     if str(SRC_DIR) not in sys.path:
         sys.path.insert(0, str(SRC_DIR))
@@ -41,7 +41,7 @@ def get_current_version():
             sys.path.remove(str(SRC_DIR))
 
 
-def parse_version(version_string):
+def parse_version(version_string: str) -> tuple[int, int, int]:
     """Parse version string, extracting major.minor.patch from PEP 440 format."""
     # Extract base version (major.minor.patch) from PEP 440 format
     # Examples: 1.2.3 -> (1,2,3), 1.2.3a1 -> (1,2,3), 1.2.3.dev1 -> (1,2,3)
@@ -56,13 +56,13 @@ def parse_version(version_string):
         raise ValueError(f"Invalid version format: {version_string}") from e
 
 
-def validate_version_format(version_string):
+def validate_version_format(version_string: str) -> None:
     """Validate that the version string follows PEP 440 format."""
     if not re.match(PEP440_PATTERN, version_string):
         raise ValueError(f"Invalid version format (should follow PEP 440): {version_string}")
 
 
-def bump_version(current_version, bump_type):
+def bump_version(current_version: str, bump_type: str) -> str:
     """Bump version based on type (major, minor, patch)."""
     major, minor, patch = parse_version(current_version)
 
@@ -76,7 +76,7 @@ def bump_version(current_version, bump_type):
         raise ValueError(f"Invalid bump type: {bump_type}")
 
 
-def update_version(new_version):
+def update_version(new_version: str) -> None:
     """Update version in _version.py and sync dependencies."""
     content = VERSION_FILE.read_text()
     new_content = re.sub(r'__version__ = "[^"]+"', f'__version__ = "{new_version}"', content)
@@ -89,7 +89,7 @@ def update_version(new_version):
         print(f"Warning: Failed to run 'uv sync': {e}")
 
 
-def handle_version_change(action_description, new_version):
+def handle_version_change(action_description: str, new_version: str) -> str:
     """Handle version changes with common logic."""
     current = get_current_version()
     print(f"{action_description} from {current} to {new_version}")
@@ -98,7 +98,7 @@ def handle_version_change(action_description, new_version):
     return new_version
 
 
-def print_next_steps(version):
+def print_next_steps(version: str) -> None:
     """Print the next steps after version update."""
     print("\nNext steps:")
     print(f"1. Commit the change: git add {FILES_TO_COMMIT} && git commit -m 'chore: bump version to {version}'")
@@ -106,7 +106,7 @@ def print_next_steps(version):
     print("3. The GitHub Action will automatically create a release and publish to PyPI and Container Registry")
 
 
-def main():
+def main() -> None:
     """Handle version bumping operations."""
     if len(sys.argv) not in [2, 3]:
         print(__doc__)
