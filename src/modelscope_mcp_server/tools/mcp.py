@@ -9,7 +9,7 @@ from fastmcp import FastMCP
 from fastmcp.utilities import logging
 from pydantic import Field
 
-from ..client import default_client
+from ..client import get_client
 from ..settings import settings
 from ..types import McpServer, McpServerDetail
 
@@ -79,7 +79,8 @@ def register_mcp_tools(mcp: FastMCP) -> None:
             "search": search,
         }
 
-        response = default_client.put(url, json_data=request_data)
+        client = get_client()
+        response = await client.put(url, request_data)
 
         servers_data = response.get("data", {}).get("mcp_server_list", [])
 
@@ -115,7 +116,8 @@ def register_mcp_tools(mcp: FastMCP) -> None:
         """Get detailed information about a specific MCP server."""
         url = f"{settings.main_domain}/openapi/v1/mcp/servers/{server_id}"
 
-        response = default_client.get(url)
+        client = get_client()
+        response = await client.get(url)
         server_data = response.get("data", {})
 
         id = server_data.get("id", "")

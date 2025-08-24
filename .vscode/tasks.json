@@ -85,6 +85,23 @@
         "focus": true
       },
       "problemMatcher": []
+    },
+    {
+      "label": "uv run pytest -m 'slow'",
+      "detail": "Run slow pytest tests",
+      "type": "shell",
+      "command": "uv",
+      "args": ["run", "pytest", "-m", "slow"],
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": []
     }
   ]
 }

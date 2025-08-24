@@ -3,6 +3,7 @@
 Provides MCP tools for text-to-image generation, etc.
 """
 
+import asyncio
 import time
 from typing import Annotated
 
@@ -10,7 +11,7 @@ from fastmcp import FastMCP
 from fastmcp.utilities import logging
 from pydantic import Field
 
-from ..client import default_client
+from ..client import get_client
 from ..settings import settings
 from ..types import GenerationType, ImageGenerationResult
 
@@ -91,9 +92,10 @@ def register_aigc_tools(mcp: FastMCP) -> None:
         if generation_type == GenerationType.IMAGE_TO_IMAGE and image_url:
             payload["image_url"] = image_url
 
-        submit_response = default_client.post(
+        client = get_client()
+        submit_response = await client.post(
             submit_url,
-            json_data=payload,
+            payload,
             timeout=settings.default_image_generation_timeout_seconds,
             headers={"X-ModelScope-Async-Mode": "true"},
         )
@@ -114,7 +116,7 @@ def register_aigc_tools(mcp: FastMCP) -> None:
 
             attempt_count += 1
 
-            task_result = default_client.get(
+            task_result = await client.get(
                 task_url,
                 timeout=settings.default_api_timeout_seconds,
                 headers={"X-ModelScope-Task-Type": "image_generation"},
@@ -146,7 +148,7 @@ def register_aigc_tools(mcp: FastMCP) -> None:
                 f"Image generation task {task_id} is {status}, waiting for next poll... "
                 f"(attempt {attempt_count}/{settings.max_poll_attempts})"
             )
-            time.sleep(settings.task_poll_interval_seconds)
+            await asyncio.sleep(settings.task_poll_interval_seconds)
 
         # If we exit the loop without success or failure, max attempts exceeded
         raise TimeoutError(

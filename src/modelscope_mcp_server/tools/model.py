@@ -10,7 +10,7 @@ from fastmcp import FastMCP
 from fastmcp.utilities import logging
 from pydantic import Field
 
-from ..client import default_client
+from ..client import get_client
 from ..settings import settings
 from ..types import Model
 
@@ -98,7 +98,8 @@ def register_model_tools(mcp: FastMCP) -> None:
             "PageSize": limit,
         }
 
-        response = default_client.put(url, json_data=request_data)
+        client = get_client()
+        response = await client.put(url, request_data)
 
         models_data = response.get("Data", {}).get("Model", {}).get("Models", [])
 

@@ -9,7 +9,7 @@ from fastmcp import FastMCP
 from fastmcp.utilities import logging
 from pydantic import Field
 
-from ..client import default_client
+from ..client import get_client
 from ..settings import settings
 from ..types import Paper
 
@@ -48,7 +48,8 @@ def register_paper_tools(mcp: FastMCP) -> None:
             "Criterion": [],
         }
 
-        response = default_client.put(url, json_data=request_data)
+        client = get_client()
+        response = await client.put(url, request_data)
 
         papers_data = response.get("Data", {}).get("Papers", [])
 

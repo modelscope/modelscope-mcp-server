@@ -52,12 +52,17 @@ async def test_get_current_user_no_api_token(mcp_server):
 
 
 @pytest.mark.integration
-async def test_get_current_user_invalid_api_token(mcp_server):
+async def test_get_current_user_invalid_api_token(mcp_server, mocker):
     """Test get_current_user when API token is invalid."""
-    # Temporarily set invalid API token
+    # Store original API token
     original_api_token = settings.api_token
 
     try:
+        # Clear the global client to force re-initialization with new token
+        from modelscope_mcp_server.client import ModelScopeClient
+
+        await ModelScopeClient.close_global_pool()
+
         # Set invalid API token
         settings.api_token = "invalid-api-token"
 
@@ -73,5 +78,8 @@ async def test_get_current_user_invalid_api_token(mcp_server):
             assert "Invalid API token" in user_info.reason, "Should have correct error reason"
 
     finally:
-        # Restore original API token
+        # Restore original API token and close pool again to force re-init
         settings.api_token = original_api_token
+        from modelscope_mcp_server.client import ModelScopeClient
+
+        await ModelScopeClient.close_global_pool()

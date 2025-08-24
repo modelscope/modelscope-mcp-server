@@ -5,9 +5,9 @@ Provides MCP tools about the current context you are operating in, such as the c
 
 from fastmcp import FastMCP
 from fastmcp.utilities import logging
-from requests.exceptions import HTTPError
+from httpx import HTTPStatusError
 
-from modelscope_mcp_server.client import default_client
+from modelscope_mcp_server.client import get_client
 
 from ..settings import settings
 from ..types import EnvironmentInfo, UserInfo
@@ -42,12 +42,13 @@ def register_context_tools(mcp: FastMCP) -> None:
         url = f"{settings.main_domain}/api/v1/users/login/info"
 
         try:
-            response = default_client.get(url)
-        except HTTPError as e:
+            client = get_client()
+            response = await client.get(url)
+        except HTTPStatusError as e:
             if e.response.status_code == 401 or e.response.status_code == 403:
                 return UserInfo(
                     authenticated=False,
-                    reason=f"Invalid API token: server returned {e.response.status_code}",
+                    reason=f"Invalid API token: {str(e)}",
                 )
             raise
 

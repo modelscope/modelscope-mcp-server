@@ -10,7 +10,7 @@ from fastmcp import FastMCP
 from fastmcp.utilities import logging
 from pydantic import Field
 
-from ..client import default_client
+from ..client import get_client
 from ..settings import settings
 from ..types import Dataset
 
@@ -54,7 +54,8 @@ def register_dataset_tools(mcp: FastMCP) -> None:
             "PageSize": limit,
         }
 
-        response = default_client.get(url, params=params)
+        client = get_client()
+        response = await client.get(url, params=params)
 
         datasets_data = response.get("Data", [])
 
