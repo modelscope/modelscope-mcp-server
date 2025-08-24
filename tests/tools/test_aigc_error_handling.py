@@ -69,7 +69,7 @@ class TestImageGenerationPollingErrors:
         )
 
         # Mock polling to return FAILED status
-        mock_get = mocker.patch(
+        _ = mocker.patch(
             "modelscope_mcp_server.client.ModelScopeClient.get",
             new_callable=mocker.AsyncMock,
             return_value={
@@ -244,7 +244,7 @@ class TestImageGenerationResponseErrors:
             return_value={"task_id": "no-images-task"},
         )
 
-        mock_get = mocker.patch(
+        _ = mocker.patch(
             "modelscope_mcp_server.client.ModelScopeClient.get",
             new_callable=mocker.AsyncMock,
             return_value={
@@ -273,7 +273,7 @@ class TestImageGenerationResponseErrors:
             return_value={"task_id": "empty-images-task"},
         )
 
-        mock_get = mocker.patch(
+        _ = mocker.patch(
             "modelscope_mcp_server.client.ModelScopeClient.get",
             new_callable=mocker.AsyncMock,
             return_value={
@@ -341,7 +341,7 @@ class TestConcurrentImageGeneration:
                 return responses.pop(0)
             return {"task_status": "PENDING"}
 
-        mock_get = mocker.patch(
+        _ = mocker.patch(
             "modelscope_mcp_server.client.ModelScopeClient.get",
             new_callable=mocker.AsyncMock,
             side_effect=mock_get_side_effect,
@@ -363,11 +363,15 @@ class TestConcurrentImageGeneration:
             results = await asyncio.gather(*tasks, return_exceptions=True)
 
         # Verify outcomes
+        from typing import Any, cast
+
         assert not isinstance(results[0], Exception)  # First succeeded
-        assert results[0].data.image_url == "https://example.com/image1.jpg"
+        result0 = cast(Any, results[0])
+        assert result0.data.image_url == "https://example.com/image1.jpg"
 
         assert isinstance(results[1], Exception)  # Second failed
         assert "Task 2 failed" in str(results[1])
 
         assert not isinstance(results[2], Exception)  # Third succeeded
-        assert results[2].data.image_url == "https://example.com/image3.jpg"
+        result2 = cast(Any, results[2])
+        assert result2.data.image_url == "https://example.com/image3.jpg"

@@ -141,7 +141,11 @@ async def test_generate_image_api_error_response(mcp_server, mocker):
     mocker.patch(
         "modelscope_mcp_server.client.ModelScopeClient.post",
         new_callable=mocker.AsyncMock,
-        side_effect=httpx.HTTPStatusError("404 Client Error: Not Found", request=None, response=None),
+        side_effect=httpx.HTTPStatusError(
+            "404 Client Error: Not Found",
+            request=httpx.Request("POST", "https://example.com"),
+            response=httpx.Response(404, request=httpx.Request("POST", "https://example.com")),
+        ),
     )
 
     async with Client(mcp_server) as client:

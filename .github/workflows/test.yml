@@ -40,6 +40,9 @@ jobs:
           uv.lock
           pyproject.toml
 
+    - name: Lock dependencies for current matrix
+      run: uv lock
+
     - name: Install dependencies
       run: uv sync --locked
 
