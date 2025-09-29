@@ -159,7 +159,7 @@ class McpServerDetail(McpServer):
 
     # Configuration
     server_config: Annotated[list[dict], Field(description="Server configuration")] = []
-    env_schema: Annotated[str, Field(description="JSON schema for environment variables")]
+    env_schema: Annotated[dict, Field(description="JSON schema for environment variables")]
 
     # Status flags
     is_hosted: Annotated[bool, Field(description="Whether the server supports hosted mode")]

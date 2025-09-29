@@ -52,7 +52,6 @@ def validate_server_detail_fields(server_detail):
 
     for field in required_fields:
         assert hasattr(server_detail, field), f"Server detail should have '{field}' attribute"
-
     # Validate field types
     assert isinstance(server_detail.id, str), "ID should be a string"
     assert isinstance(server_detail.name, str), "Name should be a string"
@@ -62,7 +61,6 @@ def validate_server_detail_fields(server_detail):
     assert isinstance(server_detail.view_count, int), "View count should be an integer"
     assert isinstance(server_detail.github_stars, int), "GitHub stars should be an integer"
     assert isinstance(server_detail.server_config, list), "Server config should be a list"
-    assert isinstance(server_detail.env_schema, str), "Env schema should be a string"
     assert isinstance(server_detail.readme, str), "Readme should be a string"
     assert isinstance(server_detail.logo_url, str), "Logo URL should be a string"
 

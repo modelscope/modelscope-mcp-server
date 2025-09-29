@@ -135,7 +135,7 @@ def register_mcp_tools(mcp: FastMCP) -> None:
             # Additional fields
             author=server_data.get("author", ""),
             server_config=server_data.get("server_config", []),
-            env_schema=server_data.get("env_schema", ""),
+            env_schema=server_data.get("env_schema", {}),
             is_hosted=server_data.get("is_hosted", False),
             is_verified=server_data.get("is_verified", False),
             source_url=server_data.get("source_url", ""),
