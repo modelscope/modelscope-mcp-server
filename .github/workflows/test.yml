@@ -70,7 +70,7 @@ jobs:
         uv run coverage report
 
     - name: Upload coverage reports
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       if: matrix.python-version == '3.12'  # Only upload once to avoid duplicates
       with:
         name: coverage-report-${{ matrix.python-version }}
